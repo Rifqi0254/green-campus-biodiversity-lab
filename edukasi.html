@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edukasi Iklim | Green Campus Biodiversity Lab</title>
+    <link rel="icon" type="image/png" href="assets/logo-uin.png">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .edukasi-hero {
+            background: linear-gradient(135deg, #0a2e1a, #0a0f0d);
+            padding: 80px 20px 60px;
+            text-align: center;
+        }
+
+        .edukasi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .edukasi-card {
+            background: #1a2a1f;
+            border-radius: 20px;
+            padding: 25px;
+            transition: 0.3s;
+            border: 1px solid #2a4a2f;
+        }
+
+        .edukasi-card:hover {
+            transform: translateY(-5px);
+            border-color: #4ade80;
+        }
+
+        .edukasi-card-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .edukasi-card h3 {
+            color: #4ade80;
+            margin-bottom: 15px;
+        }
+
+        .edukasi-card p {
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .fact-box {
+            background: linear-gradient(135deg, #1e3a2f, #0f1a12);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            border-left: 5px solid #fbbf24;
+        }
+
+        .fact-box h3 {
+            color: #fbbf24;
+            margin-bottom: 15px;
+        }
+
+        .stat-badge {
+            display: inline-block;
+            background: #4ade80;
+            color: #0a0f0d;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #2a4a2f;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tips-list li:before {
+            content: "🌱";
+        }
+
+        @media (max-width: 768px) {
+            .edukasi-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar" id="navbar">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-brand">
+                <img src="assets/logo-uin.png" alt="Logo UIN">
+                <div class="nav-brand-text">
+                    <span class="nav-brand-name">Green Campus</span>
+                    <span class="nav-brand-sub">Biodiversity Lab</span>
+                </div>
+            </a>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="index.html">🏠 Beranda</a></li>
+                <li><a href="peta.html">🗺️ Peta Biodiversitas</a></li>
+                <li><a href="upload.html">📷 Upload Temuan</a></li>
+                <li><a href="spesies.html">🔍 Scan QR</a></li>
+                <li><a href="edukasi.html" class="btn btn-primary btn-sm">🌱 Edukasi</a></li>
+            </ul>
+            <button class="nav-toggle" id="nav-toggle">☰</button>
+        </div>
+    </nav>
+
+    <div class="edukasi-hero">
+        <div class="container">
+            <div class="section-label">📚 Edukasi Lingkungan</div>
+            <h1 class="section-title">Edukasi Krisis Iklim & Biodiversitas</h1>
+            <p style="max-width: 700px; margin: 20px auto 0; color: #94a3b8;">Pelajari dampak perubahan iklim terhadap
+                keanekaragaman hayati dan bagaimana kita bisa berkontribusi</p>
+        </div>
+    </div>
+
+    <section>
+        <div class="container">
+
+            <div class="fact-box">
+                <div class="stat-badge">⚠️ Fakta Cepat</div>
+                <h3>Suhu Global Meningkat 1.2°C Sejak Era Pra-industri</h3>
+                <p>Jika tidak ada aksi signifikan, kenaikan suhu bisa mencapai 2.7°C pada 2100, mengancam 1 juta spesies
+                    dengan kepunahan.</p>
+            </div>
+
+            <div class="edukasi-grid">
+                <div class="edukasi-card">
+                    <div class="edukasi-card-icon">🌡️</div>
+                    <h3>Krisis Iklim di Perkotaan</h3>
+                    <p>Kampus hijau dapat mengurangi efek <strong>Urban Heat Island</strong> hingga 2-3°C. Pohon rindang
+                        menyerap CO₂ dan melepaskan uap air yang mendinginkan udara.</p>
+                </div>
+                <div class="edukasi-card">
+                    <div class="edukasi-card-icon">🦋</div>
+                    <h3>Peran Serangga Penyerbuk</h3>
+                    <p>Lebah, kupu-kupu, dan serangga lainnya bertanggung jawab atas 75% tanaman pangan dunia. Tanpa
+                        mereka, ekosistem dan produksi pangan akan runtuh.</p>
+                </div>
+                <div class="edukasi-card">
+                    <div class="edukasi-card-icon">💧</div>
+                    <h3>Konservasi Air & Biopori</h3>
+                    <p>Lubang biopori di kampus meningkatkan resapan air tanah 10x lipat, mencegah banjir dan menjaga
+                        ketersediaan air saat musim kemarau.</p>
+                </div>
+                <div class="edukasi-card">
+                    <div class="edukasi-card-icon">🌳</div>
+                    <h3>Karbon Biru & Mangrove</h3>
+                    <p>Banten memiliki garis pantai panjang dengan ekosistem mangrove yang menyerap karbon 4x lebih
+                        efektif dari hutan daratan.</p>
+                </div>
+                <div class="edukasi-card">
+                    <div class="edukasi-card-icon">🐦</div>
+                    <h3>Indikator Lingkungan</h3>
+                    <p>Burung seperti Kutilang dan Elang Bondol adalah indikator kesehatan ekosistem. Keberadaan mereka
+                        menandakan lingkungan yang seimbang.</p>
+                </div>
+                <div class="edukasi-card">
+                    <div class="edukasi-card-icon">♻️</div>
+                    <h3>Reduce, Reuse, Recycle</h3>
+                    <p>Sampah organik kampus bisa diolah menjadi kompos untuk menyuburkan tanah, mengurangi emisi metana
+                        dari TPA.</p>
+                </div>
+            </div>
+
+            <div class="fact-box" style="border-left-color: #4ade80;">
+                <div class="stat-badge" style="background: #4ade80;">🎓 Aksi Mahasiswa</div>
+                <h3>Yang Bisa Kamu Lakukan di Kampus</h3>
+                <ul class="tips-list">
+                    <li>Matikan lampu dan AC saat ruangan kosong</li>
+                    <li>Bawa tumbler dan tote bag sendiri</li>
+                    <li>Ikuti program penanaman pohon rutin</li>
+                    <li>Gunakan tangga daripada lift (hemat energi)</li>
+                    <li>Laporkan temuan spesies melalui platform ini</li>
+                    <li>Sebarkan edukasi ke teman-teman</li>
+                </ul>
+            </div>
+
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <img src="assets/logo-uin.png" alt="Logo UIN">
+                    <h4>Green Campus Biodiversity Lab</h4>
+                    <p>Platform pendataan, edukasi, dan aksi konservasi biodiversitas.</p>
+                </div>
+                <div class="footer-col">
+                    <h5>Platform</h5>
+                    <ul>
+                        <li><a href="peta.html">Peta Biodiversitas</a></li>
+                        <li><a href="upload.html">Upload Temuan</a></li>
+                        <li><a href="spesies.html">Scan QR</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h5>Edukasi</h5>
+                    <ul>
+                        <li><a href="edukasi.html">Edukasi Iklim</a></li>
+                        <li><a href="edukasi.html">Katalog Spesies</a></li>
+                        <li><a href="edukasi.html">Panduan Observasi</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h5>Kontak</h5>
+                    <ul>
+                        <li>📧 biodiversitylab@uinbanten.ac.id</li>
+                        <li>📍 Serang, Banten</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">© 2025 Green Campus Biodiversity Lab — 💚 untuk Bumi</div>
+        </div>
+    </footer>
+
+    <script>
+        const navToggle = document.getElementById('nav-toggle');
+        const navLinks = document.getElementById('nav-links');
+        if (navToggle) {
+            navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+        }
+    </script>
+</body>
+
+</html>

@@ -1,1074 +1,475 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Detail spesies Kamboja Jepang (Plumeria rubra) di kampus UIN Sultan Maulana Hasanuddin Banten. BIO-QR Trail — pindai QR code untuk informasi biodiversitas.">
-  <title>Kamboja Jepang — Plumeria rubra | Green Campus Biodiversity Lab</title>
+  <title>Pusat Pemindaian Pintar | Green Campus Biodiversity Lab</title>
   <link rel="icon" type="image/png" href="assets/logo-uin.png">
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .scan-loading {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(10, 15, 13, 0.95);
+      border-radius: 20px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      z-index: 10;
+    }
+
+    .scan-loading.active {
+      display: flex;
+    }
+
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid #4ade80;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    .result-card {
+      background: #0f1a12;
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .species-match {
+      background: #1a2a1f;
+      border-left: 4px solid #4ade80;
+      padding: 16px;
+      margin-bottom: 16px;
+      border-radius: 12px;
+    }
+
+    .category-flora {
+      background: #16653420;
+      color: #4ade80;
+    }
+
+    .category-fauna {
+      background: #1e3a5f20;
+      color: #60a5fa;
+    }
+
+    .category-insecta {
+      background: #854d0e20;
+      color: #fbbf24;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+  </style>
 </head>
+
 <body>
 
-  <!-- ===== NAVIGATION ===== -->
   <nav class="navbar scrolled" id="navbar">
     <div class="nav-inner">
       <a href="index.html" class="nav-brand">
-        <img src="assets/logo-uin.png" alt="Logo UIN Sultan Maulana Hasanuddin Banten">
+        <img src="assets/logo-uin.png" alt="Logo UIN">
         <div class="nav-brand-text">
           <span class="nav-brand-name">Green Campus</span>
           <span class="nav-brand-sub">Biodiversity Lab</span>
         </div>
       </a>
-
       <ul class="nav-links" id="nav-links">
-        <li><a href="index.html"><span class="nav-icon">🏠</span> Beranda</a></li>
-        <li><a href="peta.html"><span class="nav-icon">🗺️</span> Peta Biodiversitas</a></li>
-        <li><a href="upload.html"><span class="nav-icon">📷</span> Upload Temuan</a></li>
-        <li><a href="spesies.html" class="active"><span class="nav-icon">🔍</span> Scan QR</a></li>
-        <li><a href="#" class="btn btn-primary btn-sm"><span class="nav-icon">🌱</span> Aksi Hijau</a></li>
+        <li><a href="index.html">🏠 Beranda</a></li>
+        <li><a href="peta.html">🗺️ Peta Biodiversitas</a></li>
+        <li><a href="upload.html">📷 Upload Temuan</a></li>
+        <li><a href="spesies.html" class="active">🔍 Scan QR</a></li>
+        <li><a href="edukasi.html" class="btn btn-primary btn-sm">🌱 Edukasi</a></li>
       </ul>
-
-      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+      <button class="nav-toggle" id="nav-toggle">☰</button>
     </div>
   </nav>
 
-  <div id="species-detail-wrapper">
-  <!-- ===== PAGE HEADER ===== -->
-  <header class="page-header">
-    <div class="container">
-      <nav class="breadcrumbs">
-        <a href="index.html">Beranda</a>
-        <span class="separator">›</span>
-        <a href="#">Scan QR</a>
-        <span class="separator">›</span>
-        <span>Kamboja Jepang</span>
-      </nav>
+  <!-- Detail Spesies Mode (jika ada parameter ?id=) -->
+  <div id="species-detail-wrapper" style="display: none;"></div>
 
-      <!-- QR Scan Visual -->
-      <div class="scan-visual animate-on-scroll" style="margin-bottom: 32px;">
-        <div class="scan-frame" style="background: rgba(5,13,9,0.5);">
-          <div class="scan-line"></div>
-          <div class="scan-corner tl"></div>
-          <div class="scan-corner tr"></div>
-          <div class="scan-corner bl"></div>
-          <div class="scan-corner br"></div>
-          <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px;">
-            <span style="font-size: 2.5rem;">📱</span>
-            <span style="font-size: 0.8rem; color: var(--green-400); font-weight: 600;">BIO-QR Trail</span>
-          </div>
-        </div>
-      </div>
-
-      <div style="text-align: center;">
-        <div class="section-label animate-on-scroll" style="margin: 0 auto 16px;">🔍 Hasil Scan QR — BIO-QR Trail</div>
-        <h1 class="section-title animate-on-scroll" style="text-align: center;">Kamboja Jepang</h1>
-        <p class="section-subtitle animate-on-scroll" style="margin: 0 auto; text-align: center;">
-          Informasi lengkap tentang spesies yang ditemukan di titik BIO-QR Trail kampus.
-        </p>
-      </div>
-    </div>
-  </header>
-
-  <!-- ===== SPECIES DETAIL ===== -->
-  <section class="species-detail">
-    <div class="container">
-      <div class="species-hero animate-on-scroll">
-        <!-- Species Image -->
-        <div class="species-image-wrapper">
-          <img src="assets/kamboja.png" alt="Kamboja Jepang — Plumeria rubra">
-          <span class="species-badge flora">🌿 Flora</span>
-        </div>
-
-        <!-- Species Info -->
-        <div class="species-info">
-          <h1>Kamboja Jepang</h1>
-          <p class="species-scientific">Plumeria rubra</p>
-
-          <div class="species-meta">
-            <div class="species-meta-item">
-              📍 Taman Rektorat
-            </div>
-            <div class="species-meta-item">
-              🌳 Famili: Apocynaceae
-            </div>
-            <div class="species-meta-item">
-              📅 Diidentifikasi: 15 Mei 2025
-            </div>
-          </div>
-
-          <div class="conservation-status lc">
-            🟢 Least Concern (LC) — Risiko Rendah
-          </div>
-
-          <div class="species-description">
-            <h3>📝 Deskripsi</h3>
-            <p>
-              Kamboja Jepang (<em>Plumeria rubra</em>) adalah pohon berbunga yang berasal dari Amerika Tengah, Meksiko, dan Venezuela. Dikenal luas sebagai tanaman hias tropis dengan bunga yang sangat harum dan berwarna cerah — putih, merah muda, kuning, hingga merah.
-            </p>
-            <p>
-              Di kampus UIN Sultan Maulana Hasanuddin Banten, pohon Kamboja tumbuh subur di area Taman Rektorat dan menjadi salah satu penanda visual yang khas. Bunganya mekar hampir sepanjang tahun dan menarik berbagai jenis serangga penyerbuk.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Info Cards Grid -->
-      <div class="info-cards-grid animate-on-scroll">
-        <div class="info-card">
-          <div class="info-card-icon">🌎</div>
-          <h4>Manfaat Ekologis</h4>
-          <p>
-            Menjadi sumber nektar bagi serangga penyerbuk seperti kupu-kupu dan lebah. Akarnya membantu menjaga struktur tanah dan mencegah erosi di area taman.
-          </p>
-        </div>
-
-        <div class="info-card">
-          <div class="info-card-icon">🌡️</div>
-          <h4>Kaitan dengan Krisis Iklim</h4>
-          <p>
-            Seperti tanaman berkayu lainnya, Kamboja menyerap CO₂ dari atmosfer dan menyimpannya dalam biomassa. Menjaga populasi pohon ini berkontribusi pada pengurangan jejak karbon kampus.
-          </p>
-        </div>
-
-        <div class="info-card">
-          <div class="info-card-icon">🛡️</div>
-          <h4>Peran Lingkungan</h4>
-          <p>
-            Canopy pohon Kamboja memberikan naungan alami yang menurunkan suhu mikro di sekitarnya. Ini penting untuk kenyamanan area terbuka di kampus dan habitat fauna kecil.
-          </p>
-        </div>
-      </div>
-
-      <!-- Action CTA -->
-      <div class="action-cta animate-on-scroll">
-        <div class="action-cta-icon">🤝</div>
-        <div class="action-cta-content">
-          <h3>Ajakan Aksi untuk Kamu!</h3>
-          <p>Spesies ini adalah bagian penting dari ekosistem kampus kita. Berikut yang bisa kamu lakukan:</p>
-          <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
-            <div style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: rgba(34,197,94,0.08); border-radius: 10px; border-left: 3px solid var(--green-500);">
-              <span style="font-size: 1.3rem;">🚫</span>
-              <span style="font-size: 0.9rem; color: var(--dark-300);">Jangan merusak atau memetik bunga sembarangan</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: rgba(34,197,94,0.08); border-radius: 10px; border-left: 3px solid var(--green-500);">
-              <span style="font-size: 1.3rem;">🌱</span>
-              <span style="font-size: 0.9rem; color: var(--dark-300);">Ikut program penanaman pohon Kamboja bersama komunitas kampus</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: rgba(239,68,68,0.08); border-radius: 10px; border-left: 3px solid var(--red-500);">
-              <span style="font-size: 1.3rem;">⚠️</span>
-              <span style="font-size: 0.9rem; color: var(--dark-300);">Laporkan jika menemukan habitat yang rusak atau pohon terancam</span>
-            </div>
-          </div>
-          <div class="action-cta-buttons">
-            <a href="upload.html" class="btn btn-primary">📷 Laporkan Temuan</a>
-            <a href="peta.html" class="btn btn-outline">🗺️ Lihat di Peta</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- More Species Section -->
-      <div style="margin-top: 64px;">
-        <div class="features-header animate-on-scroll">
-          <div class="section-label">🔬 Spesies Lainnya di Sekitar</div>
-          <h2 class="section-title">Temuan di Lokasi yang Sama</h2>
-        </div>
-
-        <div class="features-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
-          <!-- Related Species 1 -->
-          <a href="#" class="feature-card animate-on-scroll stagger-1">
-            <div style="width: 100%; height: 160px; border-radius: 12px; overflow: hidden; margin-bottom: 12px;">
-              <img src="assets/kutilang.png" alt="Kutilang" style="width: 100%; height: 100%; object-fit: cover;">
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-              <span style="background: rgba(59,130,246,0.2); color: #60a5fa; padding: 2px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">Fauna</span>
-              <span class="conservation-status lc" style="font-size: 0.7rem; padding: 2px 8px;">LC</span>
-            </div>
-            <h3 style="font-size: 1rem;">Kutilang</h3>
-            <p style="font-size: 0.85rem; font-style: italic; color: var(--green-400);">Pycnonotus aurigaster</p>
-            <span class="feature-arrow">→</span>
-          </a>
-
-          <!-- Related Species 2 -->
-          <a href="#" class="feature-card animate-on-scroll stagger-2">
-            <div style="width: 100%; height: 160px; border-radius: 12px; overflow: hidden; margin-bottom: 12px;">
-              <img src="assets/kupu-kupu.png" alt="Kupu-kupu Swallowtail" style="width: 100%; height: 100%; object-fit: cover;">
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-              <span style="background: rgba(245,158,11,0.2); color: #fbbf24; padding: 2px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">Serangga</span>
-              <span class="conservation-status lc" style="font-size: 0.7rem; padding: 2px 8px;">LC</span>
-            </div>
-            <h3 style="font-size: 1rem;">Kupu-kupu Swallowtail</h3>
-            <p style="font-size: 0.85rem; font-style: italic; color: var(--green-400);">Papilio memnon</p>
-            <span class="feature-arrow">→</span>
-          </a>
-
-          <!-- Related Species 3 -->
-          <a href="#" class="feature-card animate-on-scroll stagger-3">
-            <div style="width: 100%; height: 160px; border-radius: 12px; overflow: hidden; margin-bottom: 12px;">
-              <img src="assets/tanjung.png" alt="Pohon Tanjung" style="width: 100%; height: 100%; object-fit: cover;">
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-              <span style="background: rgba(34,197,94,0.2); color: #4ade80; padding: 2px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">Flora</span>
-              <span class="conservation-status lc" style="font-size: 0.7rem; padding: 2px 8px;">LC</span>
-            </div>
-            <h3 style="font-size: 1rem;">Pohon Tanjung</h3>
-            <p style="font-size: 0.85rem; font-style: italic; color: var(--green-400);">Mimusops elengi</p>
-            <span class="feature-arrow">→</span>
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-  </div>
-
-  <!-- ===== PUSAT PEMINDAIAN PINTAR (AI & QR SCANNER HUB) ===== -->
-  <div id="scanner-hub-wrapper" style="display: none;">
-    <!-- ===== HEADER ===== -->
-    <header class="page-header" style="background: linear-gradient(180deg, rgba(5,13,9,0.3) 0%, #050d09 100%);">
+  <!-- Scanner Hub Mode -->
+  <div id="scanner-hub-wrapper">
+    <header class="page-header">
       <div class="container">
-        <nav class="breadcrumbs">
-          <a href="index.html">Beranda</a>
-          <span class="separator">›</span>
-          <span>Pusat Pemindaian Pintar</span>
-        </nav>
+        <nav class="breadcrumbs"><a href="index.html">Beranda</a><span class="separator">›</span><span>Pusat Pemindaian
+            Pintar</span></nav>
         <div style="text-align: center; margin-top: 24px;">
           <div class="section-label animate-on-scroll" style="margin: 0 auto 16px;">🤖 AI Vision & QR Trail Hub</div>
-          <h1 class="section-title animate-on-scroll" style="text-align: center;">Pusat Pemindaian Pintar</h1>
-          <p class="section-subtitle" style="margin: 0 auto; text-align: center; max-width: 680px;">
-            Pindai kode QR fisik BIO-QR Trail di lokasi UIN Banten atau unggah foto untuk analisis taksonomi otomatis berbasis AI Vision.
+          <h1 class="section-title animate-on-scroll">Pusat Pemindaian Pintar</h1>
+          <p class="section-subtitle">Upload foto flora/fauna untuk identifikasi AI, atau pindai QR Code BIO-QR Trail
           </p>
         </div>
       </div>
     </header>
 
-    <!-- ===== SCANNER MAIN CONSOLE ===== -->
-    <section class="species-detail" style="padding-top: 0;">
+    <section style="padding-top: 0;">
       <div class="container">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; align-items: start; margin-top: 32px;">
-          
-          <!-- LEFT COLUMN: Viewfinder Panel & Controls -->
-          <div class="feature-card animate-on-scroll stagger-1" style="background: var(--surface-card); border: 1px solid var(--surface-glass-border); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-lg); cursor: default; position: relative;">
-            
-            <!-- Tabs Navigation -->
-            <div style="display: flex; gap: 8px; margin-bottom: 24px; background: rgba(0,0,0,0.4); padding: 4px; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.05);">
-              <button id="tab-camera-btn" style="flex: 1; padding: 10px 14px; border-radius: var(--radius-sm); border: none; background: var(--green-600); color: white; font-weight: 600; font-family: var(--font-body); font-size: 0.85rem; cursor: pointer; transition: all 0.3s ease;">
-                📷 Kamera Simulasi
-              </button>
-              <button id="tab-upload-btn" style="flex: 1; padding: 10px 14px; border-radius: var(--radius-sm); border: none; background: transparent; color: var(--dark-300); font-weight: 600; font-family: var(--font-body); font-size: 0.85rem; cursor: pointer; transition: all 0.3s ease;">
-                📤 Unggah Gambar
-              </button>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 32px;">
+
+          <!-- Panel Upload -->
+          <div class="feature-card" style="padding: 28px; position: relative;">
+            <div class="scan-loading" id="scan-loading">
+              <div class="loading-spinner"></div>
+              <p style="color: #4ade80;">🔍 AI Vision sedang menganalisis gambar...</p>
             </div>
 
-            <!-- Tab 1 Container: Camera Simulation -->
-            <div id="tab-camera-container" style="display: flex; flex-direction: column; gap: 20px;">
-              
-              <!-- Viewfinder window -->
-              <div id="viewfinder" style="width: 100%; height: 260px; border-radius: var(--radius-md); background: #030805; border: 2px solid rgba(34,197,94,0.2); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-direction: column;">
-                
-                <!-- Laser line -->
-                <div id="laser-line" style="position: absolute; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, #4ade80, transparent); box-shadow: 0 0 12px #22c55e; top: 0; display: none; z-index: 2;"></div>
-                
-                <!-- Corner brackets for scanner feel -->
-                <div style="position: absolute; top: 12px; left: 12px; width: 16px; height: 16px; border-top: 3px solid var(--green-400); border-left: 3px solid var(--green-400); z-index: 2;"></div>
-                <div style="position: absolute; top: 12px; right: 12px; width: 16px; height: 16px; border-top: 3px solid var(--green-400); border-right: 3px solid var(--green-400); z-index: 2;"></div>
-                <div style="position: absolute; bottom: 12px; left: 12px; width: 16px; height: 16px; border-bottom: 3px solid var(--green-400); border-left: 3px solid var(--green-400); z-index: 2;"></div>
-                <div style="position: absolute; bottom: 12px; right: 12px; width: 16px; height: 16px; border-bottom: 3px solid var(--green-400); border-right: 3px solid var(--green-400); z-index: 2;"></div>
+            <h3 style="color: #4ade80; margin-bottom: 20px;">📤 Upload Foto untuk Discan</h3>
 
-                <!-- Viewport status & overlays -->
-                <div id="viewfinder-content" style="text-align: center; z-index: 2; padding: 20px;">
-                  <span style="font-size: 3rem; filter: drop-shadow(0 0 10px rgba(34,197,94,0.4)); display: block; margin-bottom: 12px;">📷</span>
-                  <span style="font-size: 0.85rem; color: var(--dark-300); font-weight: 500;">Kamera dinonaktifkan</span>
-                  <p style="font-size: 0.75rem; color: var(--dark-400); margin: 6px 0 0;">Klik tombol di bawah untuk mengaktifkan pemindaian simulasi.</p>
-                </div>
+            <div id="upload-area"
+              style="border: 2px dashed #4ade80; border-radius: 16px; padding: 40px 20px; text-align: center; cursor: pointer; background: #0f1a12;">
+              <span style="font-size: 48px;">📷</span>
+              <p style="margin-top: 12px; color: #cbd5e1;">Klik atau seret foto ke sini</p>
+              <p style="font-size: 12px; color: #64748b;">JPG, PNG, WEBP</p>
+            </div>
+            <input type="file" id="scan-file-input" accept="image/*" style="display: none;">
 
-                <!-- Loading spinner overlay -->
-                <div id="viewfinder-loader" style="position: absolute; inset: 0; background: rgba(5,13,9,0.9); display: none; flex-direction: column; align-items: center; justify-content: center; gap: 12px; z-index: 3;">
-                  <div style="width: 40px; height: 40px; border: 3px solid rgba(34, 197, 94, 0.1); border-top-color: var(--green-400); border-radius: 50%; animation: spin 1s infinite linear;"></div>
-                  <span style="font-size: 0.8rem; color: var(--green-400); font-weight: 600; letter-spacing: 1px;">MENGANALISIS TARGET...</span>
-                </div>
-              </div>
-
-              <!-- Action button for scanner -->
-              <button id="activate-scanner-btn" style="width: 100%; padding: 14px; border-radius: var(--radius-md); border: none; background: linear-gradient(135deg, var(--green-500), var(--green-700)); color: white; font-weight: 700; font-family: var(--font-body); font-size: 0.95rem; cursor: pointer; transition: all 0.3s ease; box-shadow: var(--shadow-sm);">
-                ⚡ Aktifkan Kamera Pemindai
-              </button>
-
-              <!-- Simulated Presets -->
-              <div style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 16px;">
-                <span style="font-size: 0.78rem; color: var(--dark-400); display: block; margin-bottom: 12px; font-weight: 600;">🔬 SIMULASI CEPAT (PILIH SAMPEL):</span>
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
-                  <button class="sample-scan-btn" data-type="elang" style="padding: 10px; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); color: var(--dark-200); font-size: 0.8rem; font-weight: 500; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 8px;">
-                    🦅 Elang Jawa
-                  </button>
-                  <button class="sample-scan-btn" data-type="kupu" style="padding: 10px; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); color: var(--dark-200); font-size: 0.8rem; font-weight: 500; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 8px;">
-                    🦋 Kupu Swallowtail
-                  </button>
-                  <button class="sample-scan-btn" data-type="kamboja" style="padding: 10px; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); color: var(--dark-200); font-size: 0.8rem; font-weight: 500; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 8px;">
-                    🌿 Kamboja Jepang
-                  </button>
-                  <button class="sample-scan-btn" data-type="qr" style="padding: 10px; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); color: var(--dark-200); font-size: 0.8rem; font-weight: 500; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 8px;">
-                    🔳 QR Code Trail
-                  </button>
-                </div>
-              </div>
+            <div id="image-preview-area" style="display: none; margin-top: 20px;">
+              <img id="scan-preview-img" src=""
+                style="width: 100%; max-height: 200px; object-fit: cover; border-radius: 12px;">
+              <button id="remove-scan-img"
+                style="margin-top: 10px; padding: 8px; background: #ef4444; color: white; border: none; border-radius: 8px; width: 100%; cursor: pointer;">Hapus
+                Gambar</button>
             </div>
 
-            <!-- Tab 2 Container: Image Upload -->
-            <div id="tab-upload-container" style="display: none; flex-direction: column; gap: 20px;">
-              <div id="scanner-upload-zone" style="width: 100%; border: 2px dashed rgba(34,197,94,0.3); border-radius: var(--radius-md); padding: 32px 20px; text-align: center; background: rgba(5,13,9,0.3); transition: all 0.3s ease; cursor: pointer; min-height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                <span style="font-size: 2.5rem; display: block; margin-bottom: 12px; filter: drop-shadow(0 0 10px rgba(34,197,94,0.25));">📤</span>
-                <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--dark-100); margin-bottom: 6px;">Tarik & Lepas Foto di sini</h4>
-                <p style="font-size: 0.78rem; color: var(--dark-400); margin-bottom: 16px; max-width: 240px; margin-left: auto; margin-right: auto;">Mendukung gambar fauna/flora atau gambar QR Code</p>
-                <span style="display: inline-block; padding: 8px 16px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--green-400); font-weight: 600;">Pilih Gambar</span>
-                <input type="file" id="scanner-file-input" accept="image/*" style="display: none;">
-              </div>
-
-              <!-- Upload progress & preview container -->
-              <div id="scanner-upload-preview" style="display: none; border-radius: var(--radius-md); overflow: hidden; background: #030805; border: 1px solid rgba(255,255,255,0.06); padding: 12px; position: relative;">
-                <div style="display: flex; gap: 12px; align-items: center;">
-                  <img id="scanner-preview-img" src="" alt="Preview" style="width: 60px; height: 60px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.08);">
-                  <div style="flex: 1; overflow: hidden;">
-                    <span id="scanner-preview-name" style="font-size: 0.8rem; font-weight: 600; color: var(--dark-50); display: block; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">photo.jpg</span>
-                    <span id="scanner-preview-size" style="font-size: 0.7rem; color: var(--dark-400); display: block;">1.2 MB</span>
-                  </div>
-                  <button id="scanner-remove-img-btn" style="background: none; border: none; color: var(--red-400); font-size: 1.2rem; cursor: pointer; padding: 4px;">×</button>
-                </div>
+            <div style="margin-top: 20px; text-align: center; padding-top: 16px; border-top: 1px solid #2a4a2f;">
+              <p style="font-size: 12px; color: #64748b; margin-bottom: 12px;">⚡ Atau pilih sampel uji coba:</p>
+              <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+                <button class="sample-test-btn" data-name="Elang Jawa" data-category="fauna"
+                  style="padding: 8px 16px; background: #1e293b; border: 1px solid #60a5fa; border-radius: 20px; cursor: pointer;">🦅
+                  Elang Jawa</button>
+                <button class="sample-test-btn" data-name="Kupu-kupu Swallowtail" data-category="insecta"
+                  style="padding: 8px 16px; background: #1e293b; border: 1px solid #fbbf24; border-radius: 20px; cursor: pointer;">🦋
+                  Kupu Swallowtail</button>
+                <button class="sample-test-btn" data-name="Kamboja Jepang" data-category="flora"
+                  style="padding: 8px 16px; background: #1e293b; border: 1px solid #4ade80; border-radius: 20px; cursor: pointer;">🌿
+                  Kamboja</button>
+                <button class="sample-test-btn" data-name="Kutilang" data-category="fauna"
+                  style="padding: 8px 16px; background: #1e293b; border: 1px solid #60a5fa; border-radius: 20px; cursor: pointer;">🐦
+                  Kutilang</button>
               </div>
             </div>
-
           </div>
 
-          <!-- RIGHT COLUMN: AI Vision Results Hub (Diagnostic Monitor) -->
-          <div class="feature-card animate-on-scroll stagger-2" style="background: var(--surface-card); border: 1px solid var(--surface-glass-border); border-radius: var(--radius-lg); padding: 28px; box-shadow: var(--shadow-lg); cursor: default; min-height: 480px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;">
-            
-            <div id="results-idle" style="text-align: center; margin: auto; padding: 40px 20px;">
-              <span style="font-size: 3rem; display: block; margin-bottom: 16px;">📡</span>
-              <h3 style="font-size: 1.2rem; margin-bottom: 8px; color: var(--dark-50);">Monitor Diagnostik</h3>
-              <p style="font-size: 0.85rem; color: var(--dark-400); line-height: 1.6; max-width: 280px; margin: 0 auto;">
-                Menunggu input pemindaian. Aktifkan kamera di kolom kiri, unggah berkas gambar, atau pilih salah satu sampel simulasi.
-              </p>
+          <!-- Panel Hasil -->
+          <div class="feature-card" style="padding: 28px; min-height: 500px; position: relative;">
+            <div id="results-idle" style="text-align: center; padding: 40px 20px;">
+              <span style="font-size: 56px;">🤖</span>
+              <h3 style="margin: 16px 0 8px; color: #cbd5e1;">Menunggu Pemindaian</h3>
+              <p style="color: #64748b;">Upload foto atau pilih sampel untuk memulai identifikasi</p>
             </div>
 
-            <!-- Full AI Vision Taxonomic Output Panel -->
-            <div id="results-active" style="display: none; flex-direction: column; gap: 20px; width: 100%;">
-              <!-- Diagnostic Header -->
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 14px;">
-                <div>
-                  <div style="display: flex; align-items: center; gap: 8px;">
-                    <span style="background: rgba(34,197,94,0.15); color: var(--green-400); padding: 2px 10px; border-radius: var(--radius-full); font-size: 0.72rem; font-weight: 700; border: 1px solid rgba(34,197,94,0.2);">AI VISION ENGINE</span>
-                    <span id="result-status-badge" style="background: rgba(59,130,246,0.15); color: #60a5fa; padding: 2px 8px; border-radius: var(--radius-full); font-size: 0.72rem; font-weight: 700;">IDENTIFIKASI BERHASIL</span>
-                  </div>
-                  <h3 id="result-title" style="font-size: 1.5rem; margin-top: 8px; color: var(--dark-50); line-height: 1.2;">Elang Jawa</h3>
-                  <p id="result-scientific" style="font-size: 0.95rem; font-style: italic; color: var(--green-400); margin: 2px 0 0;">Nisaetus alboniger</p>
-                </div>
-                
-                <!-- Confidence Circle -->
-                <div style="text-align: center; background: rgba(5,13,9,0.7); border: 1px solid var(--surface-glass-border); padding: 8px 12px; border-radius: var(--radius-md);">
-                  <span style="font-size: 0.65rem; color: var(--dark-400); display: block; font-weight: 600; text-transform: uppercase;">Akurasi</span>
-                  <span id="result-accuracy" style="font-family: var(--font-heading); font-size: 1.15rem; font-weight: 800; color: var(--green-400);">98.4%</span>
-                </div>
+            <div id="results-active" style="display: none;">
+              <div style="border-bottom: 1px solid #2a4a2f; padding-bottom: 16px; margin-bottom: 20px;">
+                <span class="badge" id="result-category-badge" style="background: #4ade8020; color: #4ade80;">🌿
+                  Flora</span>
+                <h2 id="result-name" style="margin-top: 10px; color: white; font-size: 24px;">-</h2>
+                <p id="result-scientific" style="color: #4ade80; font-style: italic;">-</p>
               </div>
 
-              <!-- Main Content Scrollable Area -->
-              <div style="display: flex; flex-direction: column; gap: 16px;">
-                
-                <!-- Taxonomy Box -->
-                <div style="background: rgba(5,13,9,0.5); border: 1px solid rgba(255,255,255,0.04); border-radius: var(--radius-md); padding: 14px;">
-                  <span style="font-size: 0.72rem; color: var(--dark-400); font-weight: 600; display: block; margin-bottom: 8px; letter-spacing: 1px; text-transform: uppercase;">🌳 Klasifikasi Taksonomi</span>
-                  <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px 16px; font-size: 0.82rem;">
-                    <div><span style="color: var(--dark-400);">Kerajaan (Kingdom):</span> <strong id="tax-kingdom" style="color: var(--dark-100); float: right;">Animalia</strong></div>
-                    <div><span style="color: var(--dark-400);">Filum (Phylum):</span> <strong id="tax-phylum" style="color: var(--dark-100); float: right;">Chordata</strong></div>
-                    <div><span style="color: var(--dark-400);">Kelas (Class):</span> <strong id="tax-class" style="color: var(--dark-100); float: right;">Aves</strong></div>
-                    <div><span style="color: var(--dark-400);">Ordo (Order):</span> <strong id="tax-order" style="color: var(--dark-100); float: right;">Accipitriformes</strong></div>
-                    <div><span style="color: var(--dark-400);">Famili (Family):</span> <strong id="tax-family" style="color: var(--dark-100); float: right;">Accipitridae</strong></div>
-                    <div><span style="color: var(--dark-400);">Kategori:</span> <strong id="tax-category" style="color: var(--green-400); float: right;">Fauna</strong></div>
-                  </div>
-                </div>
-
-                <!-- Conservation Status -->
-                <div id="result-conservation-box" style="display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 600; background: rgba(239,68,68,0.15); color: #f87171;">
-                  🔴 Terancam Punah (EN) — Dilindungi
-                </div>
-
-                <!-- Description & Climate Info -->
-                <div style="display: flex; flex-direction: column; gap: 8px;">
-                  <h4 style="font-size: 0.88rem; color: var(--dark-100); font-weight: 600; margin: 0;">📋 Deskripsi Temuan:</h4>
-                  <p id="result-desc" style="font-size: 0.82rem; color: var(--dark-300); line-height: 1.5; margin: 0;">
-                    Elang Jawa adalah raptor endemik hutan pegunungan Jawa yang sangat langka. Memiliki jambul panjang khas di kepalanya.
-                  </p>
-                </div>
-
-                <div style="display: flex; flex-direction: column; gap: 8px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px;">
-                  <h4 style="font-size: 0.88rem; color: var(--red-400); font-weight: 600; margin: 0; display: flex; align-items: center; gap: 6px;">🌡️ Hubungan dengan Krisis Iklim:</h4>
-                  <p id="result-climate" style="font-size: 0.82rem; color: var(--dark-300); line-height: 1.5; margin: 0;">
-                    Perubahan suhu global menggeser batas ekosistem hutan basah pegunungan Banten. Kehilangan naungan beringin raksasa menurunkan ketersediaan mamalia kecil mangsa elang.
-                  </p>
-                </div>
-
+              <div class="result-card">
+                <h4 style="color: #4ade80; margin-bottom: 12px;">📊 Informasi Spesies</h4>
+                <p id="result-desc" style="color: #cbd5e1; line-height: 1.6;">-</p>
+                <p id="result-location" style="color: #64748b; margin-top: 12px;">📍 Lokasi: -</p>
+                <p id="result-date" style="color: #64748b;">📅 Tanggal: -</p>
               </div>
 
-              <!-- Action buttons -->
-              <div style="display: flex; gap: 12px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 16px;">
-                <button id="register-finding-btn" style="flex: 1; padding: 12px; border-radius: var(--radius-md); border: none; background: linear-gradient(135deg, var(--green-500), var(--green-700)); color: white; font-weight: 700; font-family: var(--font-body); font-size: 0.85rem; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 6px;">
-                  📝 Daftarkan Temuan
-                </button>
-                <button id="reset-scanner-btn" style="padding: 12px 18px; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.12); background: transparent; color: var(--dark-200); font-weight: 600; font-family: var(--font-body); font-size: 0.85rem; cursor: pointer; transition: all 0.3s ease;">
-                  🔍 Bersihkan
-                </button>
+              <div class="result-card">
+                <h4 style="color: #fbbf24; margin-bottom: 12px;">🌡️ Hubungan dengan Krisis Iklim</h4>
+                <p id="result-climate" style="color: #cbd5e1; line-height: 1.6;">-</p>
+              </div>
+
+              <div style="display: flex; gap: 12px; margin-top: 20px;">
+                <button id="register-btn"
+                  style="flex: 1; padding: 12px; background: #4ade80; color: #0a0f0d; border: none; border-radius: 10px; font-weight: bold; cursor: pointer;">📝
+                  Daftarkan Temuan Ini</button>
+                <button id="reset-scan-btn"
+                  style="padding: 12px 20px; background: #1e293b; border: 1px solid #4ade80; color: #4ade80; border-radius: 10px; cursor: pointer;">Reset</button>
               </div>
             </div>
-
-            <!-- QR Confirmation Modal Overlay inside card -->
-            <div id="qr-confirm-modal" style="display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 16px; padding: 24px; position: absolute; inset: 0; background: rgba(5,13,9,0.95); border-radius: var(--radius-lg); z-index: 5; animation: fadeIn 0.3s ease;">
-              <span style="font-size: 3.5rem; filter: drop-shadow(0 0 10px rgba(59,130,246,0.4));">🔳</span>
-              <h3 style="font-size: 1.25rem; color: var(--dark-50); margin: 0;">QR Code BIO-QR Trail Terdeteksi!</h3>
-              <p style="font-size: 0.85rem; color: var(--dark-300); line-height: 1.5; max-width: 300px; margin: 0;">
-                Sistem mendeteksi tautan fisik QR Trail #1 di area Taman Rektorat (Kamboja Jepang). Apakah Anda ingin membuka penjelasan lengkap spesies ini?
-              </p>
-              <div style="display: flex; gap: 10px; width: 100%; max-width: 280px; margin-top: 8px;">
-                <button id="qr-confirm-yes-btn" style="flex: 1; padding: 12px; border-radius: var(--radius-md); border: none; background: var(--green-600); color: white; font-weight: 700; font-family: var(--font-body); font-size: 0.85rem; cursor: pointer; transition: all 0.3s ease;">
-                  Buka Detail
-                </button>
-                <button id="qr-confirm-no-btn" style="padding: 12px 18px; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.12); background: transparent; color: var(--dark-300); font-weight: 600; font-family: var(--font-body); font-size: 0.85rem; cursor: pointer; transition: all 0.3s ease;">
-                  Batal
-                </button>
-              </div>
-            </div>
-
           </div>
-
         </div>
       </div>
     </section>
   </div>
 
-  <!-- ===== FOOTER ===== -->
-
   <footer class="footer">
     <div class="container">
       <div class="footer-grid">
-        <div class="footer-brand">
-          <img src="assets/logo-uin.png" alt="Logo UIN">
+        <div class="footer-brand"><img src="assets/logo-uin.png" alt="Logo">
           <h4>Green Campus Biodiversity Lab</h4>
-          <p>Platform pendataan, edukasi, dan aksi konservasi biodiversitas di UIN Sultan Maulana Hasanuddin Banten.</p>
+          <p>Platform pendataan, edukasi, dan aksi konservasi biodiversitas.</p>
         </div>
-
         <div class="footer-col">
           <h5>Platform</h5>
           <ul>
             <li><a href="peta.html">Peta Biodiversitas</a></li>
             <li><a href="upload.html">Upload Temuan</a></li>
             <li><a href="spesies.html">Scan QR</a></li>
-            <li><a href="#">Aksi Hijau</a></li>
           </ul>
         </div>
-
         <div class="footer-col">
           <h5>Edukasi</h5>
           <ul>
-            <li><a href="#">Edukasi Iklim</a></li>
-            <li><a href="#">Katalog Spesies</a></li>
-            <li><a href="#">Panduan Observasi</a></li>
-            <li><a href="#">Tentang BIO-QR Trail</a></li>
+            <li><a href="edukasi.html">Edukasi Iklim</a></li>
           </ul>
         </div>
-
         <div class="footer-col">
           <h5>Kontak</h5>
           <ul>
-            <li><a href="#">📧 biodiversitylab@uinbanten.ac.id</a></li>
-            <li><a href="#">📞 (0254) 123-456</a></li>
-            <li><a href="https://maps.app.goo.gl/vCTasDrNrxK3fg8c7" target="_blank">📍 Serang, Banten</a></li>
+            <li>📧 biodiversitylab@uinbanten.ac.id</li>
+            <li>📍 Serang, Banten</li>
           </ul>
         </div>
       </div>
-
-      <div class="footer-bottom">
-        <span>© 2025 Green Campus Biodiversity Lab — UIN Sultan Maulana Hasanuddin Banten</span>
-        <span>Dibuat dengan 💚 untuk Bumi</span>
-      </div>
+      <div class="footer-bottom">© 2025 Green Campus Biodiversity Lab — 💚 untuk Bumi</div>
     </div>
   </footer>
 
   <script src="js/data.js"></script>
-  <script src="js/app.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const params = new URLSearchParams(window.location.search);
-      const hasId = params.has('id');
-      
-      const speciesWrapper = document.getElementById('species-detail-wrapper');
-      const scannerWrapper = document.getElementById('scanner-hub-wrapper');
+    // Database spesies dari data.js + localStorage
+    let allSpecies = [];
 
-      if (!hasId) {
-        if (speciesWrapper) speciesWrapper.style.display = 'none';
-        if (scannerWrapper) scannerWrapper.style.display = 'block';
-        document.title = "Pusat Pemindaian Pintar | Green Campus Biodiversity Lab";
-        initScannerHub();
+    function loadAllSpecies() {
+      // Ambil dari data.js
+      if (window.speciesData && Array.isArray(window.speciesData)) {
+        allSpecies = [...window.speciesData];
+      }
+      // Ambil dari localStorage (temuan user)
+      const localObservations = JSON.parse(localStorage.getItem('biodiversity_observations') || '[]');
+      const userSpecies = localObservations.map(obs => ({
+        id: obs.id,
+        title: obs.speciesName,
+        scientific: obs.scientificName || (obs.category === 'flora' ? 'Spesies Flora' : obs.category === 'fauna' ? 'Spesies Fauna' : 'Spesies Serangga'),
+        category: obs.category || 'flora',
+        location: obs.location || 'Kampus UIN Banten',
+        date: obs.date || new Date().toISOString().split('T')[0],
+        desc: obs.description || 'Temuan dari relawan kampus',
+        climate: 'Kontribusi pelestarian keanekaragaman hayati kampus UIN Banten membantu mitigasi perubahan iklim mikro.',
+        image: obs.imageData || null
+      }));
+      allSpecies = [...allSpecies, ...userSpecies];
+    }
+
+    function findSpeciesByName(name) {
+      if (!name) return null;
+      const lowerName = name.toLowerCase();
+      // Cari berdasarkan nama exact atau keyword
+      return allSpecies.find(s =>
+        s.title?.toLowerCase() === lowerName ||
+        s.title?.toLowerCase().includes(lowerName) ||
+        lowerName.includes(s.title?.toLowerCase())
+      );
+    }
+
+    function findSpeciesByKeywords(fileName) {
+      const lowerName = fileName.toLowerCase();
+
+      // Mapping keyword ke spesies
+      const keywordMap = [
+        { keywords: ['elang', 'eagle', 'hawk', 'raptor'], species: 'Elang Jawa', category: 'fauna' },
+        { keywords: ['kupu', 'butterfly', 'papilio', 'swallowtail'], species: 'Kupu-kupu Swallowtail', category: 'insecta' },
+        { keywords: ['kamboja', 'plumeria', 'jepang'], species: 'Kamboja Jepang', category: 'flora' },
+        { keywords: ['kutilang', 'burung', 'bird', 'pycnonotus'], species: 'Kutilang', category: 'fauna' },
+        { keywords: ['tanjung', 'mimusops', 'elengi'], species: 'Pohon Tanjung', category: 'flora' },
+        { keywords: ['beringin', 'banyan', 'ficus'], species: 'Pohon Beringin', category: 'flora' },
+        { keywords: ['trembesi', 'rain tree', 'samanea'], species: 'Pohon Trembesi', category: 'flora' },
+        { keywords: ['tekukur', 'dove', 'spotted dove'], species: 'Tekukur Biasa', category: 'fauna' },
+        { keywords: ['jalak', 'starling', 'sturnidae'], species: 'Jalak Kerbau', category: 'fauna' }
+      ];
+
+      for (let item of keywordMap) {
+        if (item.keywords.some(keyword => lowerName.includes(keyword))) {
+          return findSpeciesByName(item.species);
+        }
+      }
+      return null;
+    }
+
+    function displayResult(species) {
+      if (!species) {
+        alert('❌ Tidak dapat mengidentifikasi spesies. Coba upload gambar yang lebih jelas atau pilih sampel.');
+        return false;
+      }
+
+      document.getElementById('results-idle').style.display = 'none';
+      document.getElementById('results-active').style.display = 'block';
+
+      const categoryMap = {
+        flora: '🌿 Flora',
+        fauna: '🐦 Fauna',
+        insecta: '🦋 Serangga',
+        habitat: '🏞️ Habitat'
+      };
+      const categoryColor = {
+        flora: '#4ade80',
+        fauna: '#60a5fa',
+        insecta: '#fbbf24',
+        habitat: '#f87171'
+      };
+
+      const category = species.category || 'flora';
+      document.getElementById('result-category-badge').innerHTML = categoryMap[category] || '🌿 Flora';
+      document.getElementById('result-category-badge').style.background = `${categoryColor[category]}20`;
+      document.getElementById('result-category-badge').style.color = categoryColor[category];
+      document.getElementById('result-name').textContent = species.title || species.speciesName;
+      document.getElementById('result-scientific').textContent = species.scientific || (species.category === 'flora' ? 'Spesies Flora' : 'Spesies Fauna');
+      document.getElementById('result-desc').innerHTML = species.desc || species.description || 'Belum ada deskripsi untuk spesies ini.';
+      document.getElementById('result-location').innerHTML = `📍 Lokasi: ${species.location || 'Kampus UIN Banten'}`;
+      document.getElementById('result-date').innerHTML = `📅 Tanggal: ${species.date || new Date().toISOString().split('T')[0]}`;
+
+      let climateText = species.climate || 'Keberadaan spesies ini berkontribusi pada keseimbangan ekosistem kampus. Pelestarian biodiversitas membantu mitigasi perubahan iklim lokal.';
+      document.getElementById('result-climate').innerHTML = climateText;
+
+      window.lastScanResult = species;
+      return true;
+    }
+
+    function showLoading() {
+      document.getElementById('scan-loading').classList.add('active');
+    }
+
+    function hideLoading() {
+      document.getElementById('scan-loading').classList.remove('active');
+    }
+
+    function resetScanner() {
+      document.getElementById('results-idle').style.display = 'flex';
+      document.getElementById('results-active').style.display = 'none';
+      document.getElementById('image-preview-area').style.display = 'none';
+      document.getElementById('upload-area').style.display = 'block';
+      document.getElementById('scan-file-input').value = '';
+      document.getElementById('scan-preview-img').src = '';
+      window.lastScanResult = null;
+    }
+
+    function performScan(fileName, sampleName = null, sampleCategory = null) {
+      showLoading();
+      setTimeout(() => {
+        hideLoading();
+        let species = null;
+
+        if (sampleName) {
+          // Sample button
+          species = findSpeciesByName(sampleName);
+          if (!species && sampleCategory) {
+            species = { title: sampleName, category: sampleCategory, desc: 'Sampel uji coba dari platform Green Campus.', location: 'Kampus UIN Banten', date: new Date().toISOString().split('T')[0] };
+          }
+        } else if (fileName) {
+          // Detect from filename
+          species = findSpeciesByKeywords(fileName);
+          if (!species) {
+            species = findSpeciesByName(fileName.split('.')[0].replace(/[0-9]/g, '').trim());
+          }
+        }
+
+        if (!species) {
+          species = allSpecies.find(s => s.title === 'Kamboja Jepang') || allSpecies[0];
+          if (species) {
+            alert('⚠️ Spesies tidak terdeteksi secara pasti. Menampilkan contoh spesies.');
+          }
+        }
+
+        displayResult(species);
+      }, 1500);
+    }
+
+    function handleFile(file) {
+      if (!file.type.startsWith('image/')) {
+        alert('Silakan upload file gambar (JPG, PNG, WEBP)');
         return;
       }
 
-      if (speciesWrapper) speciesWrapper.style.display = 'block';
-      if (scannerWrapper) scannerWrapper.style.display = 'none';
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        document.getElementById('scan-preview-img').src = e.target.result;
+        document.getElementById('image-preview-area').style.display = 'block';
+        document.getElementById('upload-area').style.display = 'none';
+        performScan(file.name);
+      };
+      reader.readAsDataURL(file);
+    }
 
-      const idParam = params.get('id');
-      const idNum = parseInt(idParam, 10);
-      
-      const localObservations = JSON.parse(localStorage.getItem('biodiversity_observations') || '[]');
-      const allData = [...window.speciesData, ...localObservations];
-      const data = allData.find(s => s.id === idNum || s.id.toString() === idParam);
+    // Initialization
+    document.addEventListener('DOMContentLoaded', () => {
+      loadAllSpecies();
 
-      if (data) {
-        // Update Title & Header
-        document.title = `${data.title} — ${data.scientific} | Green Campus Biodiversity Lab`;
-        document.querySelector('.breadcrumbs span:last-child').textContent = data.title;
-        document.querySelector('h1.section-title').textContent = data.title;
-        
-        // Update Image & Badge
-        const img = document.querySelector('.species-image-wrapper img');
-        img.src = data.image;
-        img.alt = `${data.title} — ${data.scientific}`;
-        
-        const badge = document.querySelector('.species-badge');
-        badge.className = `species-badge ${data.category}`;
-        if (data.category === 'flora') { badge.innerHTML = '🌿 Flora'; badge.style.background = 'rgba(34,197,94,0.2)'; badge.style.color = '#4ade80'; }
-        else if (data.category === 'fauna') { badge.innerHTML = '🐦 Fauna'; badge.style.background = 'rgba(59,130,246,0.2)'; badge.style.color = '#60a5fa'; }
-        else if (data.category === 'insecta') { badge.innerHTML = '🦋 Serangga'; badge.style.background = 'rgba(245,158,11,0.2)'; badge.style.color = '#fbbf24'; }
-        else { badge.innerHTML = '⚠️ Habitat'; badge.style.background = 'rgba(239,68,68,0.2)'; badge.style.color = '#f87171'; }
+      const params = new URLSearchParams(window.location.search);
+      const hasId = params.has('id');
+      const speciesWrapper = document.getElementById('species-detail-wrapper');
+      const scannerWrapper = document.getElementById('scanner-hub-wrapper');
 
-        // Update Info section
-        document.querySelector('.species-info h1').textContent = data.title;
-        document.querySelector('.species-scientific').textContent = data.scientific;
-        
-        // Map families dynamically
-        const families = {
-          "Kamboja Jepang": "Apocynaceae",
-          "Pohon Tanjung": "Sapotaceae",
-          "Pohon Beringin": "Moraceae",
-          "Bunga Bougenville": "Nyctaginaceae",
-          "Jahe Merah": "Zingiberaceae",
-          "Pohon Trembesi": "Fabaceae",
-          "Burung Kutilang": "Pycnonotidae",
-          "Burung Gereja": "Passeridae",
-          "Tekukur Biasa": "Columbidae",
-          "Jalak Kerbau": "Sturnidae",
-          "Kupu-kupu Swallowtail": "Papilionidae",
-          "Capung Jarum": "Coenagrionidae",
-          "Kupu-kupu Lime": "Papilionidae"
-        };
-        const familyName = families[data.title] || (data.category === 'flora' ? 'Famili Flora' : data.category === 'fauna' ? 'Famili Fauna' : data.category === 'insecta' ? 'Famili Serangga' : 'Kategori Lingkungan');
-        
-        const dateIdentified = data.date || "15 Mei 2025";
-        const observerName = data.observerName || "Relawan Kampus";
-        
-        const metaContainer = document.querySelector('.species-meta');
-        if (metaContainer) {
-          metaContainer.innerHTML = `
-            <div class="species-meta-item">📍 ${data.location}</div>
-            <div class="species-meta-item">🌳 Famili: ${familyName}</div>
-            <div class="species-meta-item">📅 Tanggal: ${dateIdentified}</div>
-            <div class="species-meta-item">👤 Pengamat: ${observerName}</div>
-          `;
+      if (hasId && window.speciesData) {
+        if (speciesWrapper) speciesWrapper.style.display = 'block';
+        if (scannerWrapper) scannerWrapper.style.display = 'none';
+        const id = params.get('id');
+        const species = [...window.speciesData, ...(JSON.parse(localStorage.getItem('biodiversity_observations') || '[]'))].find(s => s.id == id);
+        if (species) {
+          speciesWrapper.innerHTML = `<div class="container" style="padding:100px 20px"><h1>${species.title}</h1><p>${species.desc}</p><a href="spesies.html" class="btn btn-primary">Kembali ke Scanner</a></div>`;
         }
-        
-        // Update Conservation Status
-        const statusEl = document.querySelector('.conservation-status');
-        statusEl.textContent = data.status;
-        statusEl.className = 'conservation-status';
-        if(data.status.includes('Least Concern')) statusEl.classList.add('lc');
-        else if(data.status.includes('Threatened') || data.status.includes('Near')) { statusEl.style.background='rgba(245,158,11,0.2)'; statusEl.style.color='#fbbf24'; }
-        else { statusEl.style.background='rgba(239,68,68,0.2)'; statusEl.style.color='#f87171'; }
-
-        // Update Description
-        const descContainer = document.querySelector('.species-description');
-        descContainer.innerHTML = `<h3>📝 Deskripsi</h3><p>${data.desc}</p><p>Spesies ini merupakan bagian penting dari keanekaragaman hayati di area ${data.location} kampus UIN Sultan Maulana Hasanuddin Banten. Program pemantauan rutin terus dilakukan oleh divisi Green Campus dan Fakultas Sains untuk mengamati status pertumbuhan, persebaran habitat, serta interaksinya dengan ekosistem sekitar.</p>`;
-
-        // Update Info Cards dynamically based on category
-        const cardsContainer = document.querySelector('.info-cards-grid');
-        if (cardsContainer) {
-          let card1Icon = "🌎", card1Title = "Manfaat Ekologis", card1Text = "";
-          let card2Icon = "🌡️", card2Title = "Kaitan Krisis Iklim", card2Text = "";
-          let card3Icon = "🛡️", card3Title = "Peran Lingkungan", card3Text = "";
-
-          if (data.category === 'flora') {
-            card1Text = "Menghasilkan oksigen (O₂), menyerap air tanah, serta menyediakan nektar atau makanan bagi serangga penyerbuk kampus.";
-            card2Text = "Sebagai penyerap karbon (carbon sink) alami yang efektif membantu mengurangi pemanasan global di area UIN Banten.";
-            card3Text = "Kanopi dedaunan memberikan peneduh alami, meredam suhu udara panas mikro, dan menyaring debu polutan.";
-          } else if (data.category === 'fauna') {
-            card1Text = "Membantu mengendalikan populasi serangga secara alami di kebun kampus dan menyebarkan biji tanaman untuk regenerasi flora.";
-            card2Text = "Sebagai indikator sensitif terhadap iklim; fluktuasi populasi atau migrasi burung mencerminkan kesehatan ekosistem lokal.";
-            card3Text = "Merupakan bagian penting dari rantai makanan kampus, berinteraksi aktif dengan tumbuhan tinggi maupun serangga kecil.";
-          } else if (data.category === 'insecta') {
-            card1Text = "Berperan sebagai agen penyerbukan utama bagi bunga hias kampus serta pemangsa alami jentik nyamuk dan hama tanaman.";
-            card2Text = "Siklus hidup serangga sangat sensitif terhadap perubahan suhu, menjadikannya alarm peringatan dini perubahan iklim.";
-            card3Text = "Membantu menguraikan materi organik tanah di kebun biologi dan menjadi sumber makanan bagi fauna burung kampus.";
-          } else { // habitat
-            card1Text = "Menjadi tempat berlindung, bersarang, dan berkembang biak bagi berbagai ragam jenis flora dan fauna lokal.";
-            card2Text = "Keseimbangan ekologi tanah dan air di zona ini berdampak langsung terhadap ketahanan iklim mikro kampus.";
-            card3Text = "Membutuhkan pemantauan berkala guna mencegah erosi tanah, degradasi kesuburan lahan, dan penumpukan limbah beton.";
-          }
-
-          cardsContainer.innerHTML = `
-            <div class="info-card">
-              <div class="info-card-icon">${card1Icon}</div>
-              <h4>${card1Title}</h4>
-              <p>${card1Text}</p>
-            </div>
-            <div class="info-card">
-              <div class="info-card-icon">${card2Icon}</div>
-              <h4>${card2Title}</h4>
-              <p>${card2Text}</p>
-            </div>
-            <div class="info-card">
-              <div class="info-card-icon">${card3Icon}</div>
-              <h4>${card3Title}</h4>
-              <p>${card3Text}</p>
-            </div>
-          `;
-        }
-
-        // Update Action CTA Checklist dynamically based on category
-        const checklistContainer = document.querySelector('.action-cta div[style*="display: flex; flex-direction: column;"]');
-        if (checklistContainer) {
-          let item1Icon = "🚫", item1Text = "Jangan merusak tanaman atau mencabut bunga sembarangan di lingkungan kampus.";
-          let item2Icon = "🌱", item2Text = `Ikuti aksi penanaman pohon dan perawatan berkala di area ${data.location}.`;
-          let item3Icon = "⚠️", item3Text = "Laporkan jika melihat tanda-tanda kerusakan pada flora atau sarang hama liar.";
-
-          if (data.category === 'fauna' || data.category === 'insecta') {
-            item1Icon = "🚫";
-            item1Text = "Jangan berburu, menangkap, menembak, atau mengganggu sarang fauna di kampus.";
-            item2Icon = "🐦";
-            item2Text = "Bantu menjaga habitat pohon peneduh agar burung dan serangga tetap bersarang dengan aman.";
-            item3Icon = "⚠️";
-            item3Text = "Laporkan kepada pengelola kampus jika melihat satwa yang terluka atau terperangkap.";
-          } else if (data.category === 'habitat') {
-            item1Icon = "🚫";
-            item1Text = "Jangan membuang sampah sembarangan atau limbah konstruksi di area sensitif ini.";
-            item2Icon = "🚧";
-            item2Text = "Patuhi rambu batas aman saat melintasi kawasan restorasi lingkungan kampus.";
-            item3Icon = "⚠️";
-            item3Text = "Laporkan segera jika mendeteksi pencemaran air, erosi parah, atau penumpukan sampah liar.";
-          }
-
-          checklistContainer.innerHTML = `
-            <div style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: rgba(34,197,94,0.08); border-radius: 10px; border-left: 3px solid var(--green-500);">
-              <span style="font-size: 1.3rem;">${item1Icon}</span>
-              <span style="font-size: 0.9rem; color: var(--dark-300);">${item1Text}</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: rgba(34,197,94,0.08); border-radius: 10px; border-left: 3px solid var(--green-500);">
-              <span style="font-size: 1.3rem;">${item2Icon}</span>
-              <span style="font-size: 0.9rem; color: var(--dark-300);">${item2Text}</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: rgba(239, 68, 68, 0.08); border-radius: 10px; border-left: 3px solid var(--red-500);">
-              <span style="font-size: 1.3rem;">${item3Icon}</span>
-              <span style="font-size: 0.9rem; color: var(--dark-300);">${item3Text}</span>
-            </div>
-          `;
-        }
-
-        // Update Related Species Grid
-        const relatedContainer = document.querySelector('.features-grid');
-        if (relatedContainer) {
-          // Filter out current species
-          const potentialRelated = allData.filter(s => s.id !== data.id);
-          
-          // Select 1 Flora, 1 Fauna, and 1 Insect (insecta) if available for dynamic diversity
-          let relatedFlora = potentialRelated.find(s => s.category === 'flora');
-          let relatedFauna = potentialRelated.find(s => s.category === 'fauna');
-          let relatedInsecta = potentialRelated.find(s => s.category === 'insecta');
-          
-          let related = [];
-          if (relatedFlora) related.push(relatedFlora);
-          if (relatedFauna) related.push(relatedFauna);
-          if (relatedInsecta) related.push(relatedInsecta);
-          
-          // Fallback in case some categories are missing (e.g. fill up to 3 from remaining)
-          if (related.length < 3) {
-            const addedIds = new Set(related.map(r => r.id));
-            const remaining = potentialRelated.filter(s => !addedIds.has(s.id));
-            for (let s of remaining) {
-              if (related.length >= 3) break;
-              related.push(s);
-            }
-          }
-          related = related.slice(0, 3);
-
-          relatedContainer.innerHTML = '';
-          related.forEach((rel, index) => {
-            let catLabel = 'Flora';
-            let catBg = 'rgba(34,197,94,0.15)';
-            let catColor = '#4ade80';
-
-            if (rel.category === 'fauna') {
-              catLabel = 'Fauna';
-              catBg = 'rgba(59,130,246,0.15)';
-              catColor = '#60a5fa';
-            } else if (rel.category === 'insecta') {
-              catLabel = 'Serangga';
-              catBg = 'rgba(245,158,11,0.15)';
-              catColor = '#fbbf24';
-            } else if (rel.category === 'habitat') {
-              catLabel = 'Habitat';
-              catBg = 'rgba(239,68,68,0.15)';
-              catColor = '#f87171';
-            }
-
-            const item = document.createElement('a');
-            item.href = rel.link || `spesies.html?id=${rel.id}`;
-            // Do NOT include animate-on-scroll here — we add .visible directly below
-            item.className = `feature-card stagger-${index + 1}`;
-            item.style.textDecoration = 'none';
-            item.style.color = 'inherit';
-            item.style.display = 'block';
-            item.style.opacity = '0';
-            item.style.transform = 'translateY(30px)';
-            item.style.transition = 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
-
-            item.innerHTML = `
-              <div style="width: 100%; height: 160px; border-radius: 12px; overflow: hidden; margin-bottom: 12px; background: #06110b; position: relative;">
-                <img src="${rel.image}" alt="${rel.title}" style="width: 100%; height: 100%; object-fit: cover;">
-              </div>
-              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                <span style="background: ${catBg}; color: ${catColor}; padding: 2px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">${catLabel}</span>
-                <span class="conservation-status" style="font-size: 0.7rem; padding: 2px 8px; margin: 0; background:${catBg}; color:${catColor}; border:none;">${rel.status}</span>
-              </div>
-              <h3 style="font-size: 1rem; margin-bottom: 4px; color: var(--dark-50);">${rel.title}</h3>
-              <p style="font-size: 0.85rem; font-style: italic; color: var(--green-400); margin-bottom: 0;">${rel.scientific}</p>
-              <span class="feature-arrow" style="position: absolute; bottom: 20px; right: 20px; font-size: 1.1rem; color: var(--green-400);">→</span>
-            `;
-            relatedContainer.appendChild(item);
-
-            // Animate in with a staggered delay — directly apply visible state after a brief layout tick
-            const delay = 120 + index * 120;
-            setTimeout(() => {
-              item.style.opacity = '1';
-              item.style.transform = 'translateY(0)';
-            }, delay);
-          });
-        }
+      } else {
+        if (speciesWrapper) speciesWrapper.style.display = 'none';
+        if (scannerWrapper) scannerWrapper.style.display = 'block';
       }
 
-      function initScannerHub() {
-        const tabCameraBtn = document.getElementById('tab-camera-btn');
-        const tabUploadBtn = document.getElementById('tab-upload-btn');
-        const tabCameraContainer = document.getElementById('tab-camera-container');
-        const tabUploadContainer = document.getElementById('tab-upload-container');
+      // Event listeners
+      const uploadArea = document.getElementById('upload-area');
+      const fileInput = document.getElementById('scan-file-input');
+      const removeBtn = document.getElementById('remove-scan-img');
+      const resetBtn = document.getElementById('reset-scan-btn');
+      const registerBtn = document.getElementById('register-btn');
+      const sampleBtns = document.querySelectorAll('.sample-test-btn');
 
-        // Tab Switching
-        tabCameraBtn.addEventListener('click', () => {
-          tabCameraBtn.style.background = 'var(--green-600)';
-          tabCameraBtn.style.color = 'white';
-          tabUploadBtn.style.background = 'transparent';
-          tabUploadBtn.style.color = 'var(--dark-300)';
-          tabCameraContainer.style.display = 'flex';
-          tabUploadContainer.style.display = 'none';
-        });
-
-        tabUploadBtn.addEventListener('click', () => {
-          tabUploadBtn.style.background = 'var(--green-600)';
-          tabUploadBtn.style.color = 'white';
-          tabCameraBtn.style.background = 'transparent';
-          tabCameraBtn.style.color = 'var(--dark-300)';
-          tabUploadContainer.style.display = 'flex';
-          tabCameraContainer.style.display = 'none';
-        });
-
-        // Viewfinder and Scan button
-        const viewfinder = document.getElementById('viewfinder');
-        const laserLine = document.getElementById('laser-line');
-        const viewfinderContent = document.getElementById('viewfinder-content');
-        const viewfinderLoader = document.getElementById('viewfinder-loader');
-        const activateScannerBtn = document.getElementById('activate-scanner-btn');
-
-        let isScanning = false;
-        let scanTimer = null;
-
-        activateScannerBtn.addEventListener('click', () => {
-          if (isScanning) {
-            stopScan();
-          } else {
-            startScan();
-          }
-        });
-
-        function startScan() {
-          isScanning = true;
-          activateScannerBtn.textContent = '🛑 Matikan Pemindai';
-          activateScannerBtn.style.background = 'linear-gradient(135deg, var(--red-500), var(--red-700))';
-          
-          laserLine.style.display = 'block';
-          laserLine.style.animation = 'scan-laser 2s infinite linear';
-          
-          viewfinderContent.innerHTML = `
-            <span style="font-size: 3rem; filter: drop-shadow(0 0 10px rgba(34,197,94,0.6)); animation: pulse-green 1.5s infinite; display: block; margin-bottom: 12px;">📡</span>
-            <span style="font-size: 0.85rem; color: var(--green-400); font-weight: 700; letter-spacing: 1px;">MENCARI TARGET...</span>
-            <p style="font-size: 0.75rem; color: var(--dark-400); margin: 6px 0 0;">Mengarahkan lensa AI sensor ke area observasi.</p>
-          `;
-
-          // Simulate scanning process
-          scanTimer = setTimeout(() => {
-            const types = ['elang', 'kupu', 'kamboja', 'qr'];
-            const randomType = types[Math.floor(Math.random() * types.length)];
-            runSimulatedScan(randomType);
-          }, 3000);
-        }
-
-        function stopScan() {
-          isScanning = false;
-          clearTimeout(scanTimer);
-          activateScannerBtn.textContent = '⚡ Aktifkan Kamera Pemindai';
-          activateScannerBtn.style.background = 'linear-gradient(135deg, var(--green-500), var(--green-700))';
-          laserLine.style.display = 'none';
-          laserLine.style.animation = 'none';
-          viewfinderContent.innerHTML = `
-            <span style="font-size: 3rem; filter: drop-shadow(0 0 10px rgba(34,197,94,0.4)); display: block; margin-bottom: 12px;">📷</span>
-            <span style="font-size: 0.85rem; color: var(--dark-300); font-weight: 500;">Kamera dinonaktifkan</span>
-            <p style="font-size: 0.75rem; color: var(--dark-400); margin: 6px 0 0;">Klik tombol di bawah untuk mengaktifkan pemindaian simulasi.</p>
-          `;
-          viewfinderLoader.style.display = 'none';
-        }
-
-        // Sample Quick buttons
-        const sampleBtns = document.querySelectorAll('.sample-scan-btn');
-        sampleBtns.forEach(btn => {
-          btn.addEventListener('click', () => {
-            const type = btn.getAttribute('data-type');
-            runSimulatedScan(type);
-          });
-        });
-
-        // Taxonomy database profiles for AI simulation
-        const taxonomyProfiles = {
-          elang: {
-            title: "Elang Jawa",
-            scientific: "Nisaetus alboniger",
-            accuracy: "98.4%",
-            kingdom: "Animalia",
-            phylum: "Chordata",
-            class: "Aves",
-            order: "Accipitriformes",
-            family: "Accipitridae",
-            category: "Fauna",
-            catBadge: "🐦 Fauna",
-            status: "🔴 Terancam Punah (EN) — Dilindungi",
-            statusClass: "red",
-            desc: "Elang Jawa adalah salah satu spesies raptor endemik terlangka yang hidup di hutan pegunungan basah pulau Jawa. Dikenal dengan jambul hitamnya yang khas di kepala dan kepakan sayap gagah saat berburu mamalia kecil.",
-            climate: "Krisis iklim mendesak pergeseran hutan pegunungan basah dan merusak area bersarang pohon tinggi UIN Banten. Melestarikan pohon beringin raksasa sangat penting guna menyediakan hunian tangguh bagi predator puncak ini.",
-            uploadCategory: "fauna"
-          },
-          kupu: {
-            title: "Kupu-kupu Swallowtail",
-            scientific: "Papilio memnon",
-            accuracy: "96.2%",
-            kingdom: "Animalia",
-            phylum: "Arthropoda",
-            class: "Insecta",
-            order: "Lepidoptera",
-            family: "Papilionidae",
-            category: "Serangga",
-            catBadge: "🦋 Serangga",
-            status: "🟢 Least Concern (LC) — Risiko Rendah",
-            statusClass: "green",
-            desc: "Kupu-kupu ekor layang besar yang indah, aktif hinggap pada tanaman bunga perdu di taman UIN Banten. Memiliki pola sayap hitam pekat dengan semburat kontras anggun.",
-            climate: "Serangga penyerbuk sangat peka terhadap kenaikan suhu mikro. Fluktuasi iklim yang tidak menentu mengganggu masa pupa/kepompong mereka, merusak proses regenerasi bunga hias tropis kampus.",
-            uploadCategory: "insecta"
-          },
-          kamboja: {
-            title: "Kamboja Jepang",
-            scientific: "Plumeria rubra",
-            accuracy: "99.1%",
-            kingdom: "Plantae",
-            phylum: "Tracheophyta",
-            class: "Magnoliopsida",
-            order: "Gentianales",
-            family: "Apocynaceae",
-            category: "Flora",
-            catBadge: "🌿 Flora",
-            status: "🟢 Least Concern (LC) — Risiko Rendah",
-            statusClass: "green",
-            desc: "Tanaman hias semak berkayu tropis dengan bunga wangi melingkar merah muda dan putih. Tumbuh subur di taman rektorat UIN Sultan Maulana Hasanuddin Banten.",
-            climate: "Mampu bertahan di bawah paparan suhu terik, pohon Kamboja ini merupakan 'carbon sink' mikro yang aktif meredam penumpukan CO₂ dari sirkulasi kendaraan bermotor di halaman rektorat.",
-            uploadCategory: "flora"
-          }
-        };
-
-        // Run simulated scan
-        function runSimulatedScan(type) {
-          stopScan();
-          viewfinderLoader.style.display = 'flex';
-          
-          setTimeout(() => {
-            viewfinderLoader.style.display = 'none';
-            
-            if (type === 'qr') {
-              // Show QR Confirmation Box
-              document.getElementById('qr-confirm-modal').style.display = 'flex';
-              if (typeof showNotification === 'function') {
-                showNotification("🔳 QR Code BIO-QR Trail Terdeteksi!", "success");
-              }
-            } else {
-              // Load AI Profile
-              const profile = taxonomyProfiles[type];
-              if (profile) {
-                displayAIProfile(profile);
-              }
-            }
-          }, 1200);
-        }
-
-        function displayAIProfile(profile) {
-          document.getElementById('results-idle').style.display = 'none';
-          document.getElementById('qr-confirm-modal').style.display = 'none';
-          const resultsActive = document.getElementById('results-active');
-          resultsActive.style.display = 'flex';
-
-          // Set text contents
-          document.getElementById('result-title').textContent = profile.title;
-          document.getElementById('result-scientific').textContent = profile.scientific;
-          document.getElementById('result-accuracy').textContent = profile.accuracy;
-          document.getElementById('tax-kingdom').textContent = profile.kingdom;
-          document.getElementById('tax-phylum').textContent = profile.phylum;
-          document.getElementById('tax-class').textContent = profile.class;
-          document.getElementById('tax-order').textContent = profile.order;
-          document.getElementById('tax-family').textContent = profile.family;
-          document.getElementById('tax-category').textContent = profile.catBadge;
-          document.getElementById('result-desc').textContent = profile.desc;
-          document.getElementById('result-climate').textContent = profile.climate;
-
-          // Conservation status styles
-          const consBox = document.getElementById('result-conservation-box');
-          consBox.textContent = profile.status;
-          
-          if (profile.statusClass === 'red') {
-            consBox.style.background = 'rgba(239,68,68,0.15)';
-            consBox.style.color = '#f87171';
-          } else {
-            consBox.style.background = 'rgba(34,197,94,0.15)';
-            consBox.style.color = '#4ade80';
-          }
-
-          if (typeof showNotification === 'function') {
-            showNotification(`🤖 AI Vision mengidentifikasi: ${profile.title} (${profile.accuracy})`, "success");
-          }
-
-          // Hook register finding button
-          const registerBtn = document.getElementById('register-finding-btn');
-          registerBtn.onclick = () => {
-            const uploadUrl = `upload.html?species=${encodeURIComponent(profile.title)}&category=${encodeURIComponent(profile.uploadCategory)}&desc=${encodeURIComponent(profile.desc)}`;
-            window.location.href = uploadUrl;
-          };
-        }
-
-        // QR modal confirmations
-        document.getElementById('qr-confirm-yes-btn').onclick = () => {
-          window.location.href = 'spesies.html?id=1';
-        };
-
-        document.getElementById('qr-confirm-no-btn').onclick = () => {
-          document.getElementById('qr-confirm-modal').style.display = 'none';
-        };
-
-        // Tab 2 File Upload interaction
-        const uploadZone = document.getElementById('scanner-upload-zone');
-        const fileInput = document.getElementById('scanner-file-input');
-        const uploadPreview = document.getElementById('scanner-upload-preview');
-        const previewImg = document.getElementById('scanner-preview-img');
-        const previewName = document.getElementById('scanner-preview-name');
-        const previewSize = document.getElementById('scanner-preview-size');
-        const removeImgBtn = document.getElementById('scanner-remove-img-btn');
-
-        uploadZone.onclick = () => {
-          fileInput.click();
-        };
-
-        uploadZone.addEventListener('dragover', (e) => {
-          e.preventDefault();
-          uploadZone.style.borderColor = 'var(--green-400)';
-          uploadZone.style.background = 'rgba(34,197,94,0.08)';
-        });
-
-        uploadZone.addEventListener('dragleave', () => {
-          uploadZone.style.borderColor = 'rgba(34,197,94,0.3)';
-          uploadZone.style.background = 'rgba(5,13,9,0.3)';
-        });
-
-        uploadZone.addEventListener('drop', (e) => {
-          e.preventDefault();
-          uploadZone.style.borderColor = 'rgba(34,197,94,0.3)';
-          uploadZone.style.background = 'rgba(5,13,9,0.3)';
-          
-          if (e.dataTransfer.files.length > 0) {
-            handleUploadedFile(e.dataTransfer.files[0]);
-          }
-        });
-
-        fileInput.addEventListener('change', (e) => {
-          if (e.target.files.length > 0) {
-            handleUploadedFile(e.target.files[0]);
-          }
-        });
-
-        function handleUploadedFile(file) {
-          if (!file.type.startsWith('image/')) {
-            if (typeof showNotification === 'function') {
-              showNotification("Mohon unggah file berkas gambar (PNG, JPG, WEBP)", "error");
-            }
-            return;
-          }
-
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            previewImg.src = e.target.result;
-            previewName.textContent = file.name;
-            previewSize.textContent = (file.size / 1024 / 1024).toFixed(2) + ' MB';
-            
-            uploadZone.style.display = 'none';
-            uploadPreview.style.display = 'block';
-
-            // Determine simulation type from filename keywords
-            const fnLower = file.name.toLowerCase();
-            let matchedType = 'kamboja'; // default fallback
-            
-            if (fnLower.includes('elang') || fnLower.includes('eagle') || fnLower.includes('hawk') || fnLower.includes('garuda')) {
-              matchedType = 'elang';
-            } else if (fnLower.includes('kupu') || fnLower.includes('serangga') || fnLower.includes('butterfly') || fnLower.includes('insect') || fnLower.includes('capung')) {
-              matchedType = 'kupu';
-            } else if (fnLower.includes('qr') || fnLower.includes('code') || fnLower.includes('barcode') || fnLower.includes('trail')) {
-              matchedType = 'qr';
-            }
-
-            runSimulatedScan(matchedType);
-          };
-          reader.readAsDataURL(file);
-        }
-
-        removeImgBtn.onclick = () => {
-          fileInput.value = '';
-          uploadPreview.style.display = 'none';
-          uploadZone.style.display = 'flex';
-          
-          document.getElementById('results-idle').style.display = 'flex';
-          document.getElementById('results-active').style.display = 'none';
-          document.getElementById('qr-confirm-modal').style.display = 'none';
-        };
-
-        // Reset button
-        document.getElementById('reset-scanner-btn').onclick = () => {
-          document.getElementById('results-idle').style.display = 'flex';
-          document.getElementById('results-active').style.display = 'none';
-          document.getElementById('qr-confirm-modal').style.display = 'none';
-          
-          fileInput.value = '';
-          uploadPreview.style.display = 'none';
-          uploadZone.style.display = 'flex';
-        };
+      if (uploadArea) {
+        uploadArea.onclick = () => fileInput.click();
+        uploadArea.ondragover = (e) => { e.preventDefault(); uploadArea.style.borderColor = '#86efac'; };
+        uploadArea.ondragleave = () => { uploadArea.style.borderColor = '#4ade80'; };
+        uploadArea.ondrop = (e) => { e.preventDefault(); uploadArea.style.borderColor = '#4ade80'; if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); };
       }
+      if (fileInput) fileInput.onchange = (e) => { if (e.target.files[0]) handleFile(e.target.files[0]); };
+      if (removeBtn) removeBtn.onclick = () => { document.getElementById('image-preview-area').style.display = 'none'; document.getElementById('upload-area').style.display = 'block'; fileInput.value = ''; document.getElementById('scan-preview-img').src = ''; };
+      if (resetBtn) resetBtn.onclick = resetScanner;
+      if (registerBtn) registerBtn.onclick = () => { if (window.lastScanResult) { window.location.href = `upload.html?species=${encodeURIComponent(window.lastScanResult.title)}&category=${encodeURIComponent(window.lastScanResult.category)}`; } else { alert('Tidak ada hasil scan. Silakan scan gambar terlebih dahulu.'); } };
+
+      sampleBtns.forEach(btn => {
+        btn.onclick = () => {
+          const name = btn.getAttribute('data-name');
+          const category = btn.getAttribute('data-category');
+          performScan(null, name, category);
+        };
+      });
     });
+
+    // Mobile nav
+    const navToggle = document.getElementById('nav-toggle');
+    const navLinks = document.getElementById('nav-links');
+    if (navToggle) navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
   </script>
 </body>
+
 </html>

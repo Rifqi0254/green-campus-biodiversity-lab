@@ -31,7 +31,7 @@
         <li><a href="peta.html"><span class="nav-icon">🗺️</span> Peta Biodiversitas</a></li>
         <li><a href="upload.html"><span class="nav-icon">📷</span> Upload Temuan</a></li>
         <li><a href="spesies.html"><span class="nav-icon">🔍</span> Scan QR</a></li>
-        <li><a href="#aksi" class="btn btn-primary btn-sm"><span class="nav-icon">🌱</span> Aksi Hijau</a></li>
+        <li><a href="edukasi.html" class="btn btn-primary btn-sm"><span class="nav-icon">🌱</span> Edukasi</a></li>
       </ul>
 
       <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
@@ -116,40 +116,35 @@
       </div>
 
       <div class="features-grid">
-        <!-- Peta Biodiversitas -->
-        <a href="peta.html" class="feature-card animate-on-scroll stagger-1" id="feature-map">
+        <a href="peta.html" class="feature-card animate-on-scroll stagger-1">
           <div class="feature-icon">🗺️</div>
           <h3>Peta Biodiversitas</h3>
           <p>Peta interaktif dengan titik-titik lokasi flora, fauna, dan area konservasi di kampus.</p>
           <span class="feature-arrow">→</span>
         </a>
 
-        <!-- Scan QR -->
-        <a href="spesies.html" class="feature-card animate-on-scroll stagger-2" id="feature-qr">
+        <a href="spesies.html" class="feature-card animate-on-scroll stagger-2">
           <div class="feature-icon blue">📱</div>
           <h3>Scan QR</h3>
           <p>Pindai QR code pada tanaman atau titik biodiversitas untuk info lengkap spesies.</p>
           <span class="feature-arrow">→</span>
         </a>
 
-        <!-- Upload Temuan -->
-        <a href="upload.html" class="feature-card animate-on-scroll stagger-3" id="feature-upload">
+        <a href="upload.html" class="feature-card animate-on-scroll stagger-3">
           <div class="feature-icon amber">📷</div>
           <h3>Upload Temuan</h3>
           <p>Catat dan laporkan temuan spesies baru dengan fitur citizen science berbasis AI.</p>
           <span class="feature-arrow">→</span>
         </a>
 
-        <!-- Aksi Hijau -->
-        <a href="#aksi" class="feature-card animate-on-scroll stagger-4" id="feature-action">
+        <a href="edukasi.html" class="feature-card animate-on-scroll stagger-4">
           <div class="feature-icon">🌱</div>
           <h3>Aksi Hijau</h3>
           <p>Ikuti program penanaman, pelestarian, dan kegiatan konservasi bersama mahasiswa.</p>
           <span class="feature-arrow">→</span>
         </a>
 
-        <!-- Edukasi Iklim -->
-        <a href="#edukasi" class="feature-card animate-on-scroll stagger-5" id="feature-education">
+        <a href="edukasi.html" class="feature-card animate-on-scroll stagger-5">
           <div class="feature-icon red">📚</div>
           <h3>Edukasi Iklim</h3>
           <p>Materi edukasi tentang krisis iklim, ekosistem, dan peran biodiversitas kampus.</p>
@@ -172,142 +167,138 @@
 
       <div class="features-grid" id="recent-observations-grid"
         style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
-        <!-- Recent observations will be dynamically loaded here by js/app.js -->
       </div>
     </div>
   </section>
 
   <!-- ===== CLIMATE EDUCATION SECTION ===== -->
-  <section class="features-section" id="edukasi" style="padding-top: 0; border-top: 1px solid rgba(34, 197, 94, 0.1); margin-top: 48px;">
+  <section class="features-section" id="edukasi"
+    style="padding-top: 0; border-top: 1px solid rgba(34, 197, 94, 0.1); margin-top: 48px;">
     <div class="container" style="padding-top: 48px;">
       <div class="features-header animate-on-scroll">
         <div class="section-label">📚 Edukasi Iklim & Aksi Karbon</div>
         <h2 class="section-title">Kalkulator Jejak Karbon & Krisis Iklim</h2>
         <p class="section-subtitle" style="margin: 0 auto;">
-          Ketahui kontribusi emisi karbon harianmu dan bagaimana biodiversitas UIN Banten membantu menyerapnya untuk menyelamatkan planet kita.
+          Ketahui kontribusi emisi karbon harianmu dan bagaimana biodiversitas UIN Banten membantu menyerapnya untuk
+          menyelamatkan planet kita.
         </p>
       </div>
 
-      <!-- Grid layout: Left is Calculator, Right is Climate & Biodiversity Education -->
-      <div class="features-grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; align-items: start; margin-top: 32px;">
-        
-        <!-- Kalkulator Karbon Panel (Premium Glassmorphism Card) -->
-        <div class="feature-card animate-on-scroll stagger-1" style="background: var(--surface-card); border: 1px solid var(--surface-glass-border); border-radius: var(--radius-lg); padding: 28px; box-shadow: var(--shadow-lg); cursor: default; position: relative;">
+      <div class="features-grid"
+        style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; align-items: start; margin-top: 32px;">
+
+        <!-- Kalkulator Karbon -->
+        <div class="feature-card animate-on-scroll stagger-1"
+          style="background: var(--surface-card); border: 1px solid var(--surface-glass-border); border-radius: var(--radius-lg); padding: 28px; box-shadow: var(--shadow-lg); cursor: default;">
           <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
             <span style="font-size: 2rem;">🧮</span>
             <div>
-              <h3 style="font-size: 1.3rem; margin: 0; color: var(--dark-50); line-height: 1.2;">Kalkulator Karbon Kampus</h3>
-              <p style="font-size: 0.8rem; color: var(--green-400); margin: 0;">Hitung emisi mingguan perjalananmu ke UIN</p>
+              <h3 style="font-size: 1.3rem; margin: 0; color: var(--dark-50);">Kalkulator Karbon Kampus</h3>
+              <p style="font-size: 0.8rem; color: var(--green-400); margin: 0;">Hitung emisi mingguan perjalananmu ke
+                UIN</p>
             </div>
           </div>
 
-          <form id="carbon-calculator-form" onsubmit="return false;" style="display: flex; flex-direction: column; gap: 20px;">
-            <!-- Transport Mode -->
+          <form id="carbon-calculator-form" onsubmit="return false;"
+            style="display: flex; flex-direction: column; gap: 20px;">
             <div>
-              <label for="calc-transport" style="display: block; font-size: 0.88rem; font-weight: 600; color: var(--dark-100); margin-bottom: 8px;">
+              <label for="calc-transport"
+                style="display: block; font-size: 0.88rem; font-weight: 600; color: var(--dark-100); margin-bottom: 8px;">
                 🚗 Moda Transportasi Utama:
               </label>
-              <select id="calc-transport" style="width: 100%; padding: 12px; border-radius: var(--radius-md); background: rgba(5,13,9,0.7); border: 1px solid var(--surface-glass-border); color: var(--dark-50); font-family: var(--font-body); font-size: 0.9rem; outline: none; transition: border 0.3s ease;">
+              <select id="calc-transport"
+                style="width: 100%; padding: 12px; border-radius: var(--radius-md); background: rgba(5,13,9,0.7); border: 1px solid var(--surface-glass-border); color: var(--dark-50); font-family: var(--font-body); font-size: 0.9rem;">
                 <option value="motorcycle">🏍️ Sepeda Motor (Bensin)</option>
                 <option value="car">🚗 Mobil Pribadi (Bensin)</option>
                 <option value="public">🚌 Transportasi Umum (Bus/Angkot)</option>
-                <option value="walk_electric">🚶 Jalan Kaki / Sepeda / Kendaraan Listrik</option>
+                <option value="walk_electric">🚶 Jalan Kaki / Sepeda / Listrik</option>
               </select>
             </div>
 
-            <!-- Weekly Distance -->
             <div>
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                 <label for="calc-distance" style="font-size: 0.88rem; font-weight: 600; color: var(--dark-100);">
                   📍 Jarak Tempuh Mingguan:
                 </label>
-                <span id="calc-distance-value" style="font-weight: 700; color: var(--green-400); font-size: 1rem;">40 km</span>
+                <span id="calc-distance-value" style="font-weight: 700; color: var(--green-400);">40 km</span>
               </div>
-              <input type="range" id="calc-distance" min="0" max="250" value="40" style="width: 100%; accent-color: var(--green-400); height: 6px; border-radius: 999px; background: rgba(255,255,255,0.1); cursor: pointer;">
-              <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--dark-400); margin-top: 4px;">
-                <span>0 km</span>
-                <span>125 km</span>
-                <span>250 km</span>
+              <input type="range" id="calc-distance" min="0" max="250" value="40"
+                style="width: 100%; accent-color: var(--green-400); height: 6px; border-radius: 999px; cursor: pointer;">
+              <div
+                style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--dark-400); margin-top: 4px;">
+                <span>0 km</span><span>125 km</span><span>250 km</span>
               </div>
             </div>
 
-            <!-- Real-time Results panel -->
-            <div style="background: rgba(5,13,9,0.5); border: 1px solid rgba(34, 197, 94, 0.2); border-radius: var(--radius-md); padding: 18px; display: flex; flex-direction: column; gap: 12px;">
+            <div
+              style="background: rgba(5,13,9,0.5); border: 1px solid rgba(34, 197, 94, 0.2); border-radius: var(--radius-md); padding: 18px;">
               <div>
-                <span style="font-size: 0.8rem; color: var(--dark-300); display: block;">Jejak Emisi Karbon Mingguan Anda:</span>
-                <span id="carbon-co2-output" style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 800; color: var(--red-400); display: flex; align-items: baseline; gap: 6px; margin-top: 4px;">
+                <span style="font-size: 0.8rem; color: var(--dark-300);">Jejak Emisi Karbon Mingguan Anda:</span>
+                <span id="carbon-co2-output"
+                  style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 800; color: var(--red-400); display: flex; align-items: baseline; gap: 6px;">
                   4.8 <span style="font-size: 0.9rem; font-weight: 500; color: var(--dark-300);">kg CO₂e</span>
                 </span>
               </div>
-
-              <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 12px;">
-                <span style="font-size: 0.8rem; color: var(--dark-300); display: block; margin-bottom: 8px;">Kebutuhan Pohon Penyeimbang di UIN Banten:</span>
-                <div style="display: flex; flex-direction: column; gap: 8px;">
-                  <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem;">
-                    <span style="color: var(--green-300);">🌳 Pohon Trembesi Kampus:</span>
-                    <strong id="carbon-trembesi-output" style="color: var(--dark-50);">9 Pohon</strong>
-                  </div>
-                  <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem;">
-                    <span style="color: var(--green-300);">🌳 Pohon Beringin Kampus:</span>
-                    <strong id="carbon-beringin-output" style="color: var(--dark-50);">12 Pohon</strong>
-                  </div>
+              <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 12px; margin-top: 8px;">
+                <span style="font-size: 0.8rem; color: var(--dark-300); display: block; margin-bottom: 8px;">Kebutuhan
+                  Pohon Penyeimbang:</span>
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                  <span style="color: var(--green-300);">🌳 Pohon Trembesi:</span>
+                  <strong id="carbon-trembesi-output" style="color: var(--dark-50);">9 Pohon</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-top: 6px;">
+                  <span style="color: var(--green-300);">🌳 Pohon Beringin:</span>
+                  <strong id="carbon-beringin-output" style="color: var(--dark-50);">12 Pohon</strong>
                 </div>
               </div>
             </div>
-            
-            <p style="font-size: 0.72rem; color: var(--dark-400); line-height: 1.4; margin: 0; font-style: italic;">
-              *Estimasi serapan: Trembesi dewasa menyerap 28.5 kg CO₂/tahun (0.55 kg/minggu) dan Beringin menyerap 21.8 kg CO₂/tahun (0.42 kg/minggu). Faktor emisi motor: 0.12 kg CO₂/km, mobil: 0.20 kg CO₂/km, umum: 0.05 kg CO₂/km.
-            </p>
+            <p style="font-size: 0.7rem; color: var(--dark-400); font-style: italic;">*Estimasi serapan pohon dewasa per
+              minggu</p>
           </form>
         </div>
 
-        <!-- Edukasi Krisis Iklim (Premium Info Cards Stack) -->
+        <!-- Edukasi Panel -->
         <div style="display: flex; flex-direction: column; gap: 20px;">
-          <!-- Card 1: Hubungan Krisis Iklim & Biodiversitas Banten -->
-          <div class="feature-card animate-on-scroll stagger-2" style="background: var(--surface-card); border: 1px solid var(--surface-glass-border); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-lg); cursor: default; position: relative;">
+          <div class="feature-card animate-on-scroll stagger-2"
+            style="background: var(--surface-card); border: 1px solid var(--surface-glass-border); border-radius: var(--radius-lg); padding: 24px;">
             <div style="display: flex; align-items: flex-start; gap: 16px;">
-              <span style="font-size: 2.2rem; background: rgba(239,68,68,0.1); border-radius: 12px; padding: 10px; line-height: 1;">🌡️</span>
+              <span style="font-size: 2rem;">🌡️</span>
               <div>
-                <h3 style="font-size: 1.15rem; margin-bottom: 8px; color: var(--dark-50);">Ancaman Iklim & Biodiversitas Banten</h3>
-                <p style="font-size: 0.88rem; color: var(--dark-300); line-height: 1.6; margin: 0;">
-                  Peningkatan suhu mikro di wilayah Serang dan Banten secara langsung mendegradasi ekosistem. Flora lokal seperti pohon Tanjung dan Kamboja mengalami pergeseran musim berbunga, sementara spesies burung seperti Kutilang dan Jalak Kerbau semakin kesulitan menemukan air bersih dan naungan rimbun untuk bersarang.
-                </p>
+                <h3 style="font-size: 1.1rem; margin-bottom: 8px;">Ancaman Iklim & Biodiversitas Banten</h3>
+                <p style="font-size: 0.85rem; color: var(--dark-300);">Peningkatan suhu mikro di Serang mendegradasi
+                  ekosistem. Flora dan fauna lokal semakin tertekan oleh perubahan musim yang tidak menentu.</p>
               </div>
             </div>
           </div>
 
-          <!-- Card 2: Peran Hutan Mini & Koridor Hijau UIN Banten -->
-          <div class="feature-card animate-on-scroll stagger-3" style="background: var(--surface-card); border: 1px solid var(--surface-glass-border); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-lg); cursor: default; position: relative;">
+          <div class="feature-card animate-on-scroll stagger-3"
+            style="background: var(--surface-card); border: 1px solid var(--surface-glass-border); border-radius: var(--radius-lg); padding: 24px;">
             <div style="display: flex; align-items: flex-start; gap: 16px;">
-              <span style="font-size: 2.2rem; background: rgba(34,197,94,0.1); border-radius: 12px; padding: 10px; line-height: 1;">🌲</span>
+              <span style="font-size: 2rem;">🌲</span>
               <div>
-                <h3 style="font-size: 1.15rem; margin-bottom: 8px; color: var(--dark-50);">Hutan Mini Kampus: Benteng Karbon Kita</h3>
-                <p style="font-size: 0.88rem; color: var(--dark-300); line-height: 1.6; margin: 0;">
-                  UIN Sultan Maulana Hasanuddin Banten mengintegrasikan Hutan Mini dan Kebun Biologi sebagai benteng mitigasi krisis iklim. Dengan ratusan pohon rindang terdata, kawasan ini menyerap puluhan ton CO₂ per tahun, menjaga kelembapan udara mikro kampus, dan mencegah bencana erosi permukaan tanah saat musim penghujan ekstrim melanda.
-                </p>
+                <h3 style="font-size: 1.1rem; margin-bottom: 8px;">Hutan Mini: Benteng Karbon Kampus</h3>
+                <p style="font-size: 0.85rem; color: var(--dark-300);">Ratusan pohon di kawasan hijau UIN Banten
+                  menyerap puluhan ton CO₂ per tahun, menjaga kelembaban dan mencegah erosi.</p>
               </div>
             </div>
           </div>
 
-          <!-- Card 3: Bagaimana Kamu Bisa Berkontribusi -->
-          <div class="feature-card animate-on-scroll stagger-4" style="background: var(--surface-card); border: 1px solid var(--surface-glass-border); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-lg); cursor: default; position: relative;">
+          <div class="feature-card animate-on-scroll stagger-4"
+            style="background: var(--surface-card); border: 1px solid var(--surface-glass-border); border-radius: var(--radius-lg); padding: 24px;">
             <div style="display: flex; align-items: flex-start; gap: 16px;">
-              <span style="font-size: 2.2rem; background: rgba(59,130,246,0.1); border-radius: 12px; padding: 10px; line-height: 1;">🤝</span>
+              <span style="font-size: 2rem;">🤝</span>
               <div>
-                <h3 style="font-size: 1.15rem; margin-bottom: 8px; color: var(--dark-50);">Aksi Nyata Citizen Science</h3>
-                <p style="font-size: 0.88rem; color: var(--dark-300); line-height: 1.6; margin: 0;">
-                  Setiap pohon yang kamu laporkan, setiap burung yang kamu potret, membantu ilmuwan mengumpulkan data klimatologi lingkungan mikro kampus. Laporkan temuan spesies baru, kurangi perjalanan emisi bahan bakar fosil, dan berpartisipasi aktif dalam kegiatan Aksi Hijau penanaman pohon.
-                </p>
+                <h3 style="font-size: 1.1rem; margin-bottom: 8px;">Aksi Citizen Science</h3>
+                <p style="font-size: 0.85rem; color: var(--dark-300);">Laporkan temuan spesies, kurangi emisi, dan ikuti
+                  Aksi Hijau. Setiap kontribusi Anda berarti bagi masa depan Bumi.</p>
               </div>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </section>
 
-  <!-- Interactive script for calculator -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const transportInput = document.getElementById('calc-transport');
@@ -323,41 +314,21 @@
           const distance = parseFloat(distanceInput.value);
           distanceValue.textContent = distance + ' km';
 
-          // Emission factors (kg CO2 per km)
-          const factors = {
-            motorcycle: 0.12,
-            car: 0.20,
-            public: 0.05,
-            walk_electric: 0
-          };
+          const factors = { motorcycle: 0.12, car: 0.20, public: 0.05, walk_electric: 0 };
+          const weeklyCo2 = distance * (factors[transport] || 0);
 
-          const factor = factors[transport] || 0;
-          const weeklyCo2 = distance * factor;
-
-          // Display weekly emission
           co2Output.innerHTML = `${weeklyCo2.toFixed(1)} <span style="font-size: 0.9rem; font-weight: 500; color: var(--dark-300);">kg CO₂e</span>`;
 
-          // Offset trees needed weekly
-          // Trembesi offset per tree per week: 28.5 kg / 52 weeks = ~0.548 kg/week
-          // Beringin offset per tree per week: 21.8 kg / 52 weeks = ~0.419 kg/week
-          const trembesiOffsetPerWeek = 28.5 / 52;
-          const beringinOffsetPerWeek = 21.8 / 52;
+          const trembesiOffset = 28.5 / 52;
+          const beringinOffset = 21.8 / 52;
 
-          let trembesiNeeded = 0;
-          let beringinNeeded = 0;
-
-          if (weeklyCo2 > 0) {
-            trembesiNeeded = Math.ceil(weeklyCo2 / trembesiOffsetPerWeek);
-            beringinNeeded = Math.ceil(weeklyCo2 / beringinOffsetPerWeek);
-          }
-
-          trembesiOutput.textContent = `${trembesiNeeded} Pohon`;
-          beringinOutput.textContent = `${beringinNeeded} Pohon`;
+          trembesiOutput.textContent = weeklyCo2 > 0 ? `${Math.ceil(weeklyCo2 / trembesiOffset)} Pohon` : '0 Pohon';
+          beringinOutput.textContent = weeklyCo2 > 0 ? `${Math.ceil(weeklyCo2 / beringinOffset)} Pohon` : '0 Pohon';
         };
 
         transportInput.addEventListener('change', calculateCarbon);
         distanceInput.addEventListener('input', calculateCarbon);
-        calculateCarbon(); // Initial run
+        calculateCarbon();
       }
     });
   </script>
@@ -369,8 +340,7 @@
         <div class="action-cta-icon">🌍</div>
         <div class="action-cta-content">
           <h3>Jadilah Bagian dari Aksi Hijau Kampus!</h3>
-          <p>Bergabunglah dengan lebih dari 215 relawan mahasiswa dalam menjaga dan melestarikan biodiversitas di
-            lingkungan kampus UIN Sultan Maulana Hasanuddin Banten.</p>
+          <p>Bergabunglah dengan lebih dari 215 relawan mahasiswa dalam menjaga dan melestarikan biodiversitas.</p>
           <div class="action-cta-buttons">
             <a href="upload.html" class="btn btn-primary">📷 Mulai Catat Temuan</a>
             <a href="peta.html" class="btn btn-outline">🗺️ Jelajahi Peta</a>
@@ -396,17 +366,17 @@
             <li><a href="peta.html">Peta Biodiversitas</a></li>
             <li><a href="upload.html">Upload Temuan</a></li>
             <li><a href="spesies.html">Scan QR</a></li>
-            <li><a href="#aksi">Aksi Hijau</a></li>
+            <li><a href="edukasi.html">Aksi Hijau</a></li>
           </ul>
         </div>
 
         <div class="footer-col">
           <h5>Edukasi</h5>
           <ul>
-            <li><a href="#edukasi">Edukasi Iklim</a></li>
-            <li><a href="#">Katalog Spesies</a></li>
-            <li><a href="#">Panduan Observasi</a></li>
-            <li><a href="#">Tentang BIO-QR Trail</a></li>
+            <li><a href="edukasi.html">Edukasi Iklim</a></li>
+            <li><a href="edukasi.html">Katalog Spesies</a></li>
+            <li><a href="edukasi.html">Panduan Observasi</a></li>
+            <li><a href="edukasi.html">Tentang BIO-QR Trail</a></li>
           </ul>
         </div>
 
