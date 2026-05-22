@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Upload temuan spesies baru di kampus UIN Sultan Maulana Hasanuddin Banten. Fitur citizen science dengan identifikasi AI untuk mahasiswa relawan.">
+  <title>Upload Temuan | Green Campus Biodiversity Lab</title>
+  <link rel="icon" type="image/png" href="assets/logo-uin.png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">
+        <img src="assets/logo-uin.png" alt="Logo UIN Sultan Maulana Hasanuddin Banten">
+        <div class="nav-brand-text">
+          <span class="nav-brand-name">Green Campus</span>
+          <span class="nav-brand-sub">Biodiversity Lab</span>
+        </div>
+      </a>
+
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html"><span class="nav-icon">🏠</span> Beranda</a></li>
+        <li><a href="peta.html"><span class="nav-icon">🗺️</span> Peta Biodiversitas</a></li>
+        <li><a href="upload.html" class="active"><span class="nav-icon">📷</span> Upload Temuan</a></li>
+        <li><a href="spesies.html"><span class="nav-icon">🔍</span> Scan QR</a></li>
+        <li><a href="#" class="btn btn-primary btn-sm"><span class="nav-icon">🌱</span> Aksi Hijau</a></li>
+      </ul>
+
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===== PAGE HEADER ===== -->
+  <header class="page-header">
+    <div class="container">
+      <nav class="breadcrumbs">
+        <a href="index.html">Beranda</a>
+        <span class="separator">›</span>
+        <span>Upload Temuan</span>
+      </nav>
+
+      <div class="section-label animate-on-scroll">📷 Citizen Science</div>
+      <h1 class="section-title animate-on-scroll">Upload Temuan Observasi</h1>
+      <p class="section-subtitle animate-on-scroll">
+        Laporkan temuan spesies baru yang kamu temukan di lingkungan kampus. Setiap observasi berkontribusi pada pendataan biodiversitas.
+      </p>
+    </div>
+  </header>
+
+  <!-- ===== UPLOAD FORM ===== -->
+  <section class="form-section">
+    <div class="container">
+      <form class="upload-form animate-on-scroll" id="observation-form">
+        <!-- Step indicator -->
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid rgba(148,163,184,0.1);">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="width: 28px; height: 28px; border-radius: 50%; background: var(--gradient-accent); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; color: white;">1</span>
+            <span style="font-size: 0.85rem; font-weight: 600; color: var(--green-400);">Foto</span>
+          </div>
+          <div style="flex: 1; height: 2px; background: rgba(34,197,94,0.3); border-radius: 2px;"></div>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="width: 28px; height: 28px; border-radius: 50%; background: rgba(34,197,94,0.2); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; color: var(--green-400);">2</span>
+            <span style="font-size: 0.85rem; font-weight: 500; color: var(--dark-400);">Detail</span>
+          </div>
+          <div style="flex: 1; height: 2px; background: rgba(148,163,184,0.1); border-radius: 2px;"></div>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="width: 28px; height: 28px; border-radius: 50%; background: rgba(148,163,184,0.1); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; color: var(--dark-500);">3</span>
+            <span style="font-size: 0.85rem; font-weight: 500; color: var(--dark-500);">Kirim</span>
+          </div>
+        </div>
+
+        <!-- Photo Upload -->
+        <div class="form-group">
+          <label>Upload Foto <span class="required">*</span></label>
+          <div class="upload-zone" id="upload-zone">
+            <span class="upload-zone-icon">📸</span>
+            <p class="upload-zone-text">Klik atau seret foto ke sini</p>
+            <p class="upload-zone-hint">Format: JPG, PNG, WEBP (Maks. 10MB)</p>
+          </div>
+          <input type="file" id="photo-upload" accept="image/*" style="display: none;">
+
+          <div class="image-preview" id="image-preview">
+            <img src="" alt="Preview" id="preview-img">
+            <button type="button" class="remove-image" aria-label="Remove image">×</button>
+          </div>
+
+          <div class="ai-hint">
+            <span class="ai-icon">🤖</span>
+            <span>AI membantu identifikasi awal spesies berdasarkan foto. Hasil identifikasi akan muncul secara otomatis setelah upload.</span>
+          </div>
+        </div>
+
+        <!-- Species Name -->
+        <div class="form-group">
+          <label for="species-name">Nama Temuan / Spesies <span class="required">*</span></label>
+          <input type="text" class="form-input" id="species-name" placeholder="Contoh: Kamboja Jepang" required>
+          <div style="margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap;">
+            <span style="font-size: 0.75rem; color: var(--dark-500); padding: 2px 10px; background: rgba(255,255,255,0.05); border-radius: 999px; cursor: pointer;" onclick="document.getElementById('species-name').value='Kamboja Jepang'">💡 Kamboja Jepang</span>
+            <span style="font-size: 0.75rem; color: var(--dark-500); padding: 2px 10px; background: rgba(255,255,255,0.05); border-radius: 999px; cursor: pointer;" onclick="document.getElementById('species-name').value='Kutilang'">💡 Kutilang</span>
+            <span style="font-size: 0.75rem; color: var(--dark-500); padding: 2px 10px; background: rgba(255,255,255,0.05); border-radius: 999px; cursor: pointer;" onclick="document.getElementById('species-name').value='Kupu-kupu Swallowtail'">💡 Kupu-kupu Swallowtail</span>
+          </div>
+        </div>
+
+        <!-- Category -->
+        <div class="form-group">
+          <label>Kategori <span class="required">*</span></label>
+          <div class="category-options">
+            <div class="category-option">
+              <input type="radio" name="category" id="cat-flora" value="flora" checked>
+              <label for="cat-flora">
+                <span class="cat-icon">🌿</span>
+                <span class="cat-name">Flora</span>
+              </label>
+            </div>
+            <div class="category-option">
+              <input type="radio" name="category" id="cat-fauna" value="fauna">
+              <label for="cat-fauna">
+                <span class="cat-icon">🐦</span>
+                <span class="cat-name">Fauna</span>
+              </label>
+            </div>
+            <div class="category-option">
+              <input type="radio" name="category" id="cat-habitat" value="habitat">
+              <label for="cat-habitat">
+                <span class="cat-icon">🏞️</span>
+                <span class="cat-name">Kondisi Habitat</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Location & Date -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="location">Lokasi <span class="required">*</span></label>
+            <select class="form-select" id="location" required>
+              <option value="">Pilih lokasi...</option>
+              <option value="taman-rektorat">Taman Rektorat</option>
+              <option value="hutan-mini">Hutan Mini Kampus</option>
+              <option value="fakultas-sains">Fakultas Sains & Teknologi</option>
+              <option value="koridor">Koridor Kampus</option>
+              <option value="lapangan">Lapangan Utama</option>
+              <option value="kebun-biologi">Kebun Biologi</option>
+              <option value="masjid">Area Masjid Kampus</option>
+              <option value="lainnya">Lainnya</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="date">Tanggal Pengamatan <span class="required">*</span></label>
+            <input type="date" class="form-input" id="date" required>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+          <label for="description">Deskripsi Singkat</label>
+          <textarea class="form-textarea" id="description" placeholder="Ceritakan kondisi temuan, jumlah yang dilihat, perilaku (untuk fauna), atau kondisi tumbuhan..."></textarea>
+        </div>
+
+        <!-- Observer Info -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="observer-name">Nama Pengamat</label>
+            <input type="text" class="form-input" id="observer-name" placeholder="Nama lengkap">
+          </div>
+
+          <div class="form-group">
+            <label for="observer-nim">NIM</label>
+            <input type="text" class="form-input" id="observer-nim" placeholder="Nomor Induk Mahasiswa">
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <div style="display: flex; gap: 12px; padding-top: 8px;">
+          <button type="submit" class="btn btn-primary btn-lg" style="flex: 1; justify-content: center;">
+            🚀 Kirim Observasi
+          </button>
+          <button type="reset" class="btn btn-outline" style="padding: 16px 24px;">
+            Bersihkan
+          </button>
+        </div>
+      </form>
+
+      <!-- Tips Section -->
+      <div style="max-width: 720px; margin: 40px auto 0; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;" class="animate-on-scroll">
+        <div class="info-card">
+          <div class="info-card-icon">📸</div>
+          <h4>Tips Foto</h4>
+          <p>Ambil foto dengan jelas. Pastikan objek terlihat utuh dan pencahayaan cukup. Sertakan detail unik seperti bunga, daun, atau warna.</p>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-icon">📍</div>
+          <h4>Tips Lokasi</h4>
+          <p>Catat lokasi se-spesifik mungkin. Jika memungkinkan, aktifkan GPS di smartphone kamu saat mengambil foto.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="assets/logo-uin.png" alt="Logo UIN">
+          <h4>Green Campus Biodiversity Lab</h4>
+          <p>Platform pendataan, edukasi, dan aksi konservasi biodiversitas di UIN Sultan Maulana Hasanuddin Banten.</p>
+        </div>
+
+        <div class="footer-col">
+          <h5>Platform</h5>
+          <ul>
+            <li><a href="peta.html">Peta Biodiversitas</a></li>
+            <li><a href="upload.html">Upload Temuan</a></li>
+            <li><a href="spesies.html">Scan QR</a></li>
+            <li><a href="#">Aksi Hijau</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Edukasi</h5>
+          <ul>
+            <li><a href="#">Edukasi Iklim</a></li>
+            <li><a href="#">Katalog Spesies</a></li>
+            <li><a href="#">Panduan Observasi</a></li>
+            <li><a href="#">Tentang BIO-QR Trail</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Kontak</h5>
+          <ul>
+            <li><a href="#">📧 biodiversitylab@uinbanten.ac.id</a></li>
+            <li><a href="#">📞 (0254) 123-456</a></li>
+            <li><a href="https://maps.app.goo.gl/vCTasDrNrxK3fg8c7" target="_blank">📍 Serang, Banten</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2025 Green Campus Biodiversity Lab — UIN Sultan Maulana Hasanuddin Banten</span>
+        <span>Dibuat dengan 💚 untuk Bumi</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    // Set default date to today
+    document.getElementById('date').valueAsDate = new Date();
+  </script>
+</body>
+</html>

@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Peta Biodiversitas Kampus UIN Sultan Maulana Hasanuddin Banten — Jelajahi lokasi flora, fauna, dan area konservasi di peta interaktif.">
+  <title>Peta Biodiversitas | Green Campus Biodiversity Lab</title>
+  <link rel="icon" type="image/png" href="assets/logo-uin.png">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Leaflet Map CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    /* Styling custom pulsing markers */
+    .pulse-marker {
+      border-radius: 50%;
+      cursor: pointer;
+      display: block;
+      box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+      animation: pulse-green 1.8s infinite;
+      border: 2px solid white;
+    }
+    .pulse-marker.green {
+      background: var(--green-500);
+      box-shadow: 0 0 10px var(--green-500);
+      animation-name: pulse-green;
+    }
+    .pulse-marker.blue {
+      background: var(--blue-500);
+      box-shadow: 0 0 10px var(--blue-500);
+      animation-name: pulse-blue;
+    }
+    .pulse-marker.amber {
+      background: var(--amber-500);
+      box-shadow: 0 0 10px var(--amber-500);
+      animation-name: pulse-amber;
+    }
+    .pulse-marker.red {
+      background: var(--red-500);
+      box-shadow: 0 0 10px var(--red-500);
+      animation-name: pulse-red;
+    }
+
+    @keyframes pulse-green {
+      0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+      70% { box-shadow: 0 0 0 12px rgba(34, 197, 94, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+    }
+    @keyframes pulse-blue {
+      0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+      70% { box-shadow: 0 0 0 12px rgba(59, 130, 246, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+    }
+    @keyframes pulse-amber {
+      0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
+      70% { box-shadow: 0 0 0 12px rgba(245, 158, 11, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+    }
+    @keyframes pulse-red {
+      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+      70% { box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
+    /* Customized Leaflet Popups to match dark emerald design system */
+    .leaflet-popup-content-wrapper {
+      background: var(--surface-bg) !important;
+      border: 1px solid var(--surface-glass-border) !important;
+      color: var(--dark-200) !important;
+      border-radius: var(--radius-md) !important;
+      padding: 0 !important;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg) !important;
+      backdrop-filter: blur(10px);
+    }
+    .leaflet-popup-content {
+      margin: 0 !important;
+      line-height: inherit !important;
+    }
+    .leaflet-popup-tip {
+      background: var(--surface-bg) !important;
+      border: 1px solid var(--surface-glass-border) !important;
+    }
+    .leaflet-container a.leaflet-popup-close-button {
+      color: var(--dark-400) !important;
+      padding: 8px !important;
+      font-size: 1.1rem !important;
+      z-index: 10;
+    }
+    .leaflet-container a.leaflet-popup-close-button:hover {
+      color: var(--red-400) !important;
+    }
+    .map-popup-card {
+      width: 240px;
+    }
+    .map-popup-card img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      display: block;
+    }
+    .map-popup-body {
+      padding: var(--space-md);
+    }
+    .map-popup-title {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 2px;
+      color: var(--dark-50);
+    }
+    .map-popup-subtitle {
+      font-size: 0.8rem;
+      font-style: italic;
+      color: var(--green-400);
+      margin-bottom: 8px;
+    }
+    .map-popup-text {
+      font-size: 0.8rem;
+      color: var(--dark-400);
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+    .map-popup-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">
+        <img src="assets/logo-uin.png" alt="Logo UIN Sultan Maulana Hasanuddin Banten">
+        <div class="nav-brand-text">
+          <span class="nav-brand-name">Green Campus</span>
+          <span class="nav-brand-sub">Biodiversity Lab</span>
+        </div>
+      </a>
+
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html"><span class="nav-icon">🏠</span> Beranda</a></li>
+        <li><a href="peta.html" class="active"><span class="nav-icon">🗺️</span> Peta Biodiversitas</a></li>
+        <li><a href="upload.html"><span class="nav-icon">📷</span> Upload Temuan</a></li>
+        <li><a href="spesies.html"><span class="nav-icon">🔍</span> Scan QR</a></li>
+        <li><a href="#" class="btn btn-primary btn-sm"><span class="nav-icon">🌱</span> Aksi Hijau</a></li>
+      </ul>
+
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===== PAGE HEADER ===== -->
+  <header class="page-header">
+    <div class="container">
+      <nav class="breadcrumbs">
+        <a href="index.html">Beranda</a>
+        <span class="separator">›</span>
+        <span>Peta Biodiversitas</span>
+      </nav>
+
+      <div class="section-label animate-on-scroll">🗺️ Peta Interaktif</div>
+      <h1 class="section-title animate-on-scroll">Peta Biodiversitas Kampus</h1>
+      <p class="section-subtitle animate-on-scroll">
+        Jelajahi lokasi flora, fauna, dan area konservasi di kampus UIN Sultan Maulana Hasanuddin Banten. Data dikumpulkan oleh relawan mahasiswa melalui citizen science.
+      </p>
+    </div>
+  </header>
+
+  <!-- ===== MAP SECTION ===== -->
+  <section class="map-section">
+    <div class="container">
+      <div class="map-layout">
+        <!-- Filter Sidebar -->
+        <aside class="map-filters animate-on-scroll">
+          <h3 style="font-size: 1.1rem; margin-bottom: 20px; color: var(--dark-100);">🔎 Filter Peta</h3>
+
+          <!-- Jenis Spesies -->
+          <div class="filter-group">
+            <span class="filter-label">Jenis Spesies</span>
+            <div class="filter-options">
+              <label class="filter-option">
+                <input type="checkbox" id="filter-tumbuhan" checked>
+                <span class="legend-dot green"></span>
+                Tumbuhan
+                <span class="filter-count">89</span>
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" id="filter-burung" checked>
+                <span class="legend-dot blue"></span>
+                Burung
+                <span class="filter-count">34</span>
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" id="filter-serangga" checked>
+                <span class="legend-dot amber"></span>
+                Serangga
+                <span class="filter-count">18</span>
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" id="filter-rawan" checked>
+                <span class="legend-dot red"></span>
+                Area Rawan
+                <span class="filter-count">6</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Lokasi -->
+          <div class="filter-group">
+            <span class="filter-label">Lokasi</span>
+            <div class="filter-options">
+              <label class="filter-option">
+                <input type="checkbox" checked>
+                Taman Rektorat
+                <span class="filter-count">24</span>
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" checked>
+                Hutan Mini
+                <span class="filter-count">31</span>
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" checked>
+                Fakultas Sains
+                <span class="filter-count">18</span>
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" checked>
+                Koridor Kampus
+                <span class="filter-count">12</span>
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" checked>
+                Lapangan Utama
+                <span class="filter-count">9</span>
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" checked>
+                Kebun Biologi
+                <span class="filter-count">15</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Status Konservasi -->
+          <div class="filter-group">
+            <span class="filter-label">Status Konservasi</span>
+            <div class="filter-options">
+              <label class="filter-option">
+                <input type="checkbox" checked>
+                🟢 Least Concern
+                <span class="filter-count">112</span>
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" checked>
+                🟡 Near Threatened
+                <span class="filter-count">21</span>
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" checked>
+                🟠 Vulnerable
+                <span class="filter-count">11</span>
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" checked>
+                🔴 Endangered
+                <span class="filter-count">3</span>
+              </label>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 8px;" onclick="showNotification('🔄 Filter diterapkan!', 'success')">
+            Terapkan Filter
+          </button>
+        </aside>
+
+        <!-- Map Container -->
+        <div class="map-container animate-on-scroll">
+          <div id="map" class="map-frame" style="background: #050d09; width: 100%; height: 500px;"></div>
+
+          <!-- Map Legend Overlay -->
+          <div class="map-overlay-info">
+            <div class="map-legend">
+              <div class="legend-item">
+                <span class="legend-dot green"></span>
+                Tumbuhan (Flora)
+              </div>
+              <div class="legend-item">
+                <span class="legend-dot blue"></span>
+                Burung (Aves)
+              </div>
+              <div class="legend-item">
+                <span class="legend-dot amber"></span>
+                Serangga (Insecta)
+              </div>
+              <div class="legend-item">
+                <span class="legend-dot red"></span>
+                Habitat Terganggu
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== OBSERVATION POINTS SUMMARY ===== -->
+  <section class="features-section" style="padding-top: 0;">
+    <div class="container">
+      <div class="features-header animate-on-scroll">
+        <div class="section-label">📍 Titik Observasi Populer</div>
+        <h2 class="section-title">Area Biodiversitas Utama</h2>
+      </div>
+
+      <div class="features-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+        <div class="feature-card animate-on-scroll stagger-1" style="cursor: default;">
+          <div class="feature-icon">🌳</div>
+          <h3>Hutan Mini Kampus</h3>
+          <p>Area hutan kecil dengan keanekaragaman tertinggi. Ditemukan 31 spesies berbeda termasuk burung endemik dan tanaman langka.</p>
+          <div style="margin-top: 12px; font-size: 0.85rem; color: var(--green-400); font-weight: 600;">31 spesies • 8 observasi bulan ini</div>
+        </div>
+
+        <div class="feature-card animate-on-scroll stagger-2" style="cursor: default;">
+          <div class="feature-icon blue">🏛️</div>
+          <h3>Taman Rektorat</h3>
+          <p>Taman depan gedung rektorat dengan koleksi tanaman hias dan pohon peneduh. Area favorit untuk pengamatan kupu-kupu.</p>
+          <div style="margin-top: 12px; font-size: 0.85rem; color: var(--blue-400); font-weight: 600;">24 spesies • 5 observasi bulan ini</div>
+        </div>
+
+        <div class="feature-card animate-on-scroll stagger-3" style="cursor: default;">
+          <div class="feature-icon amber">🔬</div>
+          <h3>Kebun Biologi</h3>
+          <p>Kebun percobaan Fakultas Sains dan Teknologi. Tempat budidaya tanaman obat dan herbal kampus.</p>
+          <div style="margin-top: 12px; font-size: 0.85rem; color: var(--amber-400); font-weight: 600;">15 spesies • 3 observasi bulan ini</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="assets/logo-uin.png" alt="Logo UIN">
+          <h4>Green Campus Biodiversity Lab</h4>
+          <p>Platform pendataan, edukasi, dan aksi konservasi biodiversitas di UIN Sultan Maulana Hasanuddin Banten.</p>
+        </div>
+
+        <div class="footer-col">
+          <h5>Platform</h5>
+          <ul>
+            <li><a href="peta.html">Peta Biodiversitas</a></li>
+            <li><a href="upload.html">Upload Temuan</a></li>
+            <li><a href="spesies.html">Scan QR</a></li>
+            <li><a href="#">Aksi Hijau</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Edukasi</h5>
+          <ul>
+            <li><a href="#">Edukasi Iklim</a></li>
+            <li><a href="#">Katalog Spesies</a></li>
+            <li><a href="#">Panduan Observasi</a></li>
+            <li><a href="#">Tentang BIO-QR Trail</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Kontak</h5>
+          <ul>
+            <li><a href="#">📧 biodiversitylab@uinbanten.ac.id</a></li>
+            <li><a href="#">📞 (0254) 123-456</a></li>
+            <li><a href="https://maps.app.goo.gl/vCTasDrNrxK3fg8c7" target="_blank">📍 Serang, Banten</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2025 Green Campus Biodiversity Lab — UIN Sultan Maulana Hasanuddin Banten</span>
+        <span>Dibuat dengan 💚 untuk Bumi</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Leaflet Map JS Library -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // Notification function
+    function showNotification(msg, type) {
+      const existing = document.querySelector('.notification');
+      if (existing) existing.remove();
+      const n = document.createElement('div');
+      Object.assign(n.style, {
+        position:'fixed',bottom:'24px',right:'24px',padding:'16px 24px',borderRadius:'12px',
+        fontSize:'0.95rem',fontFamily:'Inter,sans-serif',fontWeight:'500',zIndex:'9999',
+        animation:'fadeInUp 0.4s ease',maxWidth:'400px',backdropFilter:'blur(10px)',
+        boxShadow:'0 8px 32px rgba(0,0,0,0.4)',
+        background: type === 'success' ? 'rgba(22,101,52,0.9)' : 'rgba(30,58,138,0.9)',
+        color: type === 'success' ? '#bbf7d0' : '#bfdbfe',
+        border: type === 'success' ? '1px solid rgba(34,197,94,0.3)' : '1px solid rgba(59,130,246,0.3)'
+      });
+      n.textContent = msg;
+      document.body.appendChild(n);
+      setTimeout(() => { n.style.opacity='0'; n.style.transition='opacity 0.3s'; setTimeout(()=>n.remove(),300); }, 3000);
+    }
+
+    // Initialize Map centered at UIN Sultan Maulana Hasanuddin Banten
+    const mapCenter = [-6.220927, 106.151731];
+    const map = L.map('map', {
+      center: mapCenter,
+      zoom: 17,
+      zoomControl: true,
+      scrollWheelZoom: false
+    });
+
+    // Dark Mode Map Tiles (CartoDB Dark Matter) for beautiful dark theme integration
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 20
+    }).addTo(map);
+
+    // Dynamic marker dataset reflecting the requested ecosystem map colors:
+    // hijau = tumbuhan, biru = burung, kuning/amber = serangga, merah = habitat terganggu
+    const pointsData = [
+      {
+        id: 1,
+        title: "Kamboja Jepang",
+        scientific: "Plumeria rubra",
+        category: "flora", // green
+        location: "Taman Rektorat",
+        coords: [-6.220500, 106.151300],
+        image: "assets/kamboja.png",
+        desc: "Pohon Kamboja dengan bunga mekar merah muda dan putih harum.",
+        link: "spesies.html",
+        status: "Least Concern",
+        colorClass: "green"
+      },
+      {
+        id: 2,
+        title: "Burung Kutilang",
+        scientific: "Pycnonotus aurigaster",
+        category: "fauna", // blue
+        location: "Hutan Mini",
+        coords: [-6.221200, 106.152400],
+        image: "assets/kutilang.png",
+        desc: "Populasi burung kutilang aktif bersarang di puncak pohon beringin.",
+        link: "#",
+        status: "Least Concern",
+        colorClass: "blue"
+      },
+      {
+        id: 3,
+        title: "Kupu-kupu Swallowtail",
+        scientific: "Papilio memnon",
+        category: "insecta", // amber/kuning
+        location: "Fakultas Sains",
+        coords: [-6.220200, 106.151900],
+        image: "assets/kupu-kupu.png",
+        desc: "Ditemukan bertengger di tanaman bunga perdu fakultas sains.",
+        link: "#",
+        status: "Least Concern",
+        colorClass: "amber"
+      },
+      {
+        id: 4,
+        title: "Pohon Tanjung",
+        scientific: "Mimusops elengi",
+        category: "flora", // green
+        location: "Kebun Biologi",
+        coords: [-6.221500, 106.151000],
+        image: "assets/tanjung.png",
+        desc: "Pohon peneduh rimbun dengan aroma bunga wangi eksotis.",
+        link: "#",
+        status: "Least Concern",
+        colorClass: "green"
+      },
+      {
+        id: 5,
+        title: "Area Habitat Terganggu",
+        scientific: "Sektor Konstruksi Baru",
+        category: "habitat", // red
+        location: "Timur Hutan Mini",
+        coords: [-6.220900, 106.152800],
+        image: "assets/hero-banner.png",
+        desc: "Lahan terdampak pembangunan fasilitas. Perlu pemantauan kualitas tanah.",
+        link: "#",
+        status: "Critical Monitoring",
+        colorClass: "red"
+      }
+    ];
+
+    // Marker Layer Group
+    const markerLayer = L.layerGroup().addTo(map);
+    let activeMarkers = [];
+
+    // Function to render active filtered markers
+    function renderMapMarkers() {
+      // Clear existing markers
+      markerLayer.clearLayers();
+      activeMarkers = [];
+
+      // Read checkbox states from sidebar filter using robust unique IDs
+      const showFlora = document.getElementById('filter-tumbuhan').checked;
+      const showFauna = document.getElementById('filter-burung').checked;
+      const showInsecta = document.getElementById('filter-serangga').checked;
+      const showHabitat = document.getElementById('filter-rawan').checked;
+
+      pointsData.forEach(point => {
+        // Category filters matching checkbox positions
+        if (point.category === "flora" && !showFlora) return;
+        if (point.category === "fauna" && !showFauna) return;
+        if (point.category === "insecta" && !showInsecta) return;
+        if (point.category === "habitat" && !showHabitat) return;
+
+        // Custom pulsing divIcon
+        const customIcon = L.divIcon({
+          className: `pulse-marker ${point.colorClass}`,
+          iconSize: [16, 16],
+          iconAnchor: [8, 8]
+        });
+
+        // HTML Content for the popup card
+        const popupContent = `
+          <div class="map-popup-card">
+            <img src="${point.image}" alt="${point.title}">
+            <div class="map-popup-body">
+              <div class="map-popup-title">${point.title}</div>
+              <div class="map-popup-subtitle">${point.scientific}</div>
+              <p class="map-popup-text">${point.desc}</p>
+              <div class="map-popup-meta">
+                <span style="color:var(--dark-400);">📍 ${point.location}</span>
+                <a href="${point.link}" style="font-weight:600; color:var(--green-400);">Detail →</a>
+              </div>
+            </div>
+          </div>
+        `;
+
+        // Create Leaflet Marker
+        const marker = L.marker(point.coords, { icon: customIcon })
+          .bindPopup(popupContent, { minWidth: 240, maxWidth: 240 })
+          .addTo(markerLayer);
+
+        activeMarkers.push({ point, marker });
+      });
+    }
+
+    // Set up filter checkbox action listener
+    document.querySelectorAll('.filter-option input[type="checkbox"]').forEach(box => {
+      box.addEventListener('change', () => {
+        renderMapMarkers();
+        showNotification('🔄 Peta diperbarui sesuai filter!', 'success');
+      });
+    });
+
+    // Handle "Terapkan Filter" button
+    document.querySelector('.map-filters button').addEventListener('click', (e) => {
+      e.preventDefault();
+      renderMapMarkers();
+      showNotification('✅ Filter ekosistem berhasil diterapkan!', 'success');
+    });
+
+    // Initial Marker Load
+    renderMapMarkers();
+  </script>
+</body>
+</html>
