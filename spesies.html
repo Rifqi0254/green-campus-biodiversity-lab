@@ -54,12 +54,12 @@
       margin-top: 20px;
     }
 
-    .species-match {
-      background: #1a2a1f;
-      border-left: 4px solid #4ade80;
-      padding: 16px;
-      margin-bottom: 16px;
-      border-radius: 12px;
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
     }
 
     .category-flora {
@@ -77,12 +77,9 @@
       color: #fbbf24;
     }
 
-    .badge {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
+    .category-habitat {
+      background: #7f1d1d20;
+      color: #f87171;
     }
   </style>
 </head>
@@ -121,8 +118,7 @@
         <div style="text-align: center; margin-top: 24px;">
           <div class="section-label animate-on-scroll" style="margin: 0 auto 16px;">🤖 AI Vision & QR Trail Hub</div>
           <h1 class="section-title animate-on-scroll">Pusat Pemindaian Pintar</h1>
-          <p class="section-subtitle">Upload foto flora/fauna untuk identifikasi AI, atau pindai QR Code BIO-QR Trail
-          </p>
+          <p class="section-subtitle">Upload foto untuk identifikasi berdasarkan database temuan yang sudah ada</p>
         </div>
       </div>
     </header>
@@ -135,7 +131,7 @@
           <div class="feature-card" style="padding: 28px; position: relative;">
             <div class="scan-loading" id="scan-loading">
               <div class="loading-spinner"></div>
-              <p style="color: #4ade80;">🔍 AI Vision sedang menganalisis gambar...</p>
+              <p style="color: #4ade80;">🔍 Mencocokkan dengan database temuan...</p>
             </div>
 
             <h3 style="color: #4ade80; margin-bottom: 20px;">📤 Upload Foto untuk Discan</h3>
@@ -155,24 +151,6 @@
                 style="margin-top: 10px; padding: 8px; background: #ef4444; color: white; border: none; border-radius: 8px; width: 100%; cursor: pointer;">Hapus
                 Gambar</button>
             </div>
-
-            <div style="margin-top: 20px; text-align: center; padding-top: 16px; border-top: 1px solid #2a4a2f;">
-              <p style="font-size: 12px; color: #64748b; margin-bottom: 12px;">⚡ Atau pilih sampel uji coba:</p>
-              <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
-                <button class="sample-test-btn" data-name="Elang Jawa" data-category="fauna"
-                  style="padding: 8px 16px; background: #1e293b; border: 1px solid #60a5fa; border-radius: 20px; cursor: pointer;">🦅
-                  Elang Jawa</button>
-                <button class="sample-test-btn" data-name="Kupu-kupu Swallowtail" data-category="insecta"
-                  style="padding: 8px 16px; background: #1e293b; border: 1px solid #fbbf24; border-radius: 20px; cursor: pointer;">🦋
-                  Kupu Swallowtail</button>
-                <button class="sample-test-btn" data-name="Kamboja Jepang" data-category="flora"
-                  style="padding: 8px 16px; background: #1e293b; border: 1px solid #4ade80; border-radius: 20px; cursor: pointer;">🌿
-                  Kamboja</button>
-                <button class="sample-test-btn" data-name="Kutilang" data-category="fauna"
-                  style="padding: 8px 16px; background: #1e293b; border: 1px solid #60a5fa; border-radius: 20px; cursor: pointer;">🐦
-                  Kutilang</button>
-              </div>
-            </div>
           </div>
 
           <!-- Panel Hasil -->
@@ -180,7 +158,7 @@
             <div id="results-idle" style="text-align: center; padding: 40px 20px;">
               <span style="font-size: 56px;">🤖</span>
               <h3 style="margin: 16px 0 8px; color: #cbd5e1;">Menunggu Pemindaian</h3>
-              <p style="color: #64748b;">Upload foto atau pilih sampel untuk memulai identifikasi</p>
+              <p style="color: #64748b;">Upload foto yang sudah pernah diupload di halaman Upload Temuan</p>
             </div>
 
             <div id="results-active" style="display: none;">
@@ -196,6 +174,7 @@
                 <p id="result-desc" style="color: #cbd5e1; line-height: 1.6;">-</p>
                 <p id="result-location" style="color: #64748b; margin-top: 12px;">📍 Lokasi: -</p>
                 <p id="result-date" style="color: #64748b;">📅 Tanggal: -</p>
+                <p id="result-observer" style="color: #64748b;">👤 Pengamat: -</p>
               </div>
 
               <div class="result-card">
@@ -204,9 +183,9 @@
               </div>
 
               <div style="display: flex; gap: 12px; margin-top: 20px;">
-                <button id="register-btn"
-                  style="flex: 1; padding: 12px; background: #4ade80; color: #0a0f0d; border: none; border-radius: 10px; font-weight: bold; cursor: pointer;">📝
-                  Daftarkan Temuan Ini</button>
+                <button id="view-detail-btn"
+                  style="flex: 1; padding: 12px; background: #3b82f6; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer;">🔍
+                  Lihat Detail Spesies</button>
                 <button id="reset-scan-btn"
                   style="padding: 12px 20px; background: #1e293b; border: 1px solid #4ade80; color: #4ade80; border-radius: 10px; cursor: pointer;">Reset</button>
               </div>
@@ -252,74 +231,101 @@
 
   <script src="js/data.js"></script>
   <script>
-    // Database spesies dari data.js + localStorage
-    let allSpecies = [];
+    // Database dari localStorage (temuan user) + data.js
+    let allObservations = [];
 
-    function loadAllSpecies() {
-      // Ambil dari data.js
-      if (window.speciesData && Array.isArray(window.speciesData)) {
-        allSpecies = [...window.speciesData];
+    function loadAllObservations() {
+      allObservations = [];
+
+      // Ambil dari localStorage (biodiversity_observations)
+      const localData = localStorage.getItem('biodiversity_observations');
+      if (localData) {
+        const observations = JSON.parse(localData);
+        allObservations.push(...observations);
       }
-      // Ambil dari localStorage (temuan user)
-      const localObservations = JSON.parse(localStorage.getItem('biodiversity_observations') || '[]');
-      const userSpecies = localObservations.map(obs => ({
-        id: obs.id,
-        title: obs.speciesName,
-        scientific: obs.scientificName || (obs.category === 'flora' ? 'Spesies Flora' : obs.category === 'fauna' ? 'Spesies Fauna' : 'Spesies Serangga'),
-        category: obs.category || 'flora',
-        location: obs.location || 'Kampus UIN Banten',
-        date: obs.date || new Date().toISOString().split('T')[0],
-        desc: obs.description || 'Temuan dari relawan kampus',
-        climate: 'Kontribusi pelestarian keanekaragaman hayati kampus UIN Banten membantu mitigasi perubahan iklim mikro.',
-        image: obs.imageData || null
-      }));
-      allSpecies = [...allSpecies, ...userSpecies];
+
+      // Ambil dari localStorage (green_campus_observations - old key)
+      const oldData = localStorage.getItem('green_campus_observations');
+      if (oldData) {
+        const observations = JSON.parse(oldData);
+        allObservations.push(...observations);
+      }
+
+      // Ambil dari data.js (default species)
+      if (window.speciesData && Array.isArray(window.speciesData)) {
+        allObservations.push(...window.speciesData);
+      }
+
+      // Hapus duplikat berdasarkan id
+      const uniqueMap = new Map();
+      allObservations.forEach(obs => {
+        if (obs.id && !uniqueMap.has(obs.id)) {
+          uniqueMap.set(obs.id, obs);
+        }
+      });
+      allObservations = Array.from(uniqueMap.values());
+
+      console.log('Database temuan:', allObservations.length, 'entries');
     }
 
-    function findSpeciesByName(name) {
-      if (!name) return null;
-      const lowerName = name.toLowerCase();
-      // Cari berdasarkan nama exact atau keyword
-      return allSpecies.find(s =>
-        s.title?.toLowerCase() === lowerName ||
-        s.title?.toLowerCase().includes(lowerName) ||
-        lowerName.includes(s.title?.toLowerCase())
-      );
-    }
+    // Cari temuan berdasarkan keyword dari nama file
+    function findObservationByFileName(fileName) {
+      if (!fileName) return null;
 
-    function findSpeciesByKeywords(fileName) {
-      const lowerName = fileName.toLowerCase();
+      const lowerFileName = fileName.toLowerCase();
+      let bestMatch = null;
+      let bestScore = 0;
 
-      // Mapping keyword ke spesies
-      const keywordMap = [
-        { keywords: ['elang', 'eagle', 'hawk', 'raptor'], species: 'Elang Jawa', category: 'fauna' },
-        { keywords: ['kupu', 'butterfly', 'papilio', 'swallowtail'], species: 'Kupu-kupu Swallowtail', category: 'insecta' },
-        { keywords: ['kamboja', 'plumeria', 'jepang'], species: 'Kamboja Jepang', category: 'flora' },
-        { keywords: ['kutilang', 'burung', 'bird', 'pycnonotus'], species: 'Kutilang', category: 'fauna' },
-        { keywords: ['tanjung', 'mimusops', 'elengi'], species: 'Pohon Tanjung', category: 'flora' },
-        { keywords: ['beringin', 'banyan', 'ficus'], species: 'Pohon Beringin', category: 'flora' },
-        { keywords: ['trembesi', 'rain tree', 'samanea'], species: 'Pohon Trembesi', category: 'flora' },
-        { keywords: ['tekukur', 'dove', 'spotted dove'], species: 'Tekukur Biasa', category: 'fauna' },
-        { keywords: ['jalak', 'starling', 'sturnidae'], species: 'Jalak Kerbau', category: 'fauna' }
-      ];
+      for (const obs of allObservations) {
+        let score = 0;
+        const searchText = (obs.speciesName || obs.title || '').toLowerCase();
+        const keywords = searchText.split(' ');
 
-      for (let item of keywordMap) {
-        if (item.keywords.some(keyword => lowerName.includes(keyword))) {
-          return findSpeciesByName(item.species);
+        for (const keyword of keywords) {
+          if (keyword.length > 2 && lowerFileName.includes(keyword)) {
+            score += keyword.length;
+          }
+        }
+
+        // Cek juga deskripsi
+        const descText = (obs.description || '').toLowerCase();
+        const descWords = descText.split(' ');
+        for (const word of descWords) {
+          if (word.length > 3 && lowerFileName.includes(word)) {
+            score += 2;
+          }
+        }
+
+        if (score > bestScore && score > 0) {
+          bestScore = score;
+          bestMatch = obs;
         }
       }
-      return null;
+
+      // Jika tidak ada match, coba cari berdasarkan nama persis
+      if (!bestMatch) {
+        for (const obs of allObservations) {
+          const name = (obs.speciesName || obs.title || '').toLowerCase();
+          if (lowerFileName.includes(name) || name.includes(lowerFileName)) {
+            return obs;
+          }
+        }
+      }
+
+      return bestMatch;
     }
 
-    function displayResult(species) {
-      if (!species) {
-        alert('❌ Tidak dapat mengidentifikasi spesies. Coba upload gambar yang lebih jelas atau pilih sampel.');
+    // Tampilkan hasil
+    function displayResult(observation) {
+      if (!observation) {
+        alert('❌ Tidak ditemukan temuan yang cocok dengan gambar ini. Silakan upload temuan terlebih dahulu di halaman Upload Temuan.');
         return false;
       }
 
       document.getElementById('results-idle').style.display = 'none';
       document.getElementById('results-active').style.display = 'block';
 
+      const category = observation.category || 'flora';
       const categoryMap = {
         flora: '🌿 Flora',
         fauna: '🐦 Fauna',
@@ -333,20 +339,27 @@
         habitat: '#f87171'
       };
 
-      const category = species.category || 'flora';
+      const speciesName = observation.speciesName || observation.title || 'Tidak diketahui';
+      const scientificName = observation.scientific || observation.scientificName ||
+        (category === 'flora' ? 'Spesies Flora' : category === 'fauna' ? 'Spesies Fauna' : 'Spesies Serangga');
+      const desc = observation.description || observation.desc || 'Belum ada deskripsi untuk spesies ini.';
+      const location = observation.location || 'Kampus UIN Banten';
+      const date = observation.date || new Date().toISOString().split('T')[0];
+      const observer = observation.observerName || observation.user || 'Relawan Kampus';
+      const climate = observation.climate || 'Keberadaan spesies ini berkontribusi pada keseimbangan ekosistem kampus. Pelestarian biodiversitas membantu mitigasi perubahan iklim lokal.';
+
       document.getElementById('result-category-badge').innerHTML = categoryMap[category] || '🌿 Flora';
       document.getElementById('result-category-badge').style.background = `${categoryColor[category]}20`;
       document.getElementById('result-category-badge').style.color = categoryColor[category];
-      document.getElementById('result-name').textContent = species.title || species.speciesName;
-      document.getElementById('result-scientific').textContent = species.scientific || (species.category === 'flora' ? 'Spesies Flora' : 'Spesies Fauna');
-      document.getElementById('result-desc').innerHTML = species.desc || species.description || 'Belum ada deskripsi untuk spesies ini.';
-      document.getElementById('result-location').innerHTML = `📍 Lokasi: ${species.location || 'Kampus UIN Banten'}`;
-      document.getElementById('result-date').innerHTML = `📅 Tanggal: ${species.date || new Date().toISOString().split('T')[0]}`;
+      document.getElementById('result-name').textContent = speciesName;
+      document.getElementById('result-scientific').textContent = scientificName;
+      document.getElementById('result-desc').innerHTML = desc;
+      document.getElementById('result-location').innerHTML = `📍 Lokasi: ${location}`;
+      document.getElementById('result-date').innerHTML = `📅 Tanggal: ${date}`;
+      document.getElementById('result-observer').innerHTML = `👤 Pengamat: ${observer}`;
+      document.getElementById('result-climate').innerHTML = climate;
 
-      let climateText = species.climate || 'Keberadaan spesies ini berkontribusi pada keseimbangan ekosistem kampus. Pelestarian biodiversitas membantu mitigasi perubahan iklim lokal.';
-      document.getElementById('result-climate').innerHTML = climateText;
-
-      window.lastScanResult = species;
+      window.lastScanResult = observation;
       return true;
     }
 
@@ -368,34 +381,47 @@
       window.lastScanResult = null;
     }
 
-    function performScan(fileName, sampleName = null, sampleCategory = null) {
+    function performScan(fileName, fileData = null) {
       showLoading();
+
+      // Simulasi delay pemrosesan
       setTimeout(() => {
         hideLoading();
-        let species = null;
 
-        if (sampleName) {
-          // Sample button
-          species = findSpeciesByName(sampleName);
-          if (!species && sampleCategory) {
-            species = { title: sampleName, category: sampleCategory, desc: 'Sampel uji coba dari platform Green Campus.', location: 'Kampus UIN Banten', date: new Date().toISOString().split('T')[0] };
-          }
-        } else if (fileName) {
-          // Detect from filename
-          species = findSpeciesByKeywords(fileName);
-          if (!species) {
-            species = findSpeciesByName(fileName.split('.')[0].replace(/[0-9]/g, '').trim());
+        // Load ulang database terbaru
+        loadAllObservations();
+
+        let observation = null;
+
+        if (fileName) {
+          observation = findObservationByFileName(fileName);
+        }
+
+        if (!observation && allObservations.length > 0) {
+          // Jika tidak ada match, cari berdasarkan keyword umum
+          const lowerName = fileName.toLowerCase();
+          for (const obs of allObservations) {
+            const name = (obs.speciesName || obs.title || '').toLowerCase();
+            if (lowerName.includes('kamboja') && name.includes('kamboja')) {
+              observation = obs;
+              break;
+            } else if (lowerName.includes('kupu') && (name.includes('kupu') || name.includes('papilio'))) {
+              observation = obs;
+              break;
+            } else if (lowerName.includes('burung') && (name.includes('kutilang') || name.includes('burung'))) {
+              observation = obs;
+              break;
+            }
           }
         }
 
-        if (!species) {
-          species = allSpecies.find(s => s.title === 'Kamboja Jepang') || allSpecies[0];
-          if (species) {
-            alert('⚠️ Spesies tidak terdeteksi secara pasti. Menampilkan contoh spesies.');
-          }
+        if (!observation && allObservations.length > 0) {
+          // Tampilkan temuan pertama sebagai fallback
+          observation = allObservations[0];
+          alert('⚠️ Tidak ditemukan kecocokan persis. Menampilkan salah satu temuan yang tersedia.');
         }
 
-        displayResult(species);
+        displayResult(observation);
       }, 1500);
     }
 
@@ -410,27 +436,38 @@
         document.getElementById('scan-preview-img').src = e.target.result;
         document.getElementById('image-preview-area').style.display = 'block';
         document.getElementById('upload-area').style.display = 'none';
-        performScan(file.name);
+        performScan(file.name, e.target.result);
       };
       reader.readAsDataURL(file);
     }
 
-    // Initialization
+    // Inisialisasi
     document.addEventListener('DOMContentLoaded', () => {
-      loadAllSpecies();
+      loadAllObservations();
 
       const params = new URLSearchParams(window.location.search);
       const hasId = params.has('id');
       const speciesWrapper = document.getElementById('species-detail-wrapper');
       const scannerWrapper = document.getElementById('scanner-hub-wrapper');
 
-      if (hasId && window.speciesData) {
+      if (hasId) {
         if (speciesWrapper) speciesWrapper.style.display = 'block';
         if (scannerWrapper) scannerWrapper.style.display = 'none';
         const id = params.get('id');
-        const species = [...window.speciesData, ...(JSON.parse(localStorage.getItem('biodiversity_observations') || '[]'))].find(s => s.id == id);
+        loadAllObservations();
+        const species = allObservations.find(s => s.id == id);
         if (species) {
-          speciesWrapper.innerHTML = `<div class="container" style="padding:100px 20px"><h1>${species.title}</h1><p>${species.desc}</p><a href="spesies.html" class="btn btn-primary">Kembali ke Scanner</a></div>`;
+          speciesWrapper.innerHTML = `
+            <div class="container" style="padding:120px 20px 80px">
+              <h1>${species.speciesName || species.title}</h1>
+              <p>${species.description || species.desc || 'Tidak ada deskripsi'}</p>
+              <p>📍 ${species.location || 'Kampus UIN Banten'}</p>
+              <p>📅 ${species.date || '-'}</p>
+              <a href="spesies.html" class="btn btn-primary" style="margin-top:20px">← Kembali ke Scanner</a>
+            </div>
+          `;
+        } else {
+          speciesWrapper.innerHTML = `<div class="container" style="padding:120px 20px"><h2>Spesies tidak ditemukan</h2><a href="spesies.html" class="btn btn-primary">Kembali ke Scanner</a></div>`;
         }
       } else {
         if (speciesWrapper) speciesWrapper.style.display = 'none';
@@ -442,8 +479,7 @@
       const fileInput = document.getElementById('scan-file-input');
       const removeBtn = document.getElementById('remove-scan-img');
       const resetBtn = document.getElementById('reset-scan-btn');
-      const registerBtn = document.getElementById('register-btn');
-      const sampleBtns = document.querySelectorAll('.sample-test-btn');
+      const viewDetailBtn = document.getElementById('view-detail-btn');
 
       if (uploadArea) {
         uploadArea.onclick = () => fileInput.click();
@@ -452,17 +488,23 @@
         uploadArea.ondrop = (e) => { e.preventDefault(); uploadArea.style.borderColor = '#4ade80'; if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); };
       }
       if (fileInput) fileInput.onchange = (e) => { if (e.target.files[0]) handleFile(e.target.files[0]); };
-      if (removeBtn) removeBtn.onclick = () => { document.getElementById('image-preview-area').style.display = 'none'; document.getElementById('upload-area').style.display = 'block'; fileInput.value = ''; document.getElementById('scan-preview-img').src = ''; };
+      if (removeBtn) removeBtn.onclick = () => {
+        document.getElementById('image-preview-area').style.display = 'none';
+        document.getElementById('upload-area').style.display = 'block';
+        fileInput.value = '';
+        document.getElementById('scan-preview-img').src = '';
+      };
       if (resetBtn) resetBtn.onclick = resetScanner;
-      if (registerBtn) registerBtn.onclick = () => { if (window.lastScanResult) { window.location.href = `upload.html?species=${encodeURIComponent(window.lastScanResult.title)}&category=${encodeURIComponent(window.lastScanResult.category)}`; } else { alert('Tidak ada hasil scan. Silakan scan gambar terlebih dahulu.'); } };
-
-      sampleBtns.forEach(btn => {
-        btn.onclick = () => {
-          const name = btn.getAttribute('data-name');
-          const category = btn.getAttribute('data-category');
-          performScan(null, name, category);
-        };
-      });
+      if (viewDetailBtn) viewDetailBtn.onclick = () => {
+        if (window.lastScanResult && window.lastScanResult.id) {
+          window.location.href = `spesies.html?id=${window.lastScanResult.id}`;
+        } else if (window.lastScanResult) {
+          // Fallback jika tidak ada id
+          alert('Detail lengkap spesies dapat dilihat di halaman Upload Temuan.');
+        } else {
+          alert('Tidak ada hasil scan. Silakan scan gambar terlebih dahulu.');
+        }
+      };
     });
 
     // Mobile nav
