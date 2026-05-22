@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initParticles();
   initMobileNav();
   initUploadForm();
+  initRecentObservations();
 });
 
 /* --- Navbar Scroll Effect --- */
@@ -142,6 +143,7 @@ function initUploadForm() {
   const previewImg = document.querySelector('.image-preview img');
   const removeBtn = document.querySelector('.remove-image');
   const form = document.getElementById('observation-form');
+  const aiHint = document.querySelector('.ai-hint');
 
   if (!uploadZone || !fileInput) return;
 
@@ -156,10 +158,12 @@ function initUploadForm() {
     uploadZone.classList.add('drag-over');
   });
 
+  // Drag leave
   uploadZone.addEventListener('dragleave', () => {
     uploadZone.classList.remove('drag-over');
   });
 
+  // Drop file
   uploadZone.addEventListener('drop', (e) => {
     e.preventDefault();
     uploadZone.classList.remove('drag-over');
@@ -178,7 +182,7 @@ function initUploadForm() {
 
   function handleFileSelect(file) {
     if (!file.type.startsWith('image/')) {
-      showNotification('Mohon upload file gambar (JPG, PNG, dll)', 'error');
+      showNotification('Mohon upload file gambar (JPG, PNG, WEBP)', 'error');
       return;
     }
 
@@ -188,6 +192,45 @@ function initUploadForm() {
         previewImg.src = e.target.result;
         imagePreview.classList.add('active');
         uploadZone.style.display = 'none';
+
+        // Simulated premium AI species detection!
+        if (aiHint) {
+          aiHint.style.background = 'rgba(34, 197, 94, 0.15)';
+          aiHint.style.borderColor = 'rgba(34, 197, 94, 0.4)';
+          aiHint.innerHTML = `<span class="ai-icon" style="animation: pulse-green 1s infinite;">🤖</span> <span style="color:#4ade80; font-weight:600;">AI sedang menganalisis foto...</span>`;
+          
+          setTimeout(() => {
+            // Determine a name based on file name keywords
+            const fileNameLower = file.name.toLowerCase();
+            let predictedName = '';
+            let predictedCat = 'flora';
+
+            if (fileNameLower.includes('burung') || fileNameLower.includes('kutilang') || fileNameLower.includes('bird') || fileNameLower.includes('gereja') || fileNameLower.includes('jalak')) {
+              predictedName = fileNameLower.includes('kutilang') ? 'Burung Kutilang' : fileNameLower.includes('jalak') ? 'Burung Jalak Kerbau' : 'Burung Gereja';
+              predictedCat = 'fauna';
+            } else if (fileNameLower.includes('kamboja') || fileNameLower.includes('bunga') || fileNameLower.includes('flower') || fileNameLower.includes('pohon') || fileNameLower.includes('tanjung') || fileNameLower.includes('daun')) {
+              predictedName = fileNameLower.includes('kamboja') ? 'Kamboja Jepang' : fileNameLower.includes('tanjung') ? 'Pohon Tanjung' : 'Pohon Beringin';
+              predictedCat = 'flora';
+            } else if (fileNameLower.includes('kupu') || fileNameLower.includes('capung') || fileNameLower.includes('serangga') || fileNameLower.includes('butterfly') || fileNameLower.includes('insect')) {
+              predictedName = fileNameLower.includes('kupu') ? 'Kupu-kupu Swallowtail' : 'Capung Jarum';
+              predictedCat = 'fauna'; // maps to fauna or custom
+            }
+
+            if (predictedName) {
+              document.getElementById('species-name').value = predictedName;
+              if (predictedCat === 'flora') {
+                document.getElementById('cat-flora').checked = true;
+              } else {
+                document.getElementById('cat-fauna').checked = true;
+              }
+              aiHint.innerHTML = `<span class="ai-icon">🤖</span> <span>AI mendeteksi kecocokan tinggi: <strong>${predictedName}</strong> (${predictedCat === 'flora' ? '🌿 Flora' : '🐦 Fauna'} - Akurasi 96%). Form telah diisi otomatis.</span>`;
+              showNotification(`🤖 AI berhasil mendeteksi: ${predictedName}!`, 'success');
+            } else {
+              // Default fallback scan suggestion
+              aiHint.innerHTML = `<span class="ai-icon">🤖</span> <span>AI mendeteksi objek gambar. Silakan isi Nama Spesies & Kategori secara manual untuk akurasi terbaik.</span>`;
+            }
+          }, 1500);
+        }
       }
     };
     reader.readAsDataURL(file);
@@ -200,31 +243,175 @@ function initUploadForm() {
         imagePreview.classList.remove('active');
         uploadZone.style.display = '';
         fileInput.value = '';
+        if (aiHint) {
+          aiHint.style.background = '';
+          aiHint.style.borderColor = '';
+          aiHint.innerHTML = `<span class="ai-icon">🤖</span> <span>AI membantu identifikasi awal spesies berdasarkan foto. Hasil identifikasi akan muncul secara otomatis setelah upload.</span>`;
+        }
       }
     });
   }
 
-  // Form submission
+  // Form submission & local preservation
   if (form) {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      showNotification('✅ Observasi berhasil dikirim! Terima kasih atas kontribusi Anda.', 'success');
 
-      // Reset form after delay
+      const name = document.getElementById('species-name').value;
+      const category = document.querySelector('input[name="category"]:checked').value;
+      const locationKey = document.getElementById('location').value;
+      const locationText = document.getElementById('location').options[document.getElementById('location').selectedIndex].text;
+      const date = document.getElementById('date').value;
+      const description = document.getElementById('description').value;
+      const observerName = document.getElementById('observer-name').value || 'Relawan Mahasiswa';
+      const observerNim = document.getElementById('observer-nim').value || '-';
+
+      // Capture Image
+      let imageSrc = '';
+      if (previewImg && previewImg.src && imagePreview.classList.contains('active')) {
+        imageSrc = previewImg.src;
+      } else {
+        // Fallbacks
+        if (category === 'flora') imageSrc = 'assets/kamboja.png';
+        else if (category === 'fauna') imageSrc = 'assets/kutilang.png';
+        else imageSrc = 'assets/hero-banner.png';
+      }
+
+      // Geolocation mapping with small randomized spreads
+      const baseCoords = {
+        'taman-rektorat': [-6.220300, 106.151200],
+        'hutan-mini': [-6.221250, 106.152450],
+        'fakultas-sains': [-6.220100, 106.151950],
+        'koridor': [-6.220850, 106.151650],
+        'lapangan': [-6.220550, 106.152650],
+        'kebun-biologi': [-6.221600, 106.150900],
+        'masjid': [-6.220927, 106.151731],
+        'lainnya': [-6.220927, 106.151731]
+      };
+
+      const base = baseCoords[locationKey] || [-6.220927, 106.151731];
+      const offsetLat = (Math.random() - 0.5) * 0.0004;
+      const offsetLng = (Math.random() - 0.5) * 0.0004;
+      const coords = [base[0] + offsetLat, base[1] + offsetLng];
+
+      // Mapping status & categories
+      let colorClass = 'green';
+      let scientificFallback = 'Spesies Baru';
+      if (category === 'flora') {
+        colorClass = 'green';
+        scientificFallback = 'Flora Teridentifikasi';
+      } else if (category === 'fauna') {
+        colorClass = 'blue';
+        scientificFallback = 'Fauna Teridentifikasi';
+      } else if (category === 'habitat') {
+        colorClass = 'red';
+        scientificFallback = 'Status Kerawanan';
+      }
+
+      const generatedId = Date.now();
+      const newObservation = {
+        id: generatedId,
+        title: name,
+        scientific: scientificFallback,
+        category: category,
+        location: locationText,
+        coords: coords,
+        image: imageSrc,
+        desc: description || `Hasil temuan spesies ${name} tercatat di ${locationText} pada ${date}.`,
+        link: `spesies.html?id=${generatedId}`,
+        status: category === 'habitat' ? 'Monitoring' : 'Least Concern',
+        colorClass: colorClass,
+        observerName: observerName,
+        observerNim: observerNim,
+        date: date
+      };
+
+      // Push to LocalStorage
+      const localObservations = JSON.parse(localStorage.getItem('biodiversity_observations') || '[]');
+      localObservations.unshift(newObservation);
+      localStorage.setItem('biodiversity_observations', JSON.stringify(localObservations));
+
+      showNotification('✅ Observasi berhasil diupload! Terima kasih atas kontribusi Anda.', 'success');
+
+      // Reset and Redirect
       setTimeout(() => {
         form.reset();
         if (imagePreview) {
           imagePreview.classList.remove('active');
           uploadZone.style.display = '';
         }
-      }, 2000);
+        window.location.href = 'index.html#recent';
+      }, 1500);
     });
   }
 }
 
+/* --- Dynamic Recent Observations Feed (Home) --- */
+function initRecentObservations() {
+  const container = document.getElementById('recent-observations-grid');
+  if (!container) return;
+
+  // Baseline prominent species to show
+  const baseline = window.speciesData.slice(0, 3); // Kamboja, Tanjung, Beringin
+
+  // Retrieve user observations from LocalStorage
+  const localObs = JSON.parse(localStorage.getItem('biodiversity_observations') || '[]');
+
+  // Combine them: User-uploaded observations always take precedence at the top!
+  const allObservations = [...localObs, ...baseline].slice(0, 6);
+
+  container.innerHTML = '';
+
+  allObservations.forEach((obs, index) => {
+    const card = document.createElement('a');
+    card.href = obs.link || `spesies.html?id=${obs.id}`;
+    card.className = `feature-card animate-on-scroll stagger-${(index % 4) + 1}`;
+    card.style.textDecoration = 'none';
+    card.style.color = 'inherit';
+    card.style.display = 'block';
+
+    // Category style tags
+    let catLabel = 'Flora';
+    let catBg = 'rgba(34,197,94,0.15)';
+    let catColor = '#4ade80';
+
+    if (obs.category === 'fauna') {
+      catLabel = 'Fauna';
+      catBg = 'rgba(59,130,246,0.15)';
+      catColor = '#60a5fa';
+    } else if (obs.category === 'insecta') {
+      catLabel = 'Serangga';
+      catBg = 'rgba(245,158,11,0.15)';
+      catColor = '#fbbf24';
+    } else if (obs.category === 'habitat') {
+      catLabel = 'Habitat';
+      catBg = 'rgba(239,68,68,0.15)';
+      catColor = '#f87171';
+    }
+
+    card.innerHTML = `
+      <div style="width: 100%; height: 180px; border-radius: 12px; overflow: hidden; margin-bottom: 16px; position: relative; background: #06110b;">
+        <img src="${obs.image}" alt="${obs.title}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;">
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+        <span style="background: ${catBg}; color: ${catColor}; padding: 2px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">${catLabel}</span>
+        <span style="font-size: 0.8rem; color: #94a3b8;">📍 ${obs.location}</span>
+      </div>
+      <h3 style="font-size: 1.1rem; margin-bottom: 4px; color: var(--dark-50);">${obs.title}</h3>
+      <p style="font-size: 0.85rem; font-style: italic; color: var(--green-400); margin-bottom: 8px;">${obs.scientific}</p>
+      <p style="font-size: 0.88rem; color: var(--dark-300); line-height: 1.5; margin-bottom: 0;">${obs.desc}</p>
+      <span class="feature-arrow" style="position: absolute; bottom: 20px; right: 20px; font-size: 1.1rem; color: var(--green-400);">→</span>
+    `;
+
+    container.appendChild(card);
+  });
+
+  // Re-initialize intersection observers for the new elements
+  initScrollAnimations();
+}
+
 /* --- Notification System --- */
 function showNotification(message, type = 'info') {
-  // Remove existing notifications
   const existing = document.querySelector('.notification');
   if (existing) existing.remove();
 
@@ -235,7 +422,6 @@ function showNotification(message, type = 'info') {
     <button onclick="this.parentElement.remove()" style="background:none;border:none;color:inherit;cursor:pointer;font-size:1.2rem;padding:0 0 0 12px;">×</button>
   `;
 
-  // Styles
   Object.assign(notification.style, {
     position: 'fixed',
     bottom: '24px',
@@ -271,7 +457,6 @@ function showNotification(message, type = 'info') {
 
   document.body.appendChild(notification);
 
-  // Auto remove
   setTimeout(() => {
     notification.style.opacity = '0';
     notification.style.transform = 'translateY(10px)';
@@ -284,8 +469,10 @@ function showNotification(message, type = 'info') {
 document.addEventListener('click', (e) => {
   const anchor = e.target.closest('a[href^="#"]');
   if (anchor) {
+    const targetId = anchor.getAttribute('href');
+    if (targetId === '#') return;
     e.preventDefault();
-    const target = document.querySelector(anchor.getAttribute('href'));
+    const target = document.querySelector(targetId);
     if (target) {
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }

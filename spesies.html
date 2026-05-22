@@ -271,6 +271,225 @@
     </div>
   </footer>
 
+  <script src="js/data.js"></script>
   <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const idParam = params.get('id') || '1';
+      const idNum = parseInt(idParam, 10);
+      
+      const localObservations = JSON.parse(localStorage.getItem('biodiversity_observations') || '[]');
+      const allData = [...window.speciesData, ...localObservations];
+      const data = allData.find(s => s.id === idNum || s.id.toString() === idParam);
+
+      if (data) {
+        // Update Title & Header
+        document.title = `${data.title} — ${data.scientific} | Green Campus Biodiversity Lab`;
+        document.querySelector('.breadcrumbs span:last-child').textContent = data.title;
+        document.querySelector('h1.section-title').textContent = data.title;
+        
+        // Update Image & Badge
+        const img = document.querySelector('.species-image-wrapper img');
+        img.src = data.image;
+        img.alt = `${data.title} — ${data.scientific}`;
+        
+        const badge = document.querySelector('.species-badge');
+        badge.className = `species-badge ${data.category}`;
+        if (data.category === 'flora') { badge.innerHTML = '🌿 Flora'; badge.style.background = 'rgba(34,197,94,0.2)'; badge.style.color = '#4ade80'; }
+        else if (data.category === 'fauna') { badge.innerHTML = '🐦 Fauna'; badge.style.background = 'rgba(59,130,246,0.2)'; badge.style.color = '#60a5fa'; }
+        else if (data.category === 'insecta') { badge.innerHTML = '🦋 Serangga'; badge.style.background = 'rgba(245,158,11,0.2)'; badge.style.color = '#fbbf24'; }
+        else { badge.innerHTML = '⚠️ Habitat'; badge.style.background = 'rgba(239,68,68,0.2)'; badge.style.color = '#f87171'; }
+
+        // Update Info section
+        document.querySelector('.species-info h1').textContent = data.title;
+        document.querySelector('.species-scientific').textContent = data.scientific;
+        
+        // Map families dynamically
+        const families = {
+          "Kamboja Jepang": "Apocynaceae",
+          "Pohon Tanjung": "Sapotaceae",
+          "Pohon Beringin": "Moraceae",
+          "Bunga Bougenville": "Nyctaginaceae",
+          "Jahe Merah": "Zingiberaceae",
+          "Pohon Trembesi": "Fabaceae",
+          "Burung Kutilang": "Pycnonotidae",
+          "Burung Gereja": "Passeridae",
+          "Tekukur Biasa": "Columbidae",
+          "Jalak Kerbau": "Sturnidae",
+          "Kupu-kupu Swallowtail": "Papilionidae",
+          "Capung Jarum": "Coenagrionidae",
+          "Kupu-kupu Lime": "Papilionidae"
+        };
+        const familyName = families[data.title] || (data.category === 'flora' ? 'Famili Flora' : data.category === 'fauna' ? 'Famili Fauna' : data.category === 'insecta' ? 'Famili Serangga' : 'Kategori Lingkungan');
+        
+        const dateIdentified = data.date || "15 Mei 2025";
+        const observerName = data.observerName || "Relawan Kampus";
+        
+        const metaContainer = document.querySelector('.species-meta');
+        if (metaContainer) {
+          metaContainer.innerHTML = `
+            <div class="species-meta-item">📍 ${data.location}</div>
+            <div class="species-meta-item">🌳 Famili: ${familyName}</div>
+            <div class="species-meta-item">📅 Tanggal: ${dateIdentified}</div>
+            <div class="species-meta-item">👤 Pengamat: ${observerName}</div>
+          `;
+        }
+        
+        // Update Conservation Status
+        const statusEl = document.querySelector('.conservation-status');
+        statusEl.textContent = data.status;
+        statusEl.className = 'conservation-status';
+        if(data.status.includes('Least Concern')) statusEl.classList.add('lc');
+        else if(data.status.includes('Threatened') || data.status.includes('Near')) { statusEl.style.background='rgba(245,158,11,0.2)'; statusEl.style.color='#fbbf24'; }
+        else { statusEl.style.background='rgba(239,68,68,0.2)'; statusEl.style.color='#f87171'; }
+
+        // Update Description
+        const descContainer = document.querySelector('.species-description');
+        descContainer.innerHTML = `<h3>📝 Deskripsi</h3><p>${data.desc}</p><p>Spesies ini merupakan bagian penting dari keanekaragaman hayati di area ${data.location} kampus UIN Sultan Maulana Hasanuddin Banten. Program pemantauan rutin terus dilakukan oleh divisi Green Campus dan Fakultas Sains untuk mengamati status pertumbuhan, persebaran habitat, serta interaksinya dengan ekosistem sekitar.</p>`;
+
+        // Update Info Cards dynamically based on category
+        const cardsContainer = document.querySelector('.info-cards-grid');
+        if (cardsContainer) {
+          let card1Icon = "🌎", card1Title = "Manfaat Ekologis", card1Text = "";
+          let card2Icon = "🌡️", card2Title = "Kaitan Krisis Iklim", card2Text = "";
+          let card3Icon = "🛡️", card3Title = "Peran Lingkungan", card3Text = "";
+
+          if (data.category === 'flora') {
+            card1Text = "Menghasilkan oksigen (O₂), menyerap air tanah, serta menyediakan nektar atau makanan bagi serangga penyerbuk kampus.";
+            card2Text = "Sebagai penyerap karbon (carbon sink) alami yang efektif membantu mengurangi pemanasan global di area UIN Banten.";
+            card3Text = "Kanopi dedaunan memberikan peneduh alami, meredam suhu udara panas mikro, dan menyaring debu polutan.";
+          } else if (data.category === 'fauna') {
+            card1Text = "Membantu mengendalikan populasi serangga secara alami di kebun kampus dan menyebarkan biji tanaman untuk regenerasi flora.";
+            card2Text = "Sebagai indikator sensitif terhadap iklim; fluktuasi populasi atau migrasi burung mencerminkan kesehatan ekosistem lokal.";
+            card3Text = "Merupakan bagian penting dari rantai makanan kampus, berinteraksi aktif dengan tumbuhan tinggi maupun serangga kecil.";
+          } else if (data.category === 'insecta') {
+            card1Text = "Berperan sebagai agen penyerbukan utama bagi bunga hias kampus serta pemangsa alami jentik nyamuk dan hama tanaman.";
+            card2Text = "Siklus hidup serangga sangat sensitif terhadap perubahan suhu, menjadikannya alarm peringatan dini perubahan iklim.";
+            card3Text = "Membantu menguraikan materi organik tanah di kebun biologi dan menjadi sumber makanan bagi fauna burung kampus.";
+          } else { // habitat
+            card1Text = "Menjadi tempat berlindung, bersarang, dan berkembang biak bagi berbagai ragam jenis flora dan fauna lokal.";
+            card2Text = "Keseimbangan ekologi tanah dan air di zona ini berdampak langsung terhadap ketahanan iklim mikro kampus.";
+            card3Text = "Membutuhkan pemantauan berkala guna mencegah erosi tanah, degradasi kesuburan lahan, dan penumpukan limbah beton.";
+          }
+
+          cardsContainer.innerHTML = `
+            <div class="info-card">
+              <div class="info-card-icon">${card1Icon}</div>
+              <h4>${card1Title}</h4>
+              <p>${card1Text}</p>
+            </div>
+            <div class="info-card">
+              <div class="info-card-icon">${card2Icon}</div>
+              <h4>${card2Title}</h4>
+              <p>${card2Text}</p>
+            </div>
+            <div class="info-card">
+              <div class="info-card-icon">${card3Icon}</div>
+              <h4>${card3Title}</h4>
+              <p>${card3Text}</p>
+            </div>
+          `;
+        }
+
+        // Update Action CTA Checklist dynamically based on category
+        const checklistContainer = document.querySelector('.action-cta div[style*="display: flex; flex-direction: column;"]');
+        if (checklistContainer) {
+          let item1Icon = "🚫", item1Text = "Jangan merusak tanaman atau mencabut bunga sembarangan di lingkungan kampus.";
+          let item2Icon = "🌱", item2Text = `Ikuti aksi penanaman pohon dan perawatan berkala di area ${data.location}.`;
+          let item3Icon = "⚠️", item3Text = "Laporkan jika melihat tanda-tanda kerusakan pada flora atau sarang hama liar.";
+
+          if (data.category === 'fauna' || data.category === 'insecta') {
+            item1Icon = "🚫";
+            item1Text = "Jangan berburu, menangkap, menembak, atau mengganggu sarang fauna di kampus.";
+            item2Icon = "🐦";
+            item2Text = "Bantu menjaga habitat pohon peneduh agar burung dan serangga tetap bersarang dengan aman.";
+            item3Icon = "⚠️";
+            item3Text = "Laporkan kepada pengelola kampus jika melihat satwa yang terluka atau terperangkap.";
+          } else if (data.category === 'habitat') {
+            item1Icon = "🚫";
+            item1Text = "Jangan membuang sampah sembarangan atau limbah konstruksi di area sensitif ini.";
+            item2Icon = "🚧";
+            item2Text = "Patuhi rambu batas aman saat melintasi kawasan restorasi lingkungan kampus.";
+            item3Icon = "⚠️";
+            item3Text = "Laporkan segera jika mendeteksi pencemaran air, erosi parah, atau penumpukan sampah liar.";
+          }
+
+          checklistContainer.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: rgba(34,197,94,0.08); border-radius: 10px; border-left: 3px solid var(--green-500);">
+              <span style="font-size: 1.3rem;">${item1Icon}</span>
+              <span style="font-size: 0.9rem; color: var(--dark-300);">${item1Text}</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: rgba(34,197,94,0.08); border-radius: 10px; border-left: 3px solid var(--green-500);">
+              <span style="font-size: 1.3rem;">${item2Icon}</span>
+              <span style="font-size: 0.9rem; color: var(--dark-300);">${item2Text}</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: rgba(239, 68, 68, 0.08); border-radius: 10px; border-left: 3px solid var(--red-500);">
+              <span style="font-size: 1.3rem;">${item3Icon}</span>
+              <span style="font-size: 0.9rem; color: var(--dark-300);">${item3Text}</span>
+            </div>
+          `;
+        }
+
+        // Update Related Species Grid
+        const relatedContainer = document.querySelector('.features-grid');
+        if (relatedContainer) {
+          // Filter out current species
+          const potentialRelated = allData.filter(s => s.id !== data.id);
+          // Try to get species in same category first
+          let related = potentialRelated.filter(s => s.category === data.category);
+          // If less than 3, add other species
+          if (related.length < 3) {
+            const others = potentialRelated.filter(s => s.category !== data.category);
+            related = [...related, ...others];
+          }
+          // Slice to 3
+          related = related.slice(0, 3);
+
+          relatedContainer.innerHTML = '';
+          related.forEach((rel, index) => {
+            let catLabel = 'Flora';
+            let catBg = 'rgba(34,197,94,0.15)';
+            let catColor = '#4ade80';
+
+            if (rel.category === 'fauna') {
+              catLabel = 'Fauna';
+              catBg = 'rgba(59,130,246,0.15)';
+              catColor = '#60a5fa';
+            } else if (rel.category === 'insecta') {
+              catLabel = 'Serangga';
+              catBg = 'rgba(245,158,11,0.15)';
+              catColor = '#fbbf24';
+            } else if (rel.category === 'habitat') {
+              catLabel = 'Habitat';
+              catBg = 'rgba(239,68,68,0.15)';
+              catColor = '#f87171';
+            }
+
+            const item = document.createElement('a');
+            item.href = rel.link || `spesies.html?id=${rel.id}`;
+            item.className = `feature-card animate-on-scroll stagger-${index + 1}`;
+            item.style.textDecoration = 'none';
+            item.style.color = 'inherit';
+            item.style.display = 'block';
+
+            item.innerHTML = `
+              <div style="width: 100%; height: 160px; border-radius: 12px; overflow: hidden; margin-bottom: 12px; background: #06110b; position: relative;">
+                <img src="${rel.image}" alt="${rel.title}" style="width: 100%; height: 100%; object-fit: cover;">
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                <span style="background: ${catBg}; color: ${catColor}; padding: 2px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">${catLabel}</span>
+                <span class="conservation-status" style="font-size: 0.7rem; padding: 2px 8px; margin: 0; background:${catBg}; color:${catColor}; border:none;">${rel.status}</span>
+              </div>
+              <h3 style="font-size: 1rem; margin-bottom: 4px; color: var(--dark-50);">${rel.title}</h3>
+              <p style="font-size: 0.85rem; font-style: italic; color: var(--green-400); margin-bottom: 0;">${rel.scientific}</p>
+              <span class="feature-arrow" style="position: absolute; bottom: 20px; right: 20px; font-size: 1.1rem; color: var(--green-400);">→</span>
+            `;
+            relatedContainer.appendChild(item);
+          });
+        }
+      }
+    });
+  </script>
 </body>
 </html>

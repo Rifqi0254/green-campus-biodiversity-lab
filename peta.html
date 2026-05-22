@@ -184,6 +184,32 @@
         <aside class="map-filters animate-on-scroll">
           <h3 style="font-size: 1.1rem; margin-bottom: 20px; color: var(--dark-100);">🔎 Filter Peta</h3>
 
+          <!-- Panduan Warna Kategori (Interactive Guide) -->
+          <div class="filter-group" style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;">
+            <span class="filter-label" style="margin-bottom: 8px; font-weight: 600; color: var(--green-400);">🎨 Panduan Warna Kategori</span>
+            <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.8rem;">
+              <div style="display: flex; align-items: center; gap: 8px; color: var(--dark-200); padding: 4px 6px; border-radius: 4px; transition: background 0.3s; cursor: pointer;" onclick="toggleFilterCheckbox('filter-tumbuhan')" class="interactive-legend-row">
+                <span class="legend-dot green" style="width: 10px; height: 10px; border-radius: 50%; box-shadow: 0 0 6px var(--green-500); display: inline-block;"></span>
+                <span><strong>Flora</strong>: Warna <strong style="color:#4ade80;">Hijau</strong></span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px; color: var(--dark-200); padding: 4px 6px; border-radius: 4px; transition: background 0.3s; cursor: pointer;" onclick="toggleFilterCheckbox('filter-burung')" class="interactive-legend-row">
+                <span class="legend-dot blue" style="width: 10px; height: 10px; border-radius: 50%; box-shadow: 0 0 6px var(--blue-500); display: inline-block;"></span>
+                <span><strong>Fauna</strong>: Warna <strong style="color:#60a5fa;">Biru</strong></span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px; color: var(--dark-200); padding: 4px 6px; border-radius: 4px; transition: background 0.3s; cursor: pointer;" onclick="toggleFilterCheckbox('filter-serangga')" class="interactive-legend-row">
+                <span class="legend-dot amber" style="width: 10px; height: 10px; border-radius: 50%; box-shadow: 0 0 6px var(--amber-500); display: inline-block;"></span>
+                <span><strong>Serangga</strong>: Warna <strong style="color:#fbbf24;">Kuning/Amber</strong></span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px; color: var(--dark-200); padding: 4px 6px; border-radius: 4px; transition: background 0.3s; cursor: pointer;" onclick="toggleFilterCheckbox('filter-rawan')" class="interactive-legend-row">
+                <span class="legend-dot red" style="width: 10px; height: 10px; border-radius: 50%; box-shadow: 0 0 6px var(--red-500); display: inline-block;"></span>
+                <span><strong>Habitat Rawan</strong>: Warna <strong style="color:#f87171;">Merah</strong></span>
+              </div>
+            </div>
+            <div style="font-size: 0.7rem; color: var(--dark-500); margin-top: 8px; font-style: italic; line-height: 1.3;">
+              *Klik kategori di atas untuk memfilter tampilan peta secara instan.
+            </div>
+          </div>
+
           <!-- Jenis Spesies -->
           <div class="filter-group">
             <span class="filter-label">Jenis Spesies</span>
@@ -286,28 +312,147 @@
 
         <!-- Map Container -->
         <div class="map-container animate-on-scroll">
-          <div id="map" class="map-frame" style="background: #050d09; width: 100%; height: 500px;"></div>
+          <div id="map" class="map-frame" style="background: #050d09; width: 100%; height: 550px;"></div>
 
-          <!-- Map Legend Overlay -->
+          <!-- Map Legend Overlay - Enhanced with zone info -->
           <div class="map-overlay-info">
-            <div class="map-legend">
+            <div class="map-legend" style="flex-direction: column; gap: 6px; padding: 14px 18px;">
+              <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--dark-400); margin-bottom: 2px;">Legenda Spesies</div>
               <div class="legend-item">
                 <span class="legend-dot green"></span>
-                Tumbuhan (Flora)
+                🌿 Tumbuhan (Flora)
               </div>
               <div class="legend-item">
                 <span class="legend-dot blue"></span>
-                Burung (Aves)
+                🐦 Burung (Aves)
               </div>
               <div class="legend-item">
                 <span class="legend-dot amber"></span>
-                Serangga (Insecta)
+                🦋 Serangga (Insecta)
               </div>
               <div class="legend-item">
                 <span class="legend-dot red"></span>
-                Habitat Terganggu
+                ⚠️ Habitat Terganggu
+              </div>
+              <div style="border-top: 1px solid rgba(255,255,255,0.08); margin-top: 4px; padding-top: 6px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--dark-400);">Zona Area</div>
+              <div class="legend-item" style="cursor:pointer;" onclick="zoomToZone('taman-rektorat')">
+                <span style="width:14px;height:10px;border-radius:3px;background:rgba(34,197,94,0.5);border:1px solid rgba(34,197,94,0.7);flex-shrink:0;"></span>
+                Taman Rektorat
+              </div>
+              <div class="legend-item" style="cursor:pointer;" onclick="zoomToZone('hutan-mini')">
+                <span style="width:14px;height:10px;border-radius:3px;background:rgba(59,130,246,0.5);border:1px solid rgba(59,130,246,0.7);flex-shrink:0;"></span>
+                Hutan Mini
+              </div>
+              <div class="legend-item" style="cursor:pointer;" onclick="zoomToZone('fakultas-sains')">
+                <span style="width:14px;height:10px;border-radius:3px;background:rgba(245,158,11,0.5);border:1px solid rgba(245,158,11,0.7);flex-shrink:0;"></span>
+                Fakultas Sains
+              </div>
+              <div class="legend-item" style="cursor:pointer;" onclick="zoomToZone('kebun-biologi')">
+                <span style="width:14px;height:10px;border-radius:3px;background:rgba(168,85,247,0.5);border:1px solid rgba(168,85,247,0.7);flex-shrink:0;"></span>
+                Kebun Biologi
+              </div>
+              <div class="legend-item" style="cursor:pointer;" onclick="zoomToZone('koridor-kampus')">
+                <span style="width:14px;height:10px;border-radius:3px;background:rgba(6,182,212,0.5);border:1px solid rgba(6,182,212,0.7);flex-shrink:0;"></span>
+                Koridor Kampus
+              </div>
+              <div class="legend-item" style="cursor:pointer;" onclick="zoomToZone('lapangan-utama')">
+                <span style="width:14px;height:10px;border-radius:3px;background:rgba(244,63,94,0.5);border:1px solid rgba(244,63,94,0.7);flex-shrink:0;"></span>
+                Lapangan Utama
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ZONE INFO CARDS ===== -->
+  <section class="features-section" style="padding-top: 0;">
+    <div class="container">
+      <div class="features-header animate-on-scroll">
+        <div class="section-label">🗺️ Zona & Lokasi</div>
+        <h2 class="section-title">Panduan Warna Zona di Peta</h2>
+        <p class="section-subtitle" style="margin: 0 auto;">
+          Setiap zona di peta ditandai dengan warna area berbeda. Klik kartu di bawah untuk melihat lokasinya di peta.
+        </p>
+      </div>
+
+      <div class="features-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+        <!-- Taman Rektorat -->
+        <div class="feature-card animate-on-scroll stagger-1" style="cursor: pointer; border-left: 4px solid rgba(34,197,94,0.8);" onclick="zoomToZone('taman-rektorat')">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+            <span style="width:20px;height:20px;border-radius:6px;background:rgba(34,197,94,0.5);border:2px solid rgba(34,197,94,0.8);flex-shrink:0;"></span>
+            <h3 style="margin:0;font-size:1.1rem;">Taman Rektorat</h3>
+          </div>
+          <p>Area taman depan gedung rektorat. Koleksi tanaman hias, pohon peneduh, dan area favorit pengamatan kupu-kupu.</p>
+          <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:0.85rem;color:var(--green-400);font-weight:600;">24 spesies</span>
+            <span style="font-size:0.8rem;color:var(--dark-500);">📍 Klik untuk lihat di peta →</span>
+          </div>
+        </div>
+
+        <!-- Hutan Mini -->
+        <div class="feature-card animate-on-scroll stagger-2" style="cursor: pointer; border-left: 4px solid rgba(59,130,246,0.8);" onclick="zoomToZone('hutan-mini')">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+            <span style="width:20px;height:20px;border-radius:6px;background:rgba(59,130,246,0.5);border:2px solid rgba(59,130,246,0.8);flex-shrink:0;"></span>
+            <h3 style="margin:0;font-size:1.1rem;">Hutan Mini Kampus</h3>
+          </div>
+          <p>Area hutan kecil dengan keanekaragaman tertinggi. Ditemukan burung endemik, tanaman langka, dan berbagai serangga.</p>
+          <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:0.85rem;color:var(--blue-400);font-weight:600;">31 spesies</span>
+            <span style="font-size:0.8rem;color:var(--dark-500);">📍 Klik untuk lihat di peta →</span>
+          </div>
+        </div>
+
+        <!-- Fakultas Sains -->
+        <div class="feature-card animate-on-scroll stagger-3" style="cursor: pointer; border-left: 4px solid rgba(245,158,11,0.8);" onclick="zoomToZone('fakultas-sains')">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+            <span style="width:20px;height:20px;border-radius:6px;background:rgba(245,158,11,0.5);border:2px solid rgba(245,158,11,0.8);flex-shrink:0;"></span>
+            <h3 style="margin:0;font-size:1.1rem;">Fakultas Sains & Teknologi</h3>
+          </div>
+          <p>Kompleks gedung fakultas dengan taman perdu dan area observasi serangga. Banyak ditemukan kupu-kupu dan capung.</p>
+          <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:0.85rem;color:var(--amber-400);font-weight:600;">18 spesies</span>
+            <span style="font-size:0.8rem;color:var(--dark-500);">📍 Klik untuk lihat di peta →</span>
+          </div>
+        </div>
+
+        <!-- Kebun Biologi -->
+        <div class="feature-card animate-on-scroll stagger-4" style="cursor: pointer; border-left: 4px solid rgba(168,85,247,0.8);" onclick="zoomToZone('kebun-biologi')">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+            <span style="width:20px;height:20px;border-radius:6px;background:rgba(168,85,247,0.5);border:2px solid rgba(168,85,247,0.8);flex-shrink:0;"></span>
+            <h3 style="margin:0;font-size:1.1rem;">Kebun Biologi</h3>
+          </div>
+          <p>Kebun percobaan Fakultas Sains. Tempat budidaya tanaman obat, herbal kampus, dan koleksi tanaman langka Banten.</p>
+          <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:0.85rem;color:#a855f7;font-weight:600;">15 spesies</span>
+            <span style="font-size:0.8rem;color:var(--dark-500);">📍 Klik untuk lihat di peta →</span>
+          </div>
+        </div>
+
+        <!-- Koridor Kampus -->
+        <div class="feature-card animate-on-scroll stagger-5" style="cursor: pointer; border-left: 4px solid rgba(6,182,212,0.8);" onclick="zoomToZone('koridor-kampus')">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+            <span style="width:20px;height:20px;border-radius:6px;background:rgba(6,182,212,0.5);border:2px solid rgba(6,182,212,0.8);flex-shrink:0;"></span>
+            <h3 style="margin:0;font-size:1.1rem;">Koridor Kampus</h3>
+          </div>
+          <p>Jalur utama penghubung antar gedung dengan barisan pohon peneduh. Habitat burung gereja dan jalak kerbau.</p>
+          <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:0.85rem;color:#06b6d4;font-weight:600;">12 spesies</span>
+            <span style="font-size:0.8rem;color:var(--dark-500);">📍 Klik untuk lihat di peta →</span>
+          </div>
+        </div>
+
+        <!-- Lapangan Utama -->
+        <div class="feature-card animate-on-scroll stagger-6" style="cursor: pointer; border-left: 4px solid rgba(244,63,94,0.8);" onclick="zoomToZone('lapangan-utama')">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+            <span style="width:20px;height:20px;border-radius:6px;background:rgba(244,63,94,0.5);border:2px solid rgba(244,63,94,0.8);flex-shrink:0;"></span>
+            <h3 style="margin:0;font-size:1.1rem;">Lapangan Utama</h3>
+          </div>
+          <p>Area terbuka lapangan kampus. Habitat burung tekukur, pipit, dan area perlu pemantauan dampak konstruksi.</p>
+          <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:0.85rem;color:#f43f5e;font-weight:600;">9 spesies</span>
+            <span style="font-size:0.8rem;color:var(--dark-500);">📍 Klik untuk lihat di peta →</span>
           </div>
         </div>
       </div>
@@ -318,30 +463,35 @@
   <section class="features-section" style="padding-top: 0;">
     <div class="container">
       <div class="features-header animate-on-scroll">
-        <div class="section-label">📍 Titik Observasi Populer</div>
-        <h2 class="section-title">Area Biodiversitas Utama</h2>
+        <div class="section-label">📊 Statistik Biodiversitas</div>
+        <h2 class="section-title">Ringkasan Data Observasi</h2>
       </div>
 
-      <div class="features-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
-        <div class="feature-card animate-on-scroll stagger-1" style="cursor: default;">
-          <div class="feature-icon">🌳</div>
-          <h3>Hutan Mini Kampus</h3>
-          <p>Area hutan kecil dengan keanekaragaman tertinggi. Ditemukan 31 spesies berbeda termasuk burung endemik dan tanaman langka.</p>
-          <div style="margin-top: 12px; font-size: 0.85rem; color: var(--green-400); font-weight: 600;">31 spesies • 8 observasi bulan ini</div>
+      <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+        <div class="stat-card animate-on-scroll stagger-1">
+          <span class="stat-icon">🌿</span>
+          <div class="stat-number" style="font-size:2.2rem;">89</div>
+          <div class="stat-label">Flora Tercatat</div>
         </div>
-
-        <div class="feature-card animate-on-scroll stagger-2" style="cursor: default;">
-          <div class="feature-icon blue">🏛️</div>
-          <h3>Taman Rektorat</h3>
-          <p>Taman depan gedung rektorat dengan koleksi tanaman hias dan pohon peneduh. Area favorit untuk pengamatan kupu-kupu.</p>
-          <div style="margin-top: 12px; font-size: 0.85rem; color: var(--blue-400); font-weight: 600;">24 spesies • 5 observasi bulan ini</div>
+        <div class="stat-card animate-on-scroll stagger-2">
+          <span class="stat-icon">🐦</span>
+          <div class="stat-number" style="font-size:2.2rem;">34</div>
+          <div class="stat-label">Burung Tercatat</div>
         </div>
-
-        <div class="feature-card animate-on-scroll stagger-3" style="cursor: default;">
-          <div class="feature-icon amber">🔬</div>
-          <h3>Kebun Biologi</h3>
-          <p>Kebun percobaan Fakultas Sains dan Teknologi. Tempat budidaya tanaman obat dan herbal kampus.</p>
-          <div style="margin-top: 12px; font-size: 0.85rem; color: var(--amber-400); font-weight: 600;">15 spesies • 3 observasi bulan ini</div>
+        <div class="stat-card animate-on-scroll stagger-3">
+          <span class="stat-icon">🦋</span>
+          <div class="stat-number" style="font-size:2.2rem;">18</div>
+          <div class="stat-label">Serangga Tercatat</div>
+        </div>
+        <div class="stat-card animate-on-scroll stagger-4">
+          <span class="stat-icon">⚠️</span>
+          <div class="stat-number" style="font-size:2.2rem;">6</div>
+          <div class="stat-label">Area Rawan</div>
+        </div>
+        <div class="stat-card animate-on-scroll stagger-5">
+          <span class="stat-icon">📍</span>
+          <div class="stat-number" style="font-size:2.2rem;">6</div>
+          <div class="stat-label">Zona Observasi</div>
         </div>
       </div>
     </div>
@@ -396,6 +546,7 @@
 
   <!-- Leaflet Map JS Library -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/data.js"></script>
   <script src="js/app.js"></script>
   <script>
     // Notification function
@@ -426,114 +577,245 @@
       scrollWheelZoom: false
     });
 
-    // Dark Mode Map Tiles (CartoDB Dark Matter) for beautiful dark theme integration
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      subdomains: 'abcd',
+    // Satellite Map Tiles (Google Maps Hybrid)
+    L.tileLayer('http://mt0.google.com/vt/lyrs=y&hl=en&x={x}&y={y}&z={z}', {
+      attribution: 'Map data &copy; <a href="https://www.google.com/maps">Google</a>',
       maxZoom: 20
     }).addTo(map);
 
-    // Dynamic marker dataset reflecting the requested ecosystem map colors:
-    // hijau = tumbuhan, biru = burung, kuning/amber = serangga, merah = habitat terganggu
-    const pointsData = [
-      {
-        id: 1,
-        title: "Kamboja Jepang",
-        scientific: "Plumeria rubra",
-        category: "flora", // green
-        location: "Taman Rektorat",
-        coords: [-6.220500, 106.151300],
-        image: "assets/kamboja.png",
-        desc: "Pohon Kamboja dengan bunga mekar merah muda dan putih harum.",
-        link: "spesies.html",
-        status: "Least Concern",
-        colorClass: "green"
+    // ========================================
+    // ZONA AREA - Colored polygons on the map
+    // Each zone has a distinct color so users can see WHERE each area is
+    // ========================================
+    const zonesData = {
+      'taman-rektorat': {
+        name: 'Taman Rektorat',
+        color: '#22c55e',
+        coords: [
+          [-6.219900, 106.150800],
+          [-6.219900, 106.151600],
+          [-6.220700, 106.151600],
+          [-6.220700, 106.150800]
+        ],
+        center: [-6.220300, 106.151200],
+        zoom: 18,
+        species: 24,
+        desc: 'Taman depan gedung rektorat — koleksi tanaman hias & pohon peneduh'
       },
-      {
-        id: 2,
-        title: "Burung Kutilang",
-        scientific: "Pycnonotus aurigaster",
-        category: "fauna", // blue
-        location: "Hutan Mini",
-        coords: [-6.221200, 106.152400],
-        image: "assets/kutilang.png",
-        desc: "Populasi burung kutilang aktif bersarang di puncak pohon beringin.",
-        link: "#",
-        status: "Least Concern",
-        colorClass: "blue"
+      'hutan-mini': {
+        name: 'Hutan Mini',
+        color: '#3b82f6',
+        coords: [
+          [-6.220800, 106.152000],
+          [-6.220800, 106.152900],
+          [-6.221700, 106.152900],
+          [-6.221700, 106.152000]
+        ],
+        center: [-6.221250, 106.152450],
+        zoom: 18,
+        species: 31,
+        desc: 'Area hutan kecil — keanekaragaman tertinggi di kampus'
       },
-      {
-        id: 3,
-        title: "Kupu-kupu Swallowtail",
-        scientific: "Papilio memnon",
-        category: "insecta", // amber/kuning
-        location: "Fakultas Sains",
-        coords: [-6.220200, 106.151900],
-        image: "assets/kupu-kupu.png",
-        desc: "Ditemukan bertengger di tanaman bunga perdu fakultas sains.",
-        link: "#",
-        status: "Least Concern",
-        colorClass: "amber"
+      'fakultas-sains': {
+        name: 'Fakultas Sains & Teknologi',
+        color: '#f59e0b',
+        coords: [
+          [-6.219700, 106.151600],
+          [-6.219700, 106.152300],
+          [-6.220500, 106.152300],
+          [-6.220500, 106.151600]
+        ],
+        center: [-6.220100, 106.151950],
+        zoom: 18,
+        species: 18,
+        desc: 'Kompleks gedung fakultas — area observasi serangga'
       },
-      {
-        id: 4,
-        title: "Pohon Tanjung",
-        scientific: "Mimusops elengi",
-        category: "flora", // green
-        location: "Kebun Biologi",
-        coords: [-6.221500, 106.151000],
-        image: "assets/tanjung.png",
-        desc: "Pohon peneduh rimbun dengan aroma bunga wangi eksotis.",
-        link: "#",
-        status: "Least Concern",
-        colorClass: "green"
+      'kebun-biologi': {
+        name: 'Kebun Biologi',
+        color: '#a855f7',
+        coords: [
+          [-6.221200, 106.150500],
+          [-6.221200, 106.151300],
+          [-6.222000, 106.151300],
+          [-6.222000, 106.150500]
+        ],
+        center: [-6.221600, 106.150900],
+        zoom: 18,
+        species: 15,
+        desc: 'Kebun percobaan — tanaman obat & herbal kampus'
       },
-      {
-        id: 5,
-        title: "Area Habitat Terganggu",
-        scientific: "Sektor Konstruksi Baru",
-        category: "habitat", // red
-        location: "Timur Hutan Mini",
-        coords: [-6.220900, 106.152800],
-        image: "assets/hero-banner.png",
-        desc: "Lahan terdampak pembangunan fasilitas. Perlu pemantauan kualitas tanah.",
-        link: "#",
-        status: "Critical Monitoring",
-        colorClass: "red"
+      'koridor-kampus': {
+        name: 'Koridor Kampus',
+        color: '#06b6d4',
+        coords: [
+          [-6.220500, 106.151300],
+          [-6.220500, 106.152000],
+          [-6.221200, 106.152000],
+          [-6.221200, 106.151300]
+        ],
+        center: [-6.220850, 106.151650],
+        zoom: 18,
+        species: 12,
+        desc: 'Jalur utama antar gedung — barisan pohon peneduh'
+      },
+      'lapangan-utama': {
+        name: 'Lapangan Utama',
+        color: '#f43f5e',
+        coords: [
+          [-6.220200, 106.152300],
+          [-6.220200, 106.153000],
+          [-6.220900, 106.153000],
+          [-6.220900, 106.152300]
+        ],
+        center: [-6.220550, 106.152650],
+        zoom: 18,
+        species: 9,
+        desc: 'Area terbuka — habitat burung tekukur & pipit'
       }
-    ];
+    };
+
+    // Draw zone polygons on the map
+    const zonePolygons = {};
+    Object.entries(zonesData).forEach(([key, zone]) => {
+      const polygon = L.polygon(zone.coords, {
+        color: zone.color,
+        weight: 2,
+        opacity: 0.8,
+        fillColor: zone.color,
+        fillOpacity: 0.15,
+        dashArray: '6, 4'
+      }).addTo(map);
+
+      // Zone label in the center
+      const labelIcon = L.divIcon({
+        className: 'zone-label',
+        html: `<div style="
+          background: rgba(5,13,9,0.85);
+          backdrop-filter: blur(8px);
+          border: 1px solid ${zone.color}40;
+          border-radius: 8px;
+          padding: 4px 10px;
+          font-size: 0.7rem;
+          font-weight: 600;
+          color: ${zone.color};
+          white-space: nowrap;
+          font-family: 'Inter', sans-serif;
+          text-align: center;
+          pointer-events: none;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        ">${zone.name}<br><span style="font-size:0.6rem;color:#94a3b8;font-weight:400;">${zone.species} spesies</span></div>`,
+        iconSize: [0, 0],
+        iconAnchor: [0, 0]
+      });
+      L.marker(zone.center, { icon: labelIcon, interactive: false }).addTo(map);
+
+      // Popup for the zone polygon
+      polygon.bindPopup(`
+        <div class="map-popup-card" style="width:220px;">
+          <div class="map-popup-body">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+              <span style="width:14px;height:14px;border-radius:4px;background:${zone.color};opacity:0.7;flex-shrink:0;"></span>
+              <div class="map-popup-title" style="margin:0;">${zone.name}</div>
+            </div>
+            <p class="map-popup-text">${zone.desc}</p>
+            <div style="font-size:0.8rem;color:${zone.color};font-weight:600;">${zone.species} spesies tercatat</div>
+          </div>
+        </div>
+      `, { minWidth: 220, maxWidth: 220 });
+
+      // Hover highlight effect
+      polygon.on('mouseover', function() {
+        this.setStyle({ fillOpacity: 0.3, weight: 3 });
+      });
+      polygon.on('mouseout', function() {
+        this.setStyle({ fillOpacity: 0.15, weight: 2 });
+      });
+
+      zonePolygons[key] = polygon;
+    });
+
+    // Function to zoom to a specific zone
+    function zoomToZone(zoneKey) {
+      const zone = zonesData[zoneKey];
+      if (!zone) return;
+      map.flyTo(zone.center, zone.zoom, { duration: 1.2 });
+      // Open the polygon popup
+      setTimeout(() => {
+        if (zonePolygons[zoneKey]) {
+          zonePolygons[zoneKey].openPopup();
+        }
+      }, 1300);
+      // Scroll to map
+      document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      showNotification(`📍 Menampilkan zona: ${zone.name}`, 'success');
+    }
+
+    // ========================================
+    // SPECIES MARKER DATA - Expanded dataset
+    // hijau = tumbuhan, biru = burung, kuning/amber = serangga, merah = habitat terganggu
+    // ========================================
+    const localObservations = JSON.parse(localStorage.getItem('biodiversity_observations') || '[]');
+    const pointsData = [...window.speciesData, ...localObservations];
 
     // Marker Layer Group
     const markerLayer = L.layerGroup().addTo(map);
     let activeMarkers = [];
 
+    // Interactive category explorer toggle
+    function toggleFilterCheckbox(id) {
+      const checkbox = document.getElementById(id);
+      if (checkbox) {
+        checkbox.checked = !checkbox.checked;
+        renderMapMarkers();
+        showNotification(`🔄 Filter Kategori diperbarui!`, 'success');
+      }
+    }
+
+    // Dynamic count updater
+    function updateFilterCounts() {
+      const localCounts = { flora: 0, fauna: 0, insecta: 0, habitat: 0 };
+      localObservations.forEach(obs => {
+        if (localCounts[obs.category] !== undefined) {
+          localCounts[obs.category]++;
+        }
+      });
+      
+      const floraEl = document.querySelector('#filter-tumbuhan').parentNode.querySelector('.filter-count');
+      const faunaEl = document.querySelector('#filter-burung').parentNode.querySelector('.filter-count');
+      const insectaEl = document.querySelector('#filter-serangga').parentNode.querySelector('.filter-count');
+      const rawanEl = document.querySelector('#filter-rawan').parentNode.querySelector('.filter-count');
+      
+      if (floraEl) floraEl.textContent = 89 + localCounts.flora;
+      if (faunaEl) faunaEl.textContent = 34 + localCounts.fauna;
+      if (insectaEl) insectaEl.textContent = 18 + localCounts.insecta;
+      if (rawanEl) rawanEl.textContent = 6 + localCounts.habitat;
+    }
+
     // Function to render active filtered markers
     function renderMapMarkers() {
-      // Clear existing markers
       markerLayer.clearLayers();
       activeMarkers = [];
 
-      // Read checkbox states from sidebar filter using robust unique IDs
       const showFlora = document.getElementById('filter-tumbuhan').checked;
       const showFauna = document.getElementById('filter-burung').checked;
       const showInsecta = document.getElementById('filter-serangga').checked;
       const showHabitat = document.getElementById('filter-rawan').checked;
 
       pointsData.forEach(point => {
-        // Category filters matching checkbox positions
         if (point.category === "flora" && !showFlora) return;
         if (point.category === "fauna" && !showFauna) return;
         if (point.category === "insecta" && !showInsecta) return;
         if (point.category === "habitat" && !showHabitat) return;
 
-        // Custom pulsing divIcon
         const customIcon = L.divIcon({
           className: `pulse-marker ${point.colorClass}`,
-          iconSize: [16, 16],
-          iconAnchor: [8, 8]
+          iconSize: [14, 14],
+          iconAnchor: [7, 7]
         });
 
-        // HTML Content for the popup card
+        const statusColor = point.status === 'Critical Monitoring' || point.status === 'Under Recovery' ? 'var(--red-400)' :
+                            point.status === 'Near Threatened' ? 'var(--amber-400)' : 'var(--green-400)';
+
         const popupContent = `
           <div class="map-popup-card">
             <img src="${point.image}" alt="${point.title}">
@@ -541,6 +823,9 @@
               <div class="map-popup-title">${point.title}</div>
               <div class="map-popup-subtitle">${point.scientific}</div>
               <p class="map-popup-text">${point.desc}</p>
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
+                <span style="font-size:0.7rem;padding:2px 8px;border-radius:999px;background:${statusColor}20;color:${statusColor};font-weight:600;border:1px solid ${statusColor}40;">${point.status}</span>
+              </div>
               <div class="map-popup-meta">
                 <span style="color:var(--dark-400);">📍 ${point.location}</span>
                 <a href="${point.link}" style="font-weight:600; color:var(--green-400);">Detail →</a>
@@ -549,7 +834,6 @@
           </div>
         `;
 
-        // Create Leaflet Marker
         const marker = L.marker(point.coords, { icon: customIcon })
           .bindPopup(popupContent, { minWidth: 240, maxWidth: 240 })
           .addTo(markerLayer);
@@ -573,7 +857,23 @@
       showNotification('✅ Filter ekosistem berhasil diterapkan!', 'success');
     });
 
-    // Initial Marker Load
+    // Button to reset view
+    const resetBtn = L.control({ position: 'topright' });
+    resetBtn.onAdd = function() {
+      const div = L.DomUtil.create('div', 'leaflet-bar');
+      div.innerHTML = `<a href="#" title="Reset tampilan" style="
+        display:flex;align-items:center;justify-content:center;
+        width:34px;height:34px;background:rgba(5,13,9,0.9);
+        border:1px solid rgba(34,197,94,0.3);border-radius:6px;
+        color:#4ade80;font-size:1.1rem;text-decoration:none;
+        backdrop-filter:blur(8px);
+      " onclick="event.preventDefault();map.flyTo(mapCenter,17,{duration:1});">⟳</a>`;
+      return div;
+    };
+    resetBtn.addTo(map);
+
+    // Initial Marker Load & Dynamic Counts
+    updateFilterCounts();
     renderMapMarkers();
   </script>
 </body>
