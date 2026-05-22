@@ -220,6 +220,12 @@ h6 {
   z-index: 1000;
   padding: var(--space-md) 0;
   transition: all var(--transition-base);
+  background: rgba(0, 0, 0, 0.75);
+  /* ← tambah background hitam transparan */
+  backdrop-filter: blur(10px);
+  /* ← efek blur biar modern */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  /* ← garis putih tipis */
 }
 
 .navbar.scrolled {
