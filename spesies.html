@@ -37,6 +37,7 @@
     </div>
   </nav>
 
+  <div id="species-detail-wrapper">
   <!-- ===== PAGE HEADER ===== -->
   <header class="page-header">
     <div class="container">
@@ -223,8 +224,231 @@
       </div>
     </div>
   </section>
+  </div>
+
+  <!-- ===== PUSAT PEMINDAIAN PINTAR (AI & QR SCANNER HUB) ===== -->
+  <div id="scanner-hub-wrapper" style="display: none;">
+    <!-- ===== HEADER ===== -->
+    <header class="page-header" style="background: linear-gradient(180deg, rgba(5,13,9,0.3) 0%, #050d09 100%);">
+      <div class="container">
+        <nav class="breadcrumbs">
+          <a href="index.html">Beranda</a>
+          <span class="separator">›</span>
+          <span>Pusat Pemindaian Pintar</span>
+        </nav>
+        <div style="text-align: center; margin-top: 24px;">
+          <div class="section-label animate-on-scroll" style="margin: 0 auto 16px;">🤖 AI Vision & QR Trail Hub</div>
+          <h1 class="section-title animate-on-scroll" style="text-align: center;">Pusat Pemindaian Pintar</h1>
+          <p class="section-subtitle" style="margin: 0 auto; text-align: center; max-width: 680px;">
+            Pindai kode QR fisik BIO-QR Trail di lokasi UIN Banten atau unggah foto untuk analisis taksonomi otomatis berbasis AI Vision.
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <!-- ===== SCANNER MAIN CONSOLE ===== -->
+    <section class="species-detail" style="padding-top: 0;">
+      <div class="container">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; align-items: start; margin-top: 32px;">
+          
+          <!-- LEFT COLUMN: Viewfinder Panel & Controls -->
+          <div class="feature-card animate-on-scroll stagger-1" style="background: var(--surface-card); border: 1px solid var(--surface-glass-border); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-lg); cursor: default; position: relative;">
+            
+            <!-- Tabs Navigation -->
+            <div style="display: flex; gap: 8px; margin-bottom: 24px; background: rgba(0,0,0,0.4); padding: 4px; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.05);">
+              <button id="tab-camera-btn" style="flex: 1; padding: 10px 14px; border-radius: var(--radius-sm); border: none; background: var(--green-600); color: white; font-weight: 600; font-family: var(--font-body); font-size: 0.85rem; cursor: pointer; transition: all 0.3s ease;">
+                📷 Kamera Simulasi
+              </button>
+              <button id="tab-upload-btn" style="flex: 1; padding: 10px 14px; border-radius: var(--radius-sm); border: none; background: transparent; color: var(--dark-300); font-weight: 600; font-family: var(--font-body); font-size: 0.85rem; cursor: pointer; transition: all 0.3s ease;">
+                📤 Unggah Gambar
+              </button>
+            </div>
+
+            <!-- Tab 1 Container: Camera Simulation -->
+            <div id="tab-camera-container" style="display: flex; flex-direction: column; gap: 20px;">
+              
+              <!-- Viewfinder window -->
+              <div id="viewfinder" style="width: 100%; height: 260px; border-radius: var(--radius-md); background: #030805; border: 2px solid rgba(34,197,94,0.2); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                
+                <!-- Laser line -->
+                <div id="laser-line" style="position: absolute; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, #4ade80, transparent); box-shadow: 0 0 12px #22c55e; top: 0; display: none; z-index: 2;"></div>
+                
+                <!-- Corner brackets for scanner feel -->
+                <div style="position: absolute; top: 12px; left: 12px; width: 16px; height: 16px; border-top: 3px solid var(--green-400); border-left: 3px solid var(--green-400); z-index: 2;"></div>
+                <div style="position: absolute; top: 12px; right: 12px; width: 16px; height: 16px; border-top: 3px solid var(--green-400); border-right: 3px solid var(--green-400); z-index: 2;"></div>
+                <div style="position: absolute; bottom: 12px; left: 12px; width: 16px; height: 16px; border-bottom: 3px solid var(--green-400); border-left: 3px solid var(--green-400); z-index: 2;"></div>
+                <div style="position: absolute; bottom: 12px; right: 12px; width: 16px; height: 16px; border-bottom: 3px solid var(--green-400); border-right: 3px solid var(--green-400); z-index: 2;"></div>
+
+                <!-- Viewport status & overlays -->
+                <div id="viewfinder-content" style="text-align: center; z-index: 2; padding: 20px;">
+                  <span style="font-size: 3rem; filter: drop-shadow(0 0 10px rgba(34,197,94,0.4)); display: block; margin-bottom: 12px;">📷</span>
+                  <span style="font-size: 0.85rem; color: var(--dark-300); font-weight: 500;">Kamera dinonaktifkan</span>
+                  <p style="font-size: 0.75rem; color: var(--dark-400); margin: 6px 0 0;">Klik tombol di bawah untuk mengaktifkan pemindaian simulasi.</p>
+                </div>
+
+                <!-- Loading spinner overlay -->
+                <div id="viewfinder-loader" style="position: absolute; inset: 0; background: rgba(5,13,9,0.9); display: none; flex-direction: column; align-items: center; justify-content: center; gap: 12px; z-index: 3;">
+                  <div style="width: 40px; height: 40px; border: 3px solid rgba(34, 197, 94, 0.1); border-top-color: var(--green-400); border-radius: 50%; animation: spin 1s infinite linear;"></div>
+                  <span style="font-size: 0.8rem; color: var(--green-400); font-weight: 600; letter-spacing: 1px;">MENGANALISIS TARGET...</span>
+                </div>
+              </div>
+
+              <!-- Action button for scanner -->
+              <button id="activate-scanner-btn" style="width: 100%; padding: 14px; border-radius: var(--radius-md); border: none; background: linear-gradient(135deg, var(--green-500), var(--green-700)); color: white; font-weight: 700; font-family: var(--font-body); font-size: 0.95rem; cursor: pointer; transition: all 0.3s ease; box-shadow: var(--shadow-sm);">
+                ⚡ Aktifkan Kamera Pemindai
+              </button>
+
+              <!-- Simulated Presets -->
+              <div style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 16px;">
+                <span style="font-size: 0.78rem; color: var(--dark-400); display: block; margin-bottom: 12px; font-weight: 600;">🔬 SIMULASI CEPAT (PILIH SAMPEL):</span>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                  <button class="sample-scan-btn" data-type="elang" style="padding: 10px; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); color: var(--dark-200); font-size: 0.8rem; font-weight: 500; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 8px;">
+                    🦅 Elang Jawa
+                  </button>
+                  <button class="sample-scan-btn" data-type="kupu" style="padding: 10px; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); color: var(--dark-200); font-size: 0.8rem; font-weight: 500; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 8px;">
+                    🦋 Kupu Swallowtail
+                  </button>
+                  <button class="sample-scan-btn" data-type="kamboja" style="padding: 10px; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); color: var(--dark-200); font-size: 0.8rem; font-weight: 500; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 8px;">
+                    🌿 Kamboja Jepang
+                  </button>
+                  <button class="sample-scan-btn" data-type="qr" style="padding: 10px; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); color: var(--dark-200); font-size: 0.8rem; font-weight: 500; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 8px;">
+                    🔳 QR Code Trail
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tab 2 Container: Image Upload -->
+            <div id="tab-upload-container" style="display: none; flex-direction: column; gap: 20px;">
+              <div id="scanner-upload-zone" style="width: 100%; border: 2px dashed rgba(34,197,94,0.3); border-radius: var(--radius-md); padding: 32px 20px; text-align: center; background: rgba(5,13,9,0.3); transition: all 0.3s ease; cursor: pointer; min-height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <span style="font-size: 2.5rem; display: block; margin-bottom: 12px; filter: drop-shadow(0 0 10px rgba(34,197,94,0.25));">📤</span>
+                <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--dark-100); margin-bottom: 6px;">Tarik & Lepas Foto di sini</h4>
+                <p style="font-size: 0.78rem; color: var(--dark-400); margin-bottom: 16px; max-width: 240px; margin-left: auto; margin-right: auto;">Mendukung gambar fauna/flora atau gambar QR Code</p>
+                <span style="display: inline-block; padding: 8px 16px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--green-400); font-weight: 600;">Pilih Gambar</span>
+                <input type="file" id="scanner-file-input" accept="image/*" style="display: none;">
+              </div>
+
+              <!-- Upload progress & preview container -->
+              <div id="scanner-upload-preview" style="display: none; border-radius: var(--radius-md); overflow: hidden; background: #030805; border: 1px solid rgba(255,255,255,0.06); padding: 12px; position: relative;">
+                <div style="display: flex; gap: 12px; align-items: center;">
+                  <img id="scanner-preview-img" src="" alt="Preview" style="width: 60px; height: 60px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.08);">
+                  <div style="flex: 1; overflow: hidden;">
+                    <span id="scanner-preview-name" style="font-size: 0.8rem; font-weight: 600; color: var(--dark-50); display: block; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">photo.jpg</span>
+                    <span id="scanner-preview-size" style="font-size: 0.7rem; color: var(--dark-400); display: block;">1.2 MB</span>
+                  </div>
+                  <button id="scanner-remove-img-btn" style="background: none; border: none; color: var(--red-400); font-size: 1.2rem; cursor: pointer; padding: 4px;">×</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT COLUMN: AI Vision Results Hub (Diagnostic Monitor) -->
+          <div class="feature-card animate-on-scroll stagger-2" style="background: var(--surface-card); border: 1px solid var(--surface-glass-border); border-radius: var(--radius-lg); padding: 28px; box-shadow: var(--shadow-lg); cursor: default; min-height: 480px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;">
+            
+            <div id="results-idle" style="text-align: center; margin: auto; padding: 40px 20px;">
+              <span style="font-size: 3rem; display: block; margin-bottom: 16px;">📡</span>
+              <h3 style="font-size: 1.2rem; margin-bottom: 8px; color: var(--dark-50);">Monitor Diagnostik</h3>
+              <p style="font-size: 0.85rem; color: var(--dark-400); line-height: 1.6; max-width: 280px; margin: 0 auto;">
+                Menunggu input pemindaian. Aktifkan kamera di kolom kiri, unggah berkas gambar, atau pilih salah satu sampel simulasi.
+              </p>
+            </div>
+
+            <!-- Full AI Vision Taxonomic Output Panel -->
+            <div id="results-active" style="display: none; flex-direction: column; gap: 20px; width: 100%;">
+              <!-- Diagnostic Header -->
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 14px;">
+                <div>
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="background: rgba(34,197,94,0.15); color: var(--green-400); padding: 2px 10px; border-radius: var(--radius-full); font-size: 0.72rem; font-weight: 700; border: 1px solid rgba(34,197,94,0.2);">AI VISION ENGINE</span>
+                    <span id="result-status-badge" style="background: rgba(59,130,246,0.15); color: #60a5fa; padding: 2px 8px; border-radius: var(--radius-full); font-size: 0.72rem; font-weight: 700;">IDENTIFIKASI BERHASIL</span>
+                  </div>
+                  <h3 id="result-title" style="font-size: 1.5rem; margin-top: 8px; color: var(--dark-50); line-height: 1.2;">Elang Jawa</h3>
+                  <p id="result-scientific" style="font-size: 0.95rem; font-style: italic; color: var(--green-400); margin: 2px 0 0;">Nisaetus alboniger</p>
+                </div>
+                
+                <!-- Confidence Circle -->
+                <div style="text-align: center; background: rgba(5,13,9,0.7); border: 1px solid var(--surface-glass-border); padding: 8px 12px; border-radius: var(--radius-md);">
+                  <span style="font-size: 0.65rem; color: var(--dark-400); display: block; font-weight: 600; text-transform: uppercase;">Akurasi</span>
+                  <span id="result-accuracy" style="font-family: var(--font-heading); font-size: 1.15rem; font-weight: 800; color: var(--green-400);">98.4%</span>
+                </div>
+              </div>
+
+              <!-- Main Content Scrollable Area -->
+              <div style="display: flex; flex-direction: column; gap: 16px;">
+                
+                <!-- Taxonomy Box -->
+                <div style="background: rgba(5,13,9,0.5); border: 1px solid rgba(255,255,255,0.04); border-radius: var(--radius-md); padding: 14px;">
+                  <span style="font-size: 0.72rem; color: var(--dark-400); font-weight: 600; display: block; margin-bottom: 8px; letter-spacing: 1px; text-transform: uppercase;">🌳 Klasifikasi Taksonomi</span>
+                  <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px 16px; font-size: 0.82rem;">
+                    <div><span style="color: var(--dark-400);">Kerajaan (Kingdom):</span> <strong id="tax-kingdom" style="color: var(--dark-100); float: right;">Animalia</strong></div>
+                    <div><span style="color: var(--dark-400);">Filum (Phylum):</span> <strong id="tax-phylum" style="color: var(--dark-100); float: right;">Chordata</strong></div>
+                    <div><span style="color: var(--dark-400);">Kelas (Class):</span> <strong id="tax-class" style="color: var(--dark-100); float: right;">Aves</strong></div>
+                    <div><span style="color: var(--dark-400);">Ordo (Order):</span> <strong id="tax-order" style="color: var(--dark-100); float: right;">Accipitriformes</strong></div>
+                    <div><span style="color: var(--dark-400);">Famili (Family):</span> <strong id="tax-family" style="color: var(--dark-100); float: right;">Accipitridae</strong></div>
+                    <div><span style="color: var(--dark-400);">Kategori:</span> <strong id="tax-category" style="color: var(--green-400); float: right;">Fauna</strong></div>
+                  </div>
+                </div>
+
+                <!-- Conservation Status -->
+                <div id="result-conservation-box" style="display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 600; background: rgba(239,68,68,0.15); color: #f87171;">
+                  🔴 Terancam Punah (EN) — Dilindungi
+                </div>
+
+                <!-- Description & Climate Info -->
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                  <h4 style="font-size: 0.88rem; color: var(--dark-100); font-weight: 600; margin: 0;">📋 Deskripsi Temuan:</h4>
+                  <p id="result-desc" style="font-size: 0.82rem; color: var(--dark-300); line-height: 1.5; margin: 0;">
+                    Elang Jawa adalah raptor endemik hutan pegunungan Jawa yang sangat langka. Memiliki jambul panjang khas di kepalanya.
+                  </p>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 8px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px;">
+                  <h4 style="font-size: 0.88rem; color: var(--red-400); font-weight: 600; margin: 0; display: flex; align-items: center; gap: 6px;">🌡️ Hubungan dengan Krisis Iklim:</h4>
+                  <p id="result-climate" style="font-size: 0.82rem; color: var(--dark-300); line-height: 1.5; margin: 0;">
+                    Perubahan suhu global menggeser batas ekosistem hutan basah pegunungan Banten. Kehilangan naungan beringin raksasa menurunkan ketersediaan mamalia kecil mangsa elang.
+                  </p>
+                </div>
+
+              </div>
+
+              <!-- Action buttons -->
+              <div style="display: flex; gap: 12px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 16px;">
+                <button id="register-finding-btn" style="flex: 1; padding: 12px; border-radius: var(--radius-md); border: none; background: linear-gradient(135deg, var(--green-500), var(--green-700)); color: white; font-weight: 700; font-family: var(--font-body); font-size: 0.85rem; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                  📝 Daftarkan Temuan
+                </button>
+                <button id="reset-scanner-btn" style="padding: 12px 18px; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.12); background: transparent; color: var(--dark-200); font-weight: 600; font-family: var(--font-body); font-size: 0.85rem; cursor: pointer; transition: all 0.3s ease;">
+                  🔍 Bersihkan
+                </button>
+              </div>
+            </div>
+
+            <!-- QR Confirmation Modal Overlay inside card -->
+            <div id="qr-confirm-modal" style="display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 16px; padding: 24px; position: absolute; inset: 0; background: rgba(5,13,9,0.95); border-radius: var(--radius-lg); z-index: 5; animation: fadeIn 0.3s ease;">
+              <span style="font-size: 3.5rem; filter: drop-shadow(0 0 10px rgba(59,130,246,0.4));">🔳</span>
+              <h3 style="font-size: 1.25rem; color: var(--dark-50); margin: 0;">QR Code BIO-QR Trail Terdeteksi!</h3>
+              <p style="font-size: 0.85rem; color: var(--dark-300); line-height: 1.5; max-width: 300px; margin: 0;">
+                Sistem mendeteksi tautan fisik QR Trail #1 di area Taman Rektorat (Kamboja Jepang). Apakah Anda ingin membuka penjelasan lengkap spesies ini?
+              </p>
+              <div style="display: flex; gap: 10px; width: 100%; max-width: 280px; margin-top: 8px;">
+                <button id="qr-confirm-yes-btn" style="flex: 1; padding: 12px; border-radius: var(--radius-md); border: none; background: var(--green-600); color: white; font-weight: 700; font-family: var(--font-body); font-size: 0.85rem; cursor: pointer; transition: all 0.3s ease;">
+                  Buka Detail
+                </button>
+                <button id="qr-confirm-no-btn" style="padding: 12px 18px; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.12); background: transparent; color: var(--dark-300); font-weight: 600; font-family: var(--font-body); font-size: 0.85rem; cursor: pointer; transition: all 0.3s ease;">
+                  Batal
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </div>
 
   <!-- ===== FOOTER ===== -->
+
   <footer class="footer">
     <div class="container">
       <div class="footer-grid">
@@ -276,7 +500,23 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const params = new URLSearchParams(window.location.search);
-      const idParam = params.get('id') || '1';
+      const hasId = params.has('id');
+      
+      const speciesWrapper = document.getElementById('species-detail-wrapper');
+      const scannerWrapper = document.getElementById('scanner-hub-wrapper');
+
+      if (!hasId) {
+        if (speciesWrapper) speciesWrapper.style.display = 'none';
+        if (scannerWrapper) scannerWrapper.style.display = 'block';
+        document.title = "Pusat Pemindaian Pintar | Green Campus Biodiversity Lab";
+        initScannerHub();
+        return;
+      }
+
+      if (speciesWrapper) speciesWrapper.style.display = 'block';
+      if (scannerWrapper) scannerWrapper.style.display = 'none';
+
+      const idParam = params.get('id');
       const idNum = parseInt(idParam, 10);
       
       const localObservations = JSON.parse(localStorage.getItem('biodiversity_observations') || '[]');
@@ -436,14 +676,26 @@
         if (relatedContainer) {
           // Filter out current species
           const potentialRelated = allData.filter(s => s.id !== data.id);
-          // Try to get species in same category first
-          let related = potentialRelated.filter(s => s.category === data.category);
-          // If less than 3, add other species
+          
+          // Select 1 Flora, 1 Fauna, and 1 Insect (insecta) if available for dynamic diversity
+          let relatedFlora = potentialRelated.find(s => s.category === 'flora');
+          let relatedFauna = potentialRelated.find(s => s.category === 'fauna');
+          let relatedInsecta = potentialRelated.find(s => s.category === 'insecta');
+          
+          let related = [];
+          if (relatedFlora) related.push(relatedFlora);
+          if (relatedFauna) related.push(relatedFauna);
+          if (relatedInsecta) related.push(relatedInsecta);
+          
+          // Fallback in case some categories are missing (e.g. fill up to 3 from remaining)
           if (related.length < 3) {
-            const others = potentialRelated.filter(s => s.category !== data.category);
-            related = [...related, ...others];
+            const addedIds = new Set(related.map(r => r.id));
+            const remaining = potentialRelated.filter(s => !addedIds.has(s.id));
+            for (let s of remaining) {
+              if (related.length >= 3) break;
+              related.push(s);
+            }
           }
-          // Slice to 3
           related = related.slice(0, 3);
 
           relatedContainer.innerHTML = '';
@@ -468,10 +720,14 @@
 
             const item = document.createElement('a');
             item.href = rel.link || `spesies.html?id=${rel.id}`;
-            item.className = `feature-card animate-on-scroll stagger-${index + 1}`;
+            // Do NOT include animate-on-scroll here — we add .visible directly below
+            item.className = `feature-card stagger-${index + 1}`;
             item.style.textDecoration = 'none';
             item.style.color = 'inherit';
             item.style.display = 'block';
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(30px)';
+            item.style.transition = 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
 
             item.innerHTML = `
               <div style="width: 100%; height: 160px; border-radius: 12px; overflow: hidden; margin-bottom: 12px; background: #06110b; position: relative;">
@@ -486,8 +742,331 @@
               <span class="feature-arrow" style="position: absolute; bottom: 20px; right: 20px; font-size: 1.1rem; color: var(--green-400);">→</span>
             `;
             relatedContainer.appendChild(item);
+
+            // Animate in with a staggered delay — directly apply visible state after a brief layout tick
+            const delay = 120 + index * 120;
+            setTimeout(() => {
+              item.style.opacity = '1';
+              item.style.transform = 'translateY(0)';
+            }, delay);
           });
         }
+      }
+
+      function initScannerHub() {
+        const tabCameraBtn = document.getElementById('tab-camera-btn');
+        const tabUploadBtn = document.getElementById('tab-upload-btn');
+        const tabCameraContainer = document.getElementById('tab-camera-container');
+        const tabUploadContainer = document.getElementById('tab-upload-container');
+
+        // Tab Switching
+        tabCameraBtn.addEventListener('click', () => {
+          tabCameraBtn.style.background = 'var(--green-600)';
+          tabCameraBtn.style.color = 'white';
+          tabUploadBtn.style.background = 'transparent';
+          tabUploadBtn.style.color = 'var(--dark-300)';
+          tabCameraContainer.style.display = 'flex';
+          tabUploadContainer.style.display = 'none';
+        });
+
+        tabUploadBtn.addEventListener('click', () => {
+          tabUploadBtn.style.background = 'var(--green-600)';
+          tabUploadBtn.style.color = 'white';
+          tabCameraBtn.style.background = 'transparent';
+          tabCameraBtn.style.color = 'var(--dark-300)';
+          tabUploadContainer.style.display = 'flex';
+          tabCameraContainer.style.display = 'none';
+        });
+
+        // Viewfinder and Scan button
+        const viewfinder = document.getElementById('viewfinder');
+        const laserLine = document.getElementById('laser-line');
+        const viewfinderContent = document.getElementById('viewfinder-content');
+        const viewfinderLoader = document.getElementById('viewfinder-loader');
+        const activateScannerBtn = document.getElementById('activate-scanner-btn');
+
+        let isScanning = false;
+        let scanTimer = null;
+
+        activateScannerBtn.addEventListener('click', () => {
+          if (isScanning) {
+            stopScan();
+          } else {
+            startScan();
+          }
+        });
+
+        function startScan() {
+          isScanning = true;
+          activateScannerBtn.textContent = '🛑 Matikan Pemindai';
+          activateScannerBtn.style.background = 'linear-gradient(135deg, var(--red-500), var(--red-700))';
+          
+          laserLine.style.display = 'block';
+          laserLine.style.animation = 'scan-laser 2s infinite linear';
+          
+          viewfinderContent.innerHTML = `
+            <span style="font-size: 3rem; filter: drop-shadow(0 0 10px rgba(34,197,94,0.6)); animation: pulse-green 1.5s infinite; display: block; margin-bottom: 12px;">📡</span>
+            <span style="font-size: 0.85rem; color: var(--green-400); font-weight: 700; letter-spacing: 1px;">MENCARI TARGET...</span>
+            <p style="font-size: 0.75rem; color: var(--dark-400); margin: 6px 0 0;">Mengarahkan lensa AI sensor ke area observasi.</p>
+          `;
+
+          // Simulate scanning process
+          scanTimer = setTimeout(() => {
+            const types = ['elang', 'kupu', 'kamboja', 'qr'];
+            const randomType = types[Math.floor(Math.random() * types.length)];
+            runSimulatedScan(randomType);
+          }, 3000);
+        }
+
+        function stopScan() {
+          isScanning = false;
+          clearTimeout(scanTimer);
+          activateScannerBtn.textContent = '⚡ Aktifkan Kamera Pemindai';
+          activateScannerBtn.style.background = 'linear-gradient(135deg, var(--green-500), var(--green-700))';
+          laserLine.style.display = 'none';
+          laserLine.style.animation = 'none';
+          viewfinderContent.innerHTML = `
+            <span style="font-size: 3rem; filter: drop-shadow(0 0 10px rgba(34,197,94,0.4)); display: block; margin-bottom: 12px;">📷</span>
+            <span style="font-size: 0.85rem; color: var(--dark-300); font-weight: 500;">Kamera dinonaktifkan</span>
+            <p style="font-size: 0.75rem; color: var(--dark-400); margin: 6px 0 0;">Klik tombol di bawah untuk mengaktifkan pemindaian simulasi.</p>
+          `;
+          viewfinderLoader.style.display = 'none';
+        }
+
+        // Sample Quick buttons
+        const sampleBtns = document.querySelectorAll('.sample-scan-btn');
+        sampleBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            const type = btn.getAttribute('data-type');
+            runSimulatedScan(type);
+          });
+        });
+
+        // Taxonomy database profiles for AI simulation
+        const taxonomyProfiles = {
+          elang: {
+            title: "Elang Jawa",
+            scientific: "Nisaetus alboniger",
+            accuracy: "98.4%",
+            kingdom: "Animalia",
+            phylum: "Chordata",
+            class: "Aves",
+            order: "Accipitriformes",
+            family: "Accipitridae",
+            category: "Fauna",
+            catBadge: "🐦 Fauna",
+            status: "🔴 Terancam Punah (EN) — Dilindungi",
+            statusClass: "red",
+            desc: "Elang Jawa adalah salah satu spesies raptor endemik terlangka yang hidup di hutan pegunungan basah pulau Jawa. Dikenal dengan jambul hitamnya yang khas di kepala dan kepakan sayap gagah saat berburu mamalia kecil.",
+            climate: "Krisis iklim mendesak pergeseran hutan pegunungan basah dan merusak area bersarang pohon tinggi UIN Banten. Melestarikan pohon beringin raksasa sangat penting guna menyediakan hunian tangguh bagi predator puncak ini.",
+            uploadCategory: "fauna"
+          },
+          kupu: {
+            title: "Kupu-kupu Swallowtail",
+            scientific: "Papilio memnon",
+            accuracy: "96.2%",
+            kingdom: "Animalia",
+            phylum: "Arthropoda",
+            class: "Insecta",
+            order: "Lepidoptera",
+            family: "Papilionidae",
+            category: "Serangga",
+            catBadge: "🦋 Serangga",
+            status: "🟢 Least Concern (LC) — Risiko Rendah",
+            statusClass: "green",
+            desc: "Kupu-kupu ekor layang besar yang indah, aktif hinggap pada tanaman bunga perdu di taman UIN Banten. Memiliki pola sayap hitam pekat dengan semburat kontras anggun.",
+            climate: "Serangga penyerbuk sangat peka terhadap kenaikan suhu mikro. Fluktuasi iklim yang tidak menentu mengganggu masa pupa/kepompong mereka, merusak proses regenerasi bunga hias tropis kampus.",
+            uploadCategory: "insecta"
+          },
+          kamboja: {
+            title: "Kamboja Jepang",
+            scientific: "Plumeria rubra",
+            accuracy: "99.1%",
+            kingdom: "Plantae",
+            phylum: "Tracheophyta",
+            class: "Magnoliopsida",
+            order: "Gentianales",
+            family: "Apocynaceae",
+            category: "Flora",
+            catBadge: "🌿 Flora",
+            status: "🟢 Least Concern (LC) — Risiko Rendah",
+            statusClass: "green",
+            desc: "Tanaman hias semak berkayu tropis dengan bunga wangi melingkar merah muda dan putih. Tumbuh subur di taman rektorat UIN Sultan Maulana Hasanuddin Banten.",
+            climate: "Mampu bertahan di bawah paparan suhu terik, pohon Kamboja ini merupakan 'carbon sink' mikro yang aktif meredam penumpukan CO₂ dari sirkulasi kendaraan bermotor di halaman rektorat.",
+            uploadCategory: "flora"
+          }
+        };
+
+        // Run simulated scan
+        function runSimulatedScan(type) {
+          stopScan();
+          viewfinderLoader.style.display = 'flex';
+          
+          setTimeout(() => {
+            viewfinderLoader.style.display = 'none';
+            
+            if (type === 'qr') {
+              // Show QR Confirmation Box
+              document.getElementById('qr-confirm-modal').style.display = 'flex';
+              if (typeof showNotification === 'function') {
+                showNotification("🔳 QR Code BIO-QR Trail Terdeteksi!", "success");
+              }
+            } else {
+              // Load AI Profile
+              const profile = taxonomyProfiles[type];
+              if (profile) {
+                displayAIProfile(profile);
+              }
+            }
+          }, 1200);
+        }
+
+        function displayAIProfile(profile) {
+          document.getElementById('results-idle').style.display = 'none';
+          document.getElementById('qr-confirm-modal').style.display = 'none';
+          const resultsActive = document.getElementById('results-active');
+          resultsActive.style.display = 'flex';
+
+          // Set text contents
+          document.getElementById('result-title').textContent = profile.title;
+          document.getElementById('result-scientific').textContent = profile.scientific;
+          document.getElementById('result-accuracy').textContent = profile.accuracy;
+          document.getElementById('tax-kingdom').textContent = profile.kingdom;
+          document.getElementById('tax-phylum').textContent = profile.phylum;
+          document.getElementById('tax-class').textContent = profile.class;
+          document.getElementById('tax-order').textContent = profile.order;
+          document.getElementById('tax-family').textContent = profile.family;
+          document.getElementById('tax-category').textContent = profile.catBadge;
+          document.getElementById('result-desc').textContent = profile.desc;
+          document.getElementById('result-climate').textContent = profile.climate;
+
+          // Conservation status styles
+          const consBox = document.getElementById('result-conservation-box');
+          consBox.textContent = profile.status;
+          
+          if (profile.statusClass === 'red') {
+            consBox.style.background = 'rgba(239,68,68,0.15)';
+            consBox.style.color = '#f87171';
+          } else {
+            consBox.style.background = 'rgba(34,197,94,0.15)';
+            consBox.style.color = '#4ade80';
+          }
+
+          if (typeof showNotification === 'function') {
+            showNotification(`🤖 AI Vision mengidentifikasi: ${profile.title} (${profile.accuracy})`, "success");
+          }
+
+          // Hook register finding button
+          const registerBtn = document.getElementById('register-finding-btn');
+          registerBtn.onclick = () => {
+            const uploadUrl = `upload.html?species=${encodeURIComponent(profile.title)}&category=${encodeURIComponent(profile.uploadCategory)}&desc=${encodeURIComponent(profile.desc)}`;
+            window.location.href = uploadUrl;
+          };
+        }
+
+        // QR modal confirmations
+        document.getElementById('qr-confirm-yes-btn').onclick = () => {
+          window.location.href = 'spesies.html?id=1';
+        };
+
+        document.getElementById('qr-confirm-no-btn').onclick = () => {
+          document.getElementById('qr-confirm-modal').style.display = 'none';
+        };
+
+        // Tab 2 File Upload interaction
+        const uploadZone = document.getElementById('scanner-upload-zone');
+        const fileInput = document.getElementById('scanner-file-input');
+        const uploadPreview = document.getElementById('scanner-upload-preview');
+        const previewImg = document.getElementById('scanner-preview-img');
+        const previewName = document.getElementById('scanner-preview-name');
+        const previewSize = document.getElementById('scanner-preview-size');
+        const removeImgBtn = document.getElementById('scanner-remove-img-btn');
+
+        uploadZone.onclick = () => {
+          fileInput.click();
+        };
+
+        uploadZone.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          uploadZone.style.borderColor = 'var(--green-400)';
+          uploadZone.style.background = 'rgba(34,197,94,0.08)';
+        });
+
+        uploadZone.addEventListener('dragleave', () => {
+          uploadZone.style.borderColor = 'rgba(34,197,94,0.3)';
+          uploadZone.style.background = 'rgba(5,13,9,0.3)';
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+          e.preventDefault();
+          uploadZone.style.borderColor = 'rgba(34,197,94,0.3)';
+          uploadZone.style.background = 'rgba(5,13,9,0.3)';
+          
+          if (e.dataTransfer.files.length > 0) {
+            handleUploadedFile(e.dataTransfer.files[0]);
+          }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+          if (e.target.files.length > 0) {
+            handleUploadedFile(e.target.files[0]);
+          }
+        });
+
+        function handleUploadedFile(file) {
+          if (!file.type.startsWith('image/')) {
+            if (typeof showNotification === 'function') {
+              showNotification("Mohon unggah file berkas gambar (PNG, JPG, WEBP)", "error");
+            }
+            return;
+          }
+
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            previewImg.src = e.target.result;
+            previewName.textContent = file.name;
+            previewSize.textContent = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+            
+            uploadZone.style.display = 'none';
+            uploadPreview.style.display = 'block';
+
+            // Determine simulation type from filename keywords
+            const fnLower = file.name.toLowerCase();
+            let matchedType = 'kamboja'; // default fallback
+            
+            if (fnLower.includes('elang') || fnLower.includes('eagle') || fnLower.includes('hawk') || fnLower.includes('garuda')) {
+              matchedType = 'elang';
+            } else if (fnLower.includes('kupu') || fnLower.includes('serangga') || fnLower.includes('butterfly') || fnLower.includes('insect') || fnLower.includes('capung')) {
+              matchedType = 'kupu';
+            } else if (fnLower.includes('qr') || fnLower.includes('code') || fnLower.includes('barcode') || fnLower.includes('trail')) {
+              matchedType = 'qr';
+            }
+
+            runSimulatedScan(matchedType);
+          };
+          reader.readAsDataURL(file);
+        }
+
+        removeImgBtn.onclick = () => {
+          fileInput.value = '';
+          uploadPreview.style.display = 'none';
+          uploadZone.style.display = 'flex';
+          
+          document.getElementById('results-idle').style.display = 'flex';
+          document.getElementById('results-active').style.display = 'none';
+          document.getElementById('qr-confirm-modal').style.display = 'none';
+        };
+
+        // Reset button
+        document.getElementById('reset-scanner-btn').onclick = () => {
+          document.getElementById('results-idle').style.display = 'flex';
+          document.getElementById('results-active').style.display = 'none';
+          document.getElementById('qr-confirm-modal').style.display = 'none';
+          
+          fileInput.value = '';
+          uploadPreview.style.display = 'none';
+          uploadZone.style.display = 'flex';
+        };
       }
     });
   </script>

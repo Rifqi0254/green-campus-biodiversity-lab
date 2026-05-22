@@ -365,10 +365,14 @@ function initRecentObservations() {
   allObservations.forEach((obs, index) => {
     const card = document.createElement('a');
     card.href = obs.link || `spesies.html?id=${obs.id}`;
-    card.className = `feature-card animate-on-scroll stagger-${(index % 4) + 1}`;
+    // Use feature-card without animate-on-scroll — we'll animate directly via setTimeout
+    card.className = `feature-card stagger-${(index % 4) + 1}`;
     card.style.textDecoration = 'none';
     card.style.color = 'inherit';
     card.style.display = 'block';
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(30px)';
+    card.style.transition = 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
 
     // Category style tags
     let catLabel = 'Flora';
@@ -404,10 +408,14 @@ function initRecentObservations() {
     `;
 
     container.appendChild(card);
-  });
 
-  // Re-initialize intersection observers for the new elements
-  initScrollAnimations();
+    // Staggered entrance animation — guaranteed to work regardless of scroll position
+    const delay = 100 + index * 100;
+    setTimeout(() => {
+      card.style.opacity = '1';
+      card.style.transform = 'translateY(0)';
+    }, delay);
+  });
 }
 
 /* --- Notification System --- */

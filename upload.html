@@ -524,11 +524,91 @@
 
   <script>
     // ========== CRUD LENGKAP + DETAIL ==========
-    const STORAGE_KEY = 'green_campus_observations';
+    const STORAGE_KEY = 'biodiversity_observations';
+
+    function mapToNewSchema(o) {
+      if (!o) return null;
+      const baseCoords = {
+        'Taman Rektorat': [-6.220200, 106.151100],
+        'Hutan Mini Kampus': [-6.221250, 106.152450],
+        'Fakultas Sains & Teknologi': [-6.220100, 106.151950],
+        'Koridor Kampus': [-6.220850, 106.151650],
+        'Lapangan Utama': [-6.220550, 106.152650],
+        'Area Masjid Kampus': [-6.220927, 106.151731],
+        'Lainnya': [-6.220927, 106.151731]
+      };
+      
+      const locText = o.location || 'Lainnya';
+      const base = baseCoords[locText] || [-6.220927, 106.151731];
+      const offsetLat = (Math.random() - 0.5) * 0.0004;
+      const offsetLng = (Math.random() - 0.5) * 0.0004;
+      const coords = o.coords || [base[0] + offsetLat, base[1] + offsetLng];
+      
+      const category = o.category || 'flora';
+      let colorClass = 'green';
+      let scientific = o.scientific || 'Spesies Baru';
+      if (category === 'flora') {
+        colorClass = 'green';
+        if (scientific === 'Spesies Baru') scientific = 'Flora Teridentifikasi';
+      } else if (category === 'fauna') {
+        colorClass = 'blue';
+        if (scientific === 'Spesies Baru') scientific = 'Fauna Teridentifikasi';
+      } else if (category === 'insecta') {
+        colorClass = 'amber';
+        if (scientific === 'Spesies Baru') scientific = 'Serangga Teridentifikasi';
+      } else if (category === 'habitat') {
+        colorClass = 'red';
+        if (scientific === 'Spesies Baru') scientific = 'Status Monitoring';
+      }
+
+      const id = o.id || Date.now().toString();
+
+      return {
+        id: id,
+        speciesName: o.speciesName || o.title || '',
+        title: o.title || o.speciesName || '',
+        category: category,
+        location: locText,
+        date: o.date || '',
+        description: o.description || o.desc || '',
+        desc: o.desc || o.description || '',
+        observerName: o.observerName || 'Relawan Mahasiswa',
+        observerNim: o.observerNim || '-',
+        imageData: o.imageData || o.image || '',
+        image: o.image || o.imageData || '',
+        coords: coords,
+        link: o.link || `spesies.html?id=${id}`,
+        status: o.status || (category === 'habitat' ? 'Monitoring' : 'Least Concern'),
+        colorClass: colorClass,
+        scientific: scientific,
+        createdAt: o.createdAt || new Date().toISOString(),
+        updatedAt: o.updatedAt || new Date().toISOString()
+      };
+    }
 
     function getObservations() {
-      const data = localStorage.getItem(STORAGE_KEY);
-      return data ? JSON.parse(data) : [];
+      let data = localStorage.getItem(STORAGE_KEY);
+      if (!data) {
+        // Coba migrasi dari green_campus_observations lama
+        const oldData = localStorage.getItem('green_campus_observations');
+        if (oldData) {
+          try {
+            const parsed = JSON.parse(oldData);
+            const migrated = parsed.map(o => mapToNewSchema(o));
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
+            return migrated;
+          } catch(e) {
+            return [];
+          }
+        }
+        return [];
+      }
+      try {
+        const parsed = JSON.parse(data);
+        return parsed.map(o => mapToNewSchema(o));
+      } catch(e) {
+        return [];
+      }
     }
 
     function saveObservations(observations) {
@@ -537,23 +617,28 @@
 
     function saveObservation(observation) {
       let observations = getObservations();
-      if (observation.id) {
-        const index = observations.findIndex(obs => obs.id === observation.id);
-        if (index !== -1) observations[index] = observation;
+      const mapped = mapToNewSchema(observation);
+      if (mapped.id && observations.some(obs => obs.id.toString() === mapped.id.toString())) {
+        const index = observations.findIndex(obs => obs.id.toString() === mapped.id.toString());
+        if (index !== -1) {
+          mapped.createdAt = observations[index].createdAt;
+          observations[index] = mapped;
+        }
       } else {
-        observation.id = Date.now().toString();
-        observation.createdAt = new Date().toISOString();
-        observations.unshift(observation);
+        mapped.id = Date.now().toString();
+        mapped.link = `spesies.html?id=${mapped.id}`;
+        mapped.createdAt = new Date().toISOString();
+        observations.unshift(mapped);
       }
       saveObservations(observations);
       renderObservationsList();
-      return observation;
+      return mapped;
     }
 
     function deleteObservation(id) {
       if (confirm('⚠️ Apakah Anda yakin ingin menghapus temuan ini?')) {
         let observations = getObservations();
-        observations = observations.filter(obs => obs.id !== id);
+        observations = observations.filter(obs => obs.id.toString() !== id.toString());
         saveObservations(observations);
         renderObservationsList();
         showMessage('🗑️ Temuan berhasil dihapus!', 'success');
@@ -562,7 +647,7 @@
 
     function editObservation(id) {
       const observations = getObservations();
-      const observation = observations.find(obs => obs.id === id);
+      const observation = observations.find(obs => obs.id.toString() === id.toString());
       if (observation) {
         document.getElementById('edit-id').value = observation.id;
         document.getElementById('species-name').value = observation.speciesName || '';
@@ -769,6 +854,24 @@
 
     document.getElementById('date').valueAsDate = new Date();
     renderObservationsList();
+    
+    // Parse URL search parameters to pre-fill the form when redirected from the AI Scanner
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('species')) {
+      document.getElementById('species-name').value = urlParams.get('species');
+    }
+    if (urlParams.has('category')) {
+      let cat = urlParams.get('category');
+      if (cat === 'insecta') cat = 'fauna'; // Map insecta to fauna option in standard categories
+      const radio = document.getElementById('cat-' + cat);
+      if (radio) {
+        radio.checked = true;
+      }
+    }
+    if (urlParams.has('desc')) {
+      document.getElementById('description').value = urlParams.get('desc');
+    }
+
     window.editObservation = editObservation;
     window.deleteObservation = deleteObservation;
     window.viewDetail = viewDetail;
