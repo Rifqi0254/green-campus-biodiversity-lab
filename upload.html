@@ -4,291 +4,526 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description"
-    content="Upload temuan spesies baru di kampus UIN Sultan Maulana Hasanuddin Banten. Fitur citizen science dengan identifikasi AI untuk mahasiswa relawan.">
   <title>Upload Temuan | Green Campus Biodiversity Lab</title>
   <link rel="icon" type="image/png" href="assets/logo-uin.png">
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #0a0f0d;
+      color: #e2e8f0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .navbar {
+      background: #0f1a12;
+      padding: 15px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #4ade80;
+    }
+
+    .nav-brand img {
+      width: 40px;
+      border-radius: 50%;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #cbd5e1;
+    }
+
+    .nav-links a.active {
+      color: #4ade80;
+    }
+
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .page-header {
+      background: linear-gradient(135deg, #0a2e1a, #0a0f0d);
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .section-title {
+      font-size: 32px;
+      margin-bottom: 10px;
+      color: #4ade80;
+    }
+
+    .upload-form {
+      background: #1a2a1f;
+      padding: 25px;
+      border-radius: 16px;
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #cbd5e1;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #334155;
+      background: #0f1a12;
+      color: white;
+    }
+
+    .category-options {
+      display: flex;
+      gap: 15px;
+    }
+
+    .category-option input {
+      display: none;
+    }
+
+    .category-option label {
+      display: block;
+      padding: 10px 20px;
+      background: #0f1a12;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 1px solid #334155;
+    }
+
+    .category-option input:checked+label {
+      background: #4ade80;
+      color: #0a0f0d;
+    }
+
+    .upload-zone {
+      border: 2px dashed #4ade80;
+      border-radius: 12px;
+      padding: 30px;
+      text-align: center;
+      cursor: pointer;
+      background: #0f1a12;
+    }
+
+    .image-preview {
+      display: none;
+      margin-top: 15px;
+    }
+
+    .image-preview img {
+      max-width: 200px;
+      border-radius: 8px;
+    }
+
+    .btn-primary,
+    .btn-outline {
+      padding: 12px 24px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-primary {
+      background: #4ade80;
+      color: #0a0f0d;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid #4ade80;
+      color: #4ade80;
+    }
+
+    .my-observations-section {
+      margin-top: 30px;
+    }
+
+    .observations-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .observation-item {
+      background: #1a2a1f;
+      border-radius: 12px;
+      padding: 15px;
+      border-left: 4px solid #4ade80;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .observation-item:hover {
+      background: #1f3a25;
+      transform: translateX(4px);
+    }
+
+    .observation-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .observation-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #4ade80;
+    }
+
+    .observation-category {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+    }
+
+    .category-flora {
+      background: #166534;
+      color: #86efac;
+    }
+
+    .category-fauna {
+      background: #1e3a5f;
+      color: #60a5fa;
+    }
+
+    .category-habitat {
+      background: #854d0e;
+      color: #fbbf24;
+    }
+
+    .observation-details {
+      font-size: 14px;
+      color: #94a3b8;
+      margin: 10px 0;
+    }
+
+    .observation-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .btn-edit,
+    .btn-delete,
+    .btn-view {
+      padding: 6px 16px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-view {
+      background: #4ade80;
+      color: #0a0f0d;
+    }
+
+    .btn-edit {
+      background: #3b82f6;
+      color: white;
+    }
+
+    .btn-delete {
+      background: #ef4444;
+      color: white;
+    }
+
+    .empty-observations {
+      text-align: center;
+      padding: 40px;
+      background: #1a2a1f;
+      border-radius: 12px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 20px;
+      background: #0f1a12;
+      margin-top: 40px;
+    }
+
+    /* MODAL DETAIL */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: #1a2a1f;
+      border-radius: 20px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 25px;
+      position: relative;
+      border: 1px solid #4ade80;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 28px;
+      cursor: pointer;
+      color: #94a3b8;
+    }
+
+    .modal-close:hover {
+      color: #ef4444;
+    }
+
+    .modal-img {
+      width: 100%;
+      max-height: 250px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin: 15px 0;
+    }
+
+    .modal-field {
+      margin-bottom: 12px;
+    }
+
+    .modal-field strong {
+      color: #4ade80;
+      display: inline-block;
+      width: 100px;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .nav-toggle {
+        display: block;
+      }
+
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        right: 0;
+        background: #0f1a12;
+        padding: 20px;
+      }
+
+      .category-options {
+        flex-direction: column;
+      }
+
+      .modal-field strong {
+        width: 80px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-  <!-- ===== NAVIGATION ===== -->
-  <nav class="navbar scrolled" id="navbar">
+  <!-- NAVIGATION -->
+  <nav class="navbar">
     <div class="nav-inner">
       <a href="index.html" class="nav-brand">
-        <img src="assets/logo-uin.png" alt="Logo UIN Sultan Maulana Hasanuddin Banten">
-        <div class="nav-brand-text">
-          <span class="nav-brand-name">Green Campus</span>
-          <span class="nav-brand-sub">Biodiversity Lab</span>
-        </div>
+        <img src="assets/logo-uin.png" alt="Logo">
+        <span><strong>Green Campus</strong><br><small>Biodiversity Lab</small></span>
       </a>
-
       <ul class="nav-links" id="nav-links">
-        <li><a href="index.html"><span class="nav-icon">🏠</span> Beranda</a></li>
-        <li><a href="peta.html"><span class="nav-icon">🗺️</span> Peta Biodiversitas</a></li>
-        <li><a href="upload.html" class="active"><span class="nav-icon">📷</span> Upload Temuan</a></li>
-        <li><a href="spesies.html"><span class="nav-icon">🔍</span> Scan QR</a></li>
-        <li><a href="#" class="btn btn-primary btn-sm"><span class="nav-icon">🌱</span> Aksi Hijau</a></li>
+        <li><a href="index.html">🏠 Beranda</a></li>
+        <li><a href="peta.html">🗺️ Peta Biodiversitas</a></li>
+        <li><a href="upload.html" class="active">📷 Upload Temuan</a></li>
+        <li><a href="spesies.html">🔍 Scan QR</a></li>
+        <li><a href="#">🌱 Aksi Hijau</a></li>
       </ul>
-
-      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+      <button class="nav-toggle" id="nav-toggle">☰</button>
     </div>
   </nav>
 
-  <!-- ===== PAGE HEADER ===== -->
+  <!-- HEADER -->
   <header class="page-header">
     <div class="container">
-      <nav class="breadcrumbs">
-        <a href="index.html">Beranda</a>
-        <span class="separator">›</span>
-        <span>Upload Temuan</span>
-      </nav>
-
-      <div class="section-label animate-on-scroll">📷 Citizen Science</div>
-      <h1 class="section-title animate-on-scroll">Upload Temuan Observasi</h1>
-      <p class="section-subtitle animate-on-scroll">
-        Laporkan temuan spesies baru yang kamu temukan di lingkungan kampus. Setiap observasi berkontribusi pada
-        pendataan biodiversitas.
-      </p>
+      <div class="section-label">📷 Citizen Science</div>
+      <h1 class="section-title">Upload & Kelola Temuan</h1>
+      <p>Tambah, lihat detail, edit, atau hapus temuan biodiversitas di kampus UIN Banten</p>
     </div>
   </header>
 
-  <!-- ===== UPLOAD FORM ===== -->
-  <section class="form-section">
+  <!-- MAIN CONTENT -->
+  <section>
     <div class="container">
-      <form class="upload-form animate-on-scroll" id="observation-form">
+
+      <!-- FORM TAMBAH / EDIT -->
+      <form class="upload-form" id="observation-form">
         <input type="hidden" id="edit-id" value="">
+        <h3 style="margin-bottom:20px; color:#4ade80;">📝 Form Temuan</h3>
 
-        <!-- Step indicator -->
-        <div
-          style="display: flex; align-items: center; gap: 8px; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid rgba(148,163,184,0.1);">
-          <div style="display: flex; align-items: center; gap: 6px;">
-            <span
-              style="width: 28px; height: 28px; border-radius: 50%; background: var(--gradient-accent); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; color: white;">1</span>
-            <span style="font-size: 0.85rem; font-weight: 600; color: var(--green-400);">Foto</span>
-          </div>
-          <div style="flex: 1; height: 2px; background: rgba(34,197,94,0.3); border-radius: 2px;"></div>
-          <div style="display: flex; align-items: center; gap: 6px;">
-            <span
-              style="width: 28px; height: 28px; border-radius: 50%; background: rgba(34,197,94,0.2); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; color: var(--green-400);">2</span>
-            <span style="font-size: 0.85rem; font-weight: 500; color: var(--dark-400);">Detail</span>
-          </div>
-          <div style="flex: 1; height: 2px; background: rgba(148,163,184,0.1); border-radius: 2px;"></div>
-          <div style="display: flex; align-items: center; gap: 6px;">
-            <span
-              style="width: 28px; height: 28px; border-radius: 50%; background: rgba(148,163,184,0.1); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; color: var(--dark-500);">3</span>
-            <span style="font-size: 0.85rem; font-weight: 500; color: var(--dark-500);">Kirim</span>
-          </div>
-        </div>
-
-        <!-- Photo Upload -->
         <div class="form-group">
-          <label>Upload Foto <span class="required">*</span></label>
+          <label>📸 Foto Temuan</label>
           <div class="upload-zone" id="upload-zone">
-            <span class="upload-zone-icon">📸</span>
-            <p class="upload-zone-text">Klik atau seret foto ke sini</p>
-            <p class="upload-zone-hint">Format: JPG, PNG, WEBP (Maks. 10MB)</p>
+            <span style="font-size:32px;">📷</span>
+            <p>Klik atau seret foto ke sini</p>
+            <small>JPG, PNG, WEBP</small>
           </div>
-          <input type="file" id="photo-upload" accept="image/*" style="display: none;">
-
+          <input type="file" id="photo-upload" accept="image/*" style="display:none;">
           <div class="image-preview" id="image-preview">
-            <img src="" alt="Preview" id="preview-img">
-            <button type="button" class="remove-image" aria-label="Remove image">×</button>
-          </div>
-
-          <div class="ai-hint">
-            <span class="ai-icon">🤖</span>
-            <span>AI membantu identifikasi awal spesies berdasarkan foto. Hasil identifikasi akan muncul secara otomatis
-              setelah upload.</span>
+            <img src="" id="preview-img">
+            <button type="button" id="remove-image"
+              style="background:#ef4444; color:white; border:none; padding:5px 10px; margin-top:8px; border-radius:6px;">Hapus
+              Foto</button>
           </div>
         </div>
 
-        <!-- Species Name -->
         <div class="form-group">
-          <label for="species-name">Nama Temuan / Spesies <span class="required">*</span></label>
-          <input type="text" class="form-input" id="species-name" placeholder="Contoh: Kamboja Jepang" required>
-          <div style="margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap;">
-            <span
-              style="font-size: 0.75rem; color: var(--dark-500); padding: 2px 10px; background: rgba(255,255,255,0.05); border-radius: 999px; cursor: pointer;"
-              onclick="document.getElementById('species-name').value='Kamboja Jepang'">💡 Kamboja Jepang</span>
-            <span
-              style="font-size: 0.75rem; color: var(--dark-500); padding: 2px 10px; background: rgba(255,255,255,0.05); border-radius: 999px; cursor: pointer;"
-              onclick="document.getElementById('species-name').value='Kutilang'">💡 Kutilang</span>
-            <span
-              style="font-size: 0.75rem; color: var(--dark-500); padding: 2px 10px; background: rgba(255,255,255,0.05); border-radius: 999px; cursor: pointer;"
-              onclick="document.getElementById('species-name').value='Kupu-kupu Swallowtail'">💡 Kupu-kupu
-              Swallowtail</span>
-          </div>
+          <label>🌿 Nama Spesies *</label>
+          <input type="text" class="form-input" id="species-name" placeholder="Contoh: Kamboja Jepang, Kutilang"
+            required>
         </div>
 
-        <!-- Category -->
         <div class="form-group">
-          <label>Kategori <span class="required">*</span></label>
+          <label>📂 Kategori *</label>
           <div class="category-options">
             <div class="category-option">
               <input type="radio" name="category" id="cat-flora" value="flora" checked>
-              <label for="cat-flora">
-                <span class="cat-icon">🌿</span>
-                <span class="cat-name">Flora</span>
-              </label>
+              <label for="cat-flora">🌿 Flora</label>
             </div>
             <div class="category-option">
               <input type="radio" name="category" id="cat-fauna" value="fauna">
-              <label for="cat-fauna">
-                <span class="cat-icon">🐦</span>
-                <span class="cat-name">Fauna</span>
-              </label>
+              <label for="cat-fauna">🐦 Fauna</label>
             </div>
             <div class="category-option">
               <input type="radio" name="category" id="cat-habitat" value="habitat">
-              <label for="cat-habitat">
-                <span class="cat-icon">🏞️</span>
-                <span class="cat-name">Kondisi Habitat</span>
-              </label>
+              <label for="cat-habitat">🏞️ Habitat</label>
             </div>
           </div>
         </div>
 
-        <!-- Location & Date -->
-        <div class="form-row">
-          <div class="form-group">
-            <label for="location">Lokasi <span class="required">*</span></label>
-            <select class="form-select" id="location" required>
-              <option value="">Pilih lokasi...</option>
-              <option value="taman-rektorat">Taman Rektorat</option>
-              <option value="hutan-mini">Hutan Mini Kampus</option>
-              <option value="fakultas-sains">Fakultas Sains & Teknologi</option>
-              <option value="koridor">Koridor Kampus</option>
-              <option value="lapangan">Lapangan Utama</option>
-              <option value="kebun-biologi">Kebun Biologi</option>
-              <option value="masjid">Area Masjid Kampus</option>
-              <option value="lainnya">Lainnya</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="date">Tanggal Pengamatan <span class="required">*</span></label>
-            <input type="date" class="form-input" id="date" required>
-          </div>
-        </div>
-
-        <!-- Description -->
         <div class="form-group">
-          <label for="description">Deskripsi Singkat</label>
-          <textarea class="form-textarea" id="description"
-            placeholder="Ceritakan kondisi temuan, jumlah yang dilihat, perilaku (untuk fauna), atau kondisi tumbuhan..."></textarea>
+          <label>📍 Lokasi *</label>
+          <select class="form-select" id="location" required>
+            <option value="">Pilih lokasi...</option>
+            <option value="Taman Rektorat">Taman Rektorat</option>
+            <option value="Hutan Mini Kampus">Hutan Mini Kampus</option>
+            <option value="Fakultas Sains & Teknologi">Fakultas Sains & Teknologi</option>
+            <option value="Koridor Kampus">Koridor Kampus</option>
+            <option value="Lapangan Utama">Lapangan Utama</option>
+            <option value="Area Masjid Kampus">Area Masjid Kampus</option>
+            <option value="Lainnya">Lainnya</option>
+          </select>
         </div>
 
-        <!-- Observer Info -->
-        <div class="form-row">
-          <div class="form-group">
-            <label for="observer-name">Nama Pengamat</label>
-            <input type="text" class="form-input" id="observer-name" placeholder="Nama lengkap">
-          </div>
-
-          <div class="form-group">
-            <label for="observer-nim">NIM</label>
-            <input type="text" class="form-input" id="observer-nim" placeholder="Nomor Induk Mahasiswa">
-          </div>
+        <div class="form-group">
+          <label>📅 Tanggal Pengamatan *</label>
+          <input type="date" class="form-input" id="date" required>
         </div>
 
-        <!-- Submit & Cancel Edit -->
-        <div style="display: flex; gap: 12px; padding-top: 8px;">
-          <button type="submit" class="btn btn-primary btn-lg" style="flex: 1; justify-content: center;"
-            id="submit-btn">
-            🚀 Kirim Observasi
-          </button>
-          <button type="reset" class="btn btn-outline" style="padding: 16px 24px;" id="reset-btn">
-            Bersihkan
-          </button>
-          <button type="button" class="btn btn-outline" id="cancel-edit-btn" style="padding: 16px 24px; display: none;">
-            Batal Edit
-          </button>
+        <div class="form-group">
+          <label>📝 Deskripsi</label>
+          <textarea class="form-textarea" id="description" rows="3"
+            placeholder="Ceritakan kondisi temuan, jumlah, perilaku..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>👤 Nama Pengamat</label>
+          <input type="text" class="form-input" id="observer-name" placeholder="Nama lengkap">
+        </div>
+
+        <div style="display: flex; gap: 12px; margin-top: 20px;">
+          <button type="submit" class="btn-primary" id="submit-btn" style="flex:1;">➕ Kirim Temuan</button>
+          <button type="button" class="btn-outline" id="reset-btn">Bersihkan</button>
+          <button type="button" class="btn-outline" id="cancel-edit-btn" style="display:none;">❌ Batal Edit</button>
         </div>
       </form>
 
-      <!-- ===== DAFTAR TEMUAN SAYA ===== -->
-      <div class="my-observations-section animate-on-scroll">
-        <h3>📋 Daftar Temuan Saya</h3>
-        <p class="section-sub">Temuan yang sudah Anda upload bisa diedit atau dihapus di sini</p>
+      <!-- DAFTAR TEMUAN -->
+      <div class="my-observations-section">
+        <h2 style="color:#4ade80; margin-bottom:10px;">📋 Daftar Temuan Saya</h2>
+        <p style="margin-bottom:20px; color:#94a3b8;">Klik pada item untuk lihat detail, atau gunakan tombol Edit/Hapus
+        </p>
         <div id="observations-list-container"></div>
       </div>
 
-      <!-- Tips Section -->
-      <div style="max-width: 720px; margin: 40px auto 0; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;"
-        class="animate-on-scroll">
-        <div class="info-card">
-          <div class="info-card-icon">📸</div>
-          <h4>Tips Foto</h4>
-          <p>Ambil foto dengan jelas. Pastikan objek terlihat utuh dan pencahayaan cukup. Sertakan detail unik seperti
-            bunga, daun, atau warna.</p>
-        </div>
-
-        <div class="info-card">
-          <div class="info-card-icon">📍</div>
-          <h4>Tips Lokasi</h4>
-          <p>Catat lokasi se-spesifik mungkin. Jika memungkinkan, aktifkan GPS di smartphone kamu saat mengambil foto.
-          </p>
-        </div>
-      </div>
     </div>
   </section>
 
-  <!-- ===== FOOTER ===== -->
+  <!-- MODAL DETAIL -->
+  <div id="detailModal" class="modal">
+    <div class="modal-content">
+      <span class="modal-close" id="modalClose">&times;</span>
+      <h3 style="color:#4ade80; margin-bottom:15px;">🔍 Detail Temuan</h3>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
   <footer class="footer">
     <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <img src="assets/logo-uin.png" alt="Logo UIN">
-          <h4>Green Campus Biodiversity Lab</h4>
-          <p>Platform pendataan, edukasi, dan aksi konservasi biodiversitas di UIN Sultan Maulana Hasanuddin Banten.</p>
-        </div>
-
-        <div class="footer-col">
-          <h5>Platform</h5>
-          <ul>
-            <li><a href="peta.html">Peta Biodiversitas</a></li>
-            <li><a href="upload.html">Upload Temuan</a></li>
-            <li><a href="spesies.html">Scan QR</a></li>
-            <li><a href="#">Aksi Hijau</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-col">
-          <h5>Edukasi</h5>
-          <ul>
-            <li><a href="#">Edukasi Iklim</a></li>
-            <li><a href="#">Katalog Spesies</a></li>
-            <li><a href="#">Panduan Observasi</a></li>
-            <li><a href="#">Tentang BIO-QR Trail</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-col">
-          <h5>Kontak</h5>
-          <ul>
-            <li><a href="#">📧 biodiversitylab@uinbanten.ac.id</a></li>
-            <li><a href="#">📞 (0254) 123-456</a></li>
-            <li><a href="https://maps.app.goo.gl/vCTasDrNrxK3fg8c7" target="_blank">📍 Serang, Banten</a></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="footer-bottom">
-        <span>© 2025 Green Campus Biodiversity Lab — UIN Sultan Maulana Hasanuddin Banten</span>
-        <span>Dibuat dengan 💚 untuk Bumi</span>
-      </div>
+      <p>© 2025 Green Campus Biodiversity Lab — UIN Sultan Maulana Hasanuddin Banten</p>
+      <p style="font-size:12px; margin-top:8px;">Dibuat dengan 💚 untuk Bumi</p>
     </div>
   </footer>
 
   <script>
-    // ========== FITUR UPLOAD, EDIT, HAPUS ==========
-
+    // ========== CRUD LENGKAP + DETAIL ==========
     const STORAGE_KEY = 'green_campus_observations';
 
     function getObservations() {
@@ -302,37 +537,32 @@
 
     function saveObservation(observation) {
       let observations = getObservations();
-
       if (observation.id) {
         const index = observations.findIndex(obs => obs.id === observation.id);
-        if (index !== -1) {
-          observations[index] = observation;
-        }
+        if (index !== -1) observations[index] = observation;
       } else {
         observation.id = Date.now().toString();
         observation.createdAt = new Date().toISOString();
         observations.unshift(observation);
       }
-
       saveObservations(observations);
       renderObservationsList();
       return observation;
     }
 
     function deleteObservation(id) {
-      if (confirm('Apakah Anda yakin ingin menghapus temuan ini?')) {
+      if (confirm('⚠️ Apakah Anda yakin ingin menghapus temuan ini?')) {
         let observations = getObservations();
         observations = observations.filter(obs => obs.id !== id);
         saveObservations(observations);
         renderObservationsList();
-        showNotification('Temuan berhasil dihapus', 'success');
+        showMessage('🗑️ Temuan berhasil dihapus!', 'success');
       }
     }
 
     function editObservation(id) {
       const observations = getObservations();
       const observation = observations.find(obs => obs.id === id);
-
       if (observation) {
         document.getElementById('edit-id').value = observation.id;
         document.getElementById('species-name').value = observation.speciesName || '';
@@ -340,49 +570,83 @@
         document.getElementById('location').value = observation.location || '';
         document.getElementById('date').value = observation.date || '';
         document.getElementById('observer-name').value = observation.observerName || '';
-        document.getElementById('observer-nim').value = observation.observerNim || '';
-
         const category = observation.category || 'flora';
-        document.querySelector(`input[name="category"][value="${category}"]`).checked = true;
-
+        document.getElementById(`cat-${category}`).checked = true;
         if (observation.imageData) {
-          const previewImg = document.getElementById('preview-img');
-          const previewDiv = document.getElementById('image-preview');
-          previewImg.src = observation.imageData;
-          previewDiv.classList.add('active');
+          document.getElementById('preview-img').src = observation.imageData;
+          document.getElementById('image-preview').style.display = 'block';
+        } else {
+          document.getElementById('preview-img').src = '';
+          document.getElementById('image-preview').style.display = 'none';
         }
-
-        document.getElementById('submit-btn').innerHTML = '✏️ Update Observasi';
-        document.getElementById('cancel-edit-btn').style.display = 'flex';
-
+        document.getElementById('submit-btn').innerHTML = '✏️ Update Temuan';
+        document.getElementById('submit-btn').style.background = '#f59e0b';
+        document.getElementById('cancel-edit-btn').style.display = 'block';
         document.getElementById('observation-form').scrollIntoView({ behavior: 'smooth' });
-        showNotification('Silakan edit data, lalu klik Update', 'info');
+        showMessage('✏️ Edit data, lalu klik Update', 'info');
       }
     }
 
+    // FITUR LIHAT DETAIL
+    function viewDetail(id) {
+      const observations = getObservations();
+      const obs = observations.find(o => o.id === id);
+      if (!obs) return;
+
+      const categoryMap = {
+        flora: '🌿 Flora',
+        fauna: '🐦 Fauna',
+        habitat: '🏞️ Habitat'
+      };
+
+      const modalBody = document.getElementById('modalBody');
+      modalBody.innerHTML = `
+        ${obs.imageData ? `<img src="${obs.imageData}" class="modal-img" alt="Foto">` : '<div style="background:#0f1a12; padding:40px; text-align:center; border-radius:12px; margin:15px 0;">📷 Tidak ada foto</div>'}
+        <div class="modal-field"><strong>Nama:</strong> ${escapeHtml(obs.speciesName || '-')}</div>
+        <div class="modal-field"><strong>Kategori:</strong> ${categoryMap[obs.category] || '-'}</div>
+        <div class="modal-field"><strong>Lokasi:</strong> ${escapeHtml(obs.location || '-')}</div>
+        <div class="modal-field"><strong>Tanggal:</strong> ${obs.date || '-'}</div>
+        <div class="modal-field"><strong>Deskripsi:</strong> ${escapeHtml(obs.description || '-')}</div>
+        <div class="modal-field"><strong>Pengamat:</strong> ${escapeHtml(obs.observerName || 'Tidak disebutkan')}</div>
+        <div class="modal-field"><strong>ID Temuan:</strong> ${obs.id}</div>
+        <div class="modal-field"><strong>Dibuat:</strong> ${obs.createdAt ? new Date(obs.createdAt).toLocaleString() : '-'}</div>
+      `;
+      document.getElementById('detailModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('detailModal').style.display = 'none';
+    }
+
     function cancelEdit() {
+      resetForm();
+      document.getElementById('submit-btn').innerHTML = '➕ Kirim Temuan';
+      document.getElementById('submit-btn').style.background = '#4ade80';
+      document.getElementById('cancel-edit-btn').style.display = 'none';
+      showMessage('Edit dibatalkan', 'info');
+    }
+
+    function resetForm() {
       document.getElementById('observation-form').reset();
       document.getElementById('edit-id').value = '';
       document.getElementById('preview-img').src = '';
-      document.getElementById('image-preview').classList.remove('active');
+      document.getElementById('image-preview').style.display = 'none';
       document.getElementById('date').valueAsDate = new Date();
-      document.getElementById('submit-btn').innerHTML = '🚀 Kirim Observasi';
-      document.getElementById('cancel-edit-btn').style.display = 'none';
-      showNotification('Edit dibatalkan', 'info');
+      document.getElementById('cat-flora').checked = true;
+      document.getElementById('photo-upload').value = '';
     }
 
     function renderObservationsList() {
       const observations = getObservations();
       const container = document.getElementById('observations-list-container');
-
       if (!container) return;
 
       if (observations.length === 0) {
         container.innerHTML = `
           <div class="empty-observations">
-            <span>📭</span>
-            <p>Belum ada temuan yang diupload</p>
-            <p style="font-size: 0.8rem;">Upload temuan pertama Anda melalui form di atas</p>
+            <span style="font-size: 48px;">📭</span>
+            <p style="margin-top: 10px;">Belum ada temuan yang diupload</p>
+            <p style="font-size: 13px;">Upload temuan pertama Anda melalui form di atas</p>
           </div>
         `;
         return;
@@ -391,7 +655,7 @@
       container.innerHTML = `
         <div class="observations-list">
           ${observations.map(obs => `
-            <div class="observation-item" data-id="${obs.id}">
+            <div class="observation-item" onclick="viewDetail('${obs.id}')">
               <div class="observation-header">
                 <span class="observation-title">${escapeHtml(obs.speciesName || 'Tanpa Nama')}</span>
                 <span class="observation-category category-${obs.category || 'flora'}">
@@ -399,12 +663,12 @@
                 </span>
               </div>
               <div class="observation-details">
-                <p>📍 ${escapeHtml(obs.location || 'Lokasi tidak disebutkan')}</p>
-                <p>📅 ${obs.date || '-'}</p>
-                ${obs.description ? `<p>📝 ${escapeHtml(obs.description.substring(0, 100))}${obs.description.length > 100 ? '...' : ''}</p>` : ''}
-                ${obs.observerName ? `<p>👤 ${escapeHtml(obs.observerName)} ${obs.observerNim ? `(${obs.observerNim})` : ''}</p>` : ''}
+                <div>📍 ${escapeHtml(obs.location || 'Lokasi tidak disebutkan')}</div>
+                <div>📅 ${obs.date || '-'}</div>
+                ${obs.description ? `<div>📝 ${escapeHtml(obs.description.substring(0, 80))}${obs.description.length > 80 ? '...' : ''}</div>` : ''}
               </div>
-              <div class="observation-actions">
+              <div class="observation-actions" onclick="event.stopPropagation()">
+                <button class="btn-view" onclick="viewDetail('${obs.id}')">🔍 Lihat</button>
                 <button class="btn-edit" onclick="editObservation('${obs.id}')">✏️ Edit</button>
                 <button class="btn-delete" onclick="deleteObservation('${obs.id}')">🗑️ Hapus</button>
               </div>
@@ -421,60 +685,34 @@
       return div.innerHTML;
     }
 
-    function showNotification(message, type = 'success') {
-      let notif = document.getElementById('custom-notification');
-      if (!notif) {
-        notif = document.createElement('div');
-        notif.id = 'custom-notification';
-        document.body.appendChild(notif);
-      }
-
-      const colors = {
-        success: 'linear-gradient(135deg, #16a34a, #15803d)',
-        error: 'linear-gradient(135deg, #dc2626, #b91c1c)',
-        info: 'linear-gradient(135deg, #2563eb, #1d4ed8)'
-      };
-
-      notif.style.background = colors[type] || colors.success;
-      notif.style.color = 'white';
-      notif.style.padding = '12px 20px';
-      notif.style.borderRadius = '12px';
-      notif.style.fontSize = '0.85rem';
-      notif.style.fontWeight = '500';
-      notif.style.boxShadow = '0 4px 15px rgba(0,0,0,0.3)';
-      notif.innerHTML = message;
-      notif.style.transform = 'translateX(0)';
-
-      setTimeout(() => {
-        notif.style.transform = 'translateX(400px)';
-      }, 3000);
+    function showMessage(msg, type = 'success') {
+      const oldNotif = document.getElementById('custom-notif');
+      if (oldNotif) oldNotif.remove();
+      const notif = document.createElement('div');
+      notif.id = 'custom-notif';
+      notif.textContent = msg;
+      notif.style.cssText = `
+        position: fixed; bottom: 20px; right: 20px;
+        background: ${type === 'success' ? '#4ade80' : type === 'error' ? '#ef4444' : '#3b82f6'};
+        color: white; padding: 12px 20px; border-radius: 10px;
+        z-index: 9999; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      `;
+      document.body.appendChild(notif);
+      setTimeout(() => notif.remove(), 3000);
     }
 
-    // Form submission
+    // EVENT LISTENERS
     document.getElementById('observation-form').addEventListener('submit', function (e) {
       e.preventDefault();
-
       const speciesName = document.getElementById('species-name').value.trim();
       const location = document.getElementById('location').value;
       const date = document.getElementById('date').value;
-
-      if (!speciesName) {
-        showNotification('Nama spesies harus diisi', 'error');
+      if (!speciesName || !location || !date) {
+        showMessage('Lengkapi nama spesies, lokasi, dan tanggal!', 'error');
         return;
       }
-      if (!location) {
-        showNotification('Lokasi harus dipilih', 'error');
-        return;
-      }
-      if (!date) {
-        showNotification('Tanggal pengamatan harus diisi', 'error');
-        return;
-      }
-
       const category = document.querySelector('input[name="category"]:checked')?.value || 'flora';
       const previewImg = document.getElementById('preview-img');
-      let imageData = previewImg.src && previewImg.src !== '' ? previewImg.src : null;
-
       const observation = {
         id: document.getElementById('edit-id').value || null,
         speciesName: speciesName,
@@ -483,102 +721,61 @@
         date: date,
         description: document.getElementById('description').value,
         observerName: document.getElementById('observer-name').value,
-        observerNim: document.getElementById('observer-nim').value,
-        imageData: imageData,
+        imageData: previewImg.src && previewImg.src !== '' ? previewImg.src : null,
         updatedAt: new Date().toISOString()
       };
-
+      const isEdit = observation.id !== null;
       saveObservation(observation);
-
-      document.getElementById('observation-form').reset();
-      document.getElementById('edit-id').value = '';
-      document.getElementById('preview-img').src = '';
-      document.getElementById('image-preview').classList.remove('active');
-      document.getElementById('date').valueAsDate = new Date();
-      document.getElementById('submit-btn').innerHTML = '🚀 Kirim Observasi';
+      resetForm();
+      document.getElementById('submit-btn').innerHTML = '➕ Kirim Temuan';
+      document.getElementById('submit-btn').style.background = '#4ade80';
       document.getElementById('cancel-edit-btn').style.display = 'none';
-
-      showNotification(observation.id ? 'Temuan berhasil diperbarui!' : 'Temuan berhasil diupload!', 'success');
+      showMessage(isEdit ? '✅ Temuan berhasil diperbarui!' : '✅ Temuan berhasil ditambahkan!', 'success');
     });
 
-    document.getElementById('reset-btn').addEventListener('click', function () {
-      document.getElementById('edit-id').value = '';
-      document.getElementById('preview-img').src = '';
-      document.getElementById('image-preview').classList.remove('active');
-      document.getElementById('date').valueAsDate = new Date();
-      document.getElementById('submit-btn').innerHTML = '🚀 Kirim Observasi';
-      document.getElementById('cancel-edit-btn').style.display = 'none';
-    });
-
+    document.getElementById('reset-btn').addEventListener('click', resetForm);
     document.getElementById('cancel-edit-btn').addEventListener('click', cancelEdit);
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    window.addEventListener('click', (e) => { if (e.target === document.getElementById('detailModal')) closeModal(); });
 
-    // Photo upload handler
+    // UPLOAD FOTO
     const uploadZone = document.getElementById('upload-zone');
     const photoUpload = document.getElementById('photo-upload');
-    const imagePreview = document.getElementById('image-preview');
     const previewImg = document.getElementById('preview-img');
-    const removeImageBtn = document.querySelector('.remove-image');
-
+    const imagePreview = document.getElementById('image-preview');
     uploadZone.addEventListener('click', () => photoUpload.click());
-    uploadZone.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      uploadZone.classList.add('drag-over');
-    });
-    uploadZone.addEventListener('dragleave', () => {
-      uploadZone.classList.remove('drag-over');
-    });
+    uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.style.background = '#1e3a2f'; });
+    uploadZone.addEventListener('dragleave', () => { uploadZone.style.background = '#0f1a12'; });
     uploadZone.addEventListener('drop', (e) => {
       e.preventDefault();
-      uploadZone.classList.remove('drag-over');
+      uploadZone.style.background = '#0f1a12';
       const file = e.dataTransfer.files[0];
-      if (file && file.type.startsWith('image/')) {
-        handleImageFile(file);
-      }
+      if (file && file.type.startsWith('image/')) handleImage(file);
     });
-
-    photoUpload.addEventListener('change', (e) => {
-      if (e.target.files[0]) {
-        handleImageFile(e.target.files[0]);
-      }
-    });
-
-    removeImageBtn.addEventListener('click', () => {
+    photoUpload.addEventListener('change', (e) => { if (e.target.files[0]) handleImage(e.target.files[0]); });
+    document.getElementById('remove-image').addEventListener('click', () => {
       previewImg.src = '';
-      imagePreview.classList.remove('active');
+      imagePreview.style.display = 'none';
       photoUpload.value = '';
     });
-
-    function handleImageFile(file) {
+    function handleImage(file) {
       const reader = new FileReader();
       reader.onload = (e) => {
         previewImg.src = e.target.result;
-        imagePreview.classList.add('active');
-
-        const fileName = file.name.toLowerCase();
-        if (fileName.includes('kamboja') || fileName.includes('plumeria')) {
-          document.getElementById('species-name').value = 'Kamboja Jepang';
-          showNotification('🤖 AI: Terdeteksi tanaman Kamboja Jepang', 'info');
-        } else if (fileName.includes('kupu')) {
-          document.getElementById('species-name').value = 'Kupu-kupu Papilio';
-          showNotification('🤖 AI: Terdeteksi kupu-kupu jenis Papilio', 'info');
-        }
+        imagePreview.style.display = 'block';
       };
       reader.readAsDataURL(file);
     }
 
     document.getElementById('date').valueAsDate = new Date();
     renderObservationsList();
-
     window.editObservation = editObservation;
     window.deleteObservation = deleteObservation;
+    window.viewDetail = viewDetail;
 
-    // Mobile nav toggle
     const navToggle = document.getElementById('nav-toggle');
     const navLinks = document.getElementById('nav-links');
-    navToggle.addEventListener('click', () => {
-      navLinks.classList.toggle('open');
-      navToggle.classList.toggle('active');
-    });
+    if (navToggle) navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
   </script>
 </body>
 
