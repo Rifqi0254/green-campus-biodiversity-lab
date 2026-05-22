@@ -123,6 +123,7 @@
     .category-options {
       display: flex;
       gap: 15px;
+      flex-wrap: wrap;
     }
 
     .category-option input {
@@ -150,16 +151,60 @@
       text-align: center;
       cursor: pointer;
       background: #0f1a12;
+      transition: 0.3s;
     }
 
-    .image-preview {
+    .upload-zone:hover {
+      background: #1e3a2f;
+      border-color: #86efac;
+    }
+
+    .file-preview {
       display: none;
       margin-top: 15px;
+      background: #0f1a12;
+      border-radius: 12px;
+      padding: 15px;
     }
 
-    .image-preview img {
-      max-width: 200px;
+    .file-preview.active {
+      display: block;
+    }
+
+    .file-preview img,
+    .file-preview video {
+      max-width: 100%;
+      max-height: 200px;
       border-radius: 8px;
+      object-fit: cover;
+    }
+
+    .file-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: #1a2a1f;
+      border-radius: 10px;
+    }
+
+    .file-icon {
+      font-size: 40px;
+    }
+
+    .file-details {
+      flex: 1;
+    }
+
+    .file-name {
+      font-weight: bold;
+      color: #4ade80;
+      word-break: break-all;
+    }
+
+    .file-size {
+      font-size: 12px;
+      color: #64748b;
     }
 
     .btn-primary,
@@ -180,6 +225,15 @@
       background: transparent;
       border: 1px solid #4ade80;
       color: #4ade80;
+    }
+
+    .btn-danger {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
     }
 
     .my-observations-section {
@@ -252,11 +306,13 @@
       display: flex;
       gap: 10px;
       margin-top: 10px;
+      flex-wrap: wrap;
     }
 
     .btn-edit,
     .btn-delete,
-    .btn-view {
+    .btn-view,
+    .btn-download {
       padding: 6px 16px;
       border-radius: 6px;
       border: none;
@@ -278,6 +334,11 @@
       color: white;
     }
 
+    .btn-download {
+      background: #f59e0b;
+      color: white;
+    }
+
     .empty-observations {
       text-align: center;
       padding: 40px;
@@ -292,7 +353,6 @@
       margin-top: 40px;
     }
 
-    /* MODAL DETAIL */
     .modal {
       display: none;
       position: fixed;
@@ -331,7 +391,8 @@
       color: #ef4444;
     }
 
-    .modal-img {
+    .modal-img,
+    .modal-pdf {
       width: 100%;
       max-height: 250px;
       object-fit: cover;
@@ -347,6 +408,29 @@
       color: #4ade80;
       display: inline-block;
       width: 100px;
+    }
+
+    .file-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 10px;
+      margin-left: 8px;
+    }
+
+    .file-badge.image {
+      background: #4ade80;
+      color: #0a0f0d;
+    }
+
+    .file-badge.pdf {
+      background: #ef4444;
+      color: white;
+    }
+
+    .file-badge.document {
+      background: #3b82f6;
+      color: white;
     }
 
     @media (max-width: 768px) {
@@ -382,7 +466,6 @@
 
 <body>
 
-  <!-- NAVIGATION -->
   <nav class="navbar">
     <div class="nav-inner">
       <a href="index.html" class="nav-brand">
@@ -394,43 +477,49 @@
         <li><a href="peta.html">🗺️ Peta Biodiversitas</a></li>
         <li><a href="upload.html" class="active">📷 Upload Temuan</a></li>
         <li><a href="spesies.html">🔍 Scan QR</a></li>
-        <li><a href="#">🌱 Aksi Hijau</a></li>
+        <li><a href="edukasi.html" class="btn-primary" style="padding: 8px 16px;">🌱 Edukasi</a></li>
       </ul>
       <button class="nav-toggle" id="nav-toggle">☰</button>
     </div>
   </nav>
 
-  <!-- HEADER -->
   <header class="page-header">
     <div class="container">
       <div class="section-label">📷 Citizen Science</div>
       <h1 class="section-title">Upload & Kelola Temuan</h1>
       <p>Tambah, lihat detail, edit, atau hapus temuan biodiversitas di kampus UIN Banten</p>
+      <p style="font-size: 12px; margin-top: 8px;">✅ Support file: JPG, PNG, GIF, WEBP, PDF, DOC, DOCX, XLS, PPT, TXT
+        (Maks. 10MB)</p>
     </div>
   </header>
 
-  <!-- MAIN CONTENT -->
   <section>
     <div class="container">
 
-      <!-- FORM TAMBAH / EDIT -->
       <form class="upload-form" id="observation-form">
         <input type="hidden" id="edit-id" value="">
         <h3 style="margin-bottom:20px; color:#4ade80;">📝 Form Temuan</h3>
 
         <div class="form-group">
-          <label>📸 Foto Temuan</label>
+          <label>📎 Upload File (Foto/Dokumen)</label>
           <div class="upload-zone" id="upload-zone">
-            <span style="font-size:32px;">📷</span>
-            <p>Klik atau seret foto ke sini</p>
-            <small>JPG, PNG, WEBP</small>
+            <span style="font-size: 48px;">📁</span>
+            <p>Klik atau seret file ke sini</p>
+            <small>Support: JPG, PNG, GIF, WEBP, PDF, DOC, DOCX, XLS, PPT, TXT (Maks. 10MB)</small>
           </div>
-          <input type="file" id="photo-upload" accept="image/*" style="display:none;">
-          <div class="image-preview" id="image-preview">
-            <img src="" id="preview-img">
-            <button type="button" id="remove-image"
-              style="background:#ef4444; color:white; border:none; padding:5px 10px; margin-top:8px; border-radius:6px;">Hapus
-              Foto</button>
+          <input type="file" id="file-upload" accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt"
+            style="display:none;">
+
+          <div class="file-preview" id="file-preview">
+            <div class="file-info">
+              <div class="file-icon" id="file-icon">📄</div>
+              <div class="file-details">
+                <div class="file-name" id="file-name">-</div>
+                <div class="file-size" id="file-size">-</div>
+              </div>
+              <button type="button" id="remove-file" class="btn-danger">Hapus</button>
+            </div>
+            <div id="file-visual-preview" style="margin-top: 12px; text-align: center;"></div>
           </div>
         </div>
 
@@ -468,6 +557,7 @@
             <option value="Koridor Kampus">Koridor Kampus</option>
             <option value="Lapangan Utama">Lapangan Utama</option>
             <option value="Area Masjid Kampus">Area Masjid Kampus</option>
+            <option value="Kebun Biologi">Kebun Biologi</option>
             <option value="Lainnya">Lainnya</option>
           </select>
         </div>
@@ -488,14 +578,13 @@
           <input type="text" class="form-input" id="observer-name" placeholder="Nama lengkap">
         </div>
 
-        <div style="display: flex; gap: 12px; margin-top: 20px;">
+        <div style="display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap;">
           <button type="submit" class="btn-primary" id="submit-btn" style="flex:1;">➕ Kirim Temuan</button>
           <button type="button" class="btn-outline" id="reset-btn">Bersihkan</button>
           <button type="button" class="btn-outline" id="cancel-edit-btn" style="display:none;">❌ Batal Edit</button>
         </div>
       </form>
 
-      <!-- DAFTAR TEMUAN -->
       <div class="my-observations-section">
         <h2 style="color:#4ade80; margin-bottom:10px;">📋 Daftar Temuan Saya</h2>
         <p style="margin-bottom:20px; color:#94a3b8;">Klik pada item untuk lihat detail, atau gunakan tombol Edit/Hapus
@@ -506,7 +595,6 @@
     </div>
   </section>
 
-  <!-- MODAL DETAIL -->
   <div id="detailModal" class="modal">
     <div class="modal-content">
       <span class="modal-close" id="modalClose">&times;</span>
@@ -523,90 +611,42 @@
   </footer>
 
   <script>
-    // ========== CRUD LENGKAP + DETAIL ==========
     const STORAGE_KEY = 'biodiversity_observations';
+    let currentFileData = null;
+    let currentFileType = null;
+    let currentFileName = null;
+    let currentFileSize = null;
 
-    function mapToNewSchema(o) {
-      if (!o) return null;
-      const baseCoords = {
-        'Taman Rektorat': [-6.220200, 106.151100],
-        'Hutan Mini Kampus': [-6.221250, 106.152450],
-        'Fakultas Sains & Teknologi': [-6.220100, 106.151950],
-        'Koridor Kampus': [-6.220850, 106.151650],
-        'Lapangan Utama': [-6.220550, 106.152650],
-        'Area Masjid Kampus': [-6.220927, 106.151731],
-        'Lainnya': [-6.220927, 106.151731]
-      };
-      
-      const locText = o.location || 'Lainnya';
-      const base = baseCoords[locText] || [-6.220927, 106.151731];
-      const offsetLat = (Math.random() - 0.5) * 0.0004;
-      const offsetLng = (Math.random() - 0.5) * 0.0004;
-      const coords = o.coords || [base[0] + offsetLat, base[1] + offsetLng];
-      
-      const category = o.category || 'flora';
-      let colorClass = 'green';
-      let scientific = o.scientific || 'Spesies Baru';
-      if (category === 'flora') {
-        colorClass = 'green';
-        if (scientific === 'Spesies Baru') scientific = 'Flora Teridentifikasi';
-      } else if (category === 'fauna') {
-        colorClass = 'blue';
-        if (scientific === 'Spesies Baru') scientific = 'Fauna Teridentifikasi';
-      } else if (category === 'insecta') {
-        colorClass = 'amber';
-        if (scientific === 'Spesies Baru') scientific = 'Serangga Teridentifikasi';
-      } else if (category === 'habitat') {
-        colorClass = 'red';
-        if (scientific === 'Spesies Baru') scientific = 'Status Monitoring';
-      }
+    function getFileIcon(mimeType, fileName) {
+      if (mimeType.startsWith('image/')) return '🖼️';
+      if (mimeType === 'application/pdf') return '📑';
+      if (mimeType.includes('word') || fileName?.endsWith('.doc') || fileName?.endsWith('.docx')) return '📝';
+      if (mimeType.includes('excel') || fileName?.endsWith('.xls') || fileName?.endsWith('.xlsx')) return '📊';
+      if (mimeType.includes('powerpoint') || fileName?.endsWith('.ppt') || fileName?.endsWith('.pptx')) return '📽️';
+      if (mimeType === 'text/plain' || fileName?.endsWith('.txt')) return '📄';
+      return '📎';
+    }
 
-      const id = o.id || Date.now().toString();
+    function getFileBadge(mimeType) {
+      if (mimeType.startsWith('image/')) return '<span class="file-badge image">Gambar</span>';
+      if (mimeType === 'application/pdf') return '<span class="file-badge pdf">PDF</span>';
+      return '<span class="file-badge document">Dokumen</span>';
+    }
 
-      return {
-        id: id,
-        speciesName: o.speciesName || o.title || '',
-        title: o.title || o.speciesName || '',
-        category: category,
-        location: locText,
-        date: o.date || '',
-        description: o.description || o.desc || '',
-        desc: o.desc || o.description || '',
-        observerName: o.observerName || 'Relawan Mahasiswa',
-        observerNim: o.observerNim || '-',
-        imageData: o.imageData || o.image || '',
-        image: o.image || o.imageData || '',
-        coords: coords,
-        link: o.link || `spesies.html?id=${id}`,
-        status: o.status || (category === 'habitat' ? 'Monitoring' : 'Least Concern'),
-        colorClass: colorClass,
-        scientific: scientific,
-        createdAt: o.createdAt || new Date().toISOString(),
-        updatedAt: o.updatedAt || new Date().toISOString()
-      };
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 
     function getObservations() {
       let data = localStorage.getItem(STORAGE_KEY);
-      if (!data) {
-        // Coba migrasi dari green_campus_observations lama
-        const oldData = localStorage.getItem('green_campus_observations');
-        if (oldData) {
-          try {
-            const parsed = JSON.parse(oldData);
-            const migrated = parsed.map(o => mapToNewSchema(o));
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
-            return migrated;
-          } catch(e) {
-            return [];
-          }
-        }
-        return [];
-      }
+      if (!data) return [];
       try {
-        const parsed = JSON.parse(data);
-        return parsed.map(o => mapToNewSchema(o));
-      } catch(e) {
+        return JSON.parse(data);
+      } catch (e) {
         return [];
       }
     }
@@ -617,28 +657,25 @@
 
     function saveObservation(observation) {
       let observations = getObservations();
-      const mapped = mapToNewSchema(observation);
-      if (mapped.id && observations.some(obs => obs.id.toString() === mapped.id.toString())) {
-        const index = observations.findIndex(obs => obs.id.toString() === mapped.id.toString());
-        if (index !== -1) {
-          mapped.createdAt = observations[index].createdAt;
-          observations[index] = mapped;
-        }
+      const existingIndex = observations.findIndex(obs => obs.id === observation.id);
+
+      if (existingIndex !== -1) {
+        observations[existingIndex] = observation;
       } else {
-        mapped.id = Date.now().toString();
-        mapped.link = `spesies.html?id=${mapped.id}`;
-        mapped.createdAt = new Date().toISOString();
-        observations.unshift(mapped);
+        observation.id = Date.now().toString();
+        observation.createdAt = new Date().toISOString();
+        observations.unshift(observation);
       }
+
       saveObservations(observations);
       renderObservationsList();
-      return mapped;
+      return observation;
     }
 
     function deleteObservation(id) {
       if (confirm('⚠️ Apakah Anda yakin ingin menghapus temuan ini?')) {
         let observations = getObservations();
-        observations = observations.filter(obs => obs.id.toString() !== id.toString());
+        observations = observations.filter(obs => obs.id !== id);
         saveObservations(observations);
         renderObservationsList();
         showMessage('🗑️ Temuan berhasil dihapus!', 'success');
@@ -647,7 +684,7 @@
 
     function editObservation(id) {
       const observations = getObservations();
-      const observation = observations.find(obs => obs.id.toString() === id.toString());
+      const observation = observations.find(obs => obs.id === id);
       if (observation) {
         document.getElementById('edit-id').value = observation.id;
         document.getElementById('species-name').value = observation.speciesName || '';
@@ -655,15 +692,18 @@
         document.getElementById('location').value = observation.location || '';
         document.getElementById('date').value = observation.date || '';
         document.getElementById('observer-name').value = observation.observerName || '';
+
         const category = observation.category || 'flora';
         document.getElementById(`cat-${category}`).checked = true;
-        if (observation.imageData) {
-          document.getElementById('preview-img').src = observation.imageData;
-          document.getElementById('image-preview').style.display = 'block';
-        } else {
-          document.getElementById('preview-img').src = '';
-          document.getElementById('image-preview').style.display = 'none';
+
+        if (observation.fileData) {
+          currentFileData = observation.fileData;
+          currentFileType = observation.fileType;
+          currentFileName = observation.fileName;
+          currentFileSize = observation.fileSize;
+          updateFilePreview();
         }
+
         document.getElementById('submit-btn').innerHTML = '✏️ Update Temuan';
         document.getElementById('submit-btn').style.background = '#f59e0b';
         document.getElementById('cancel-edit-btn').style.display = 'block';
@@ -672,21 +712,37 @@
       }
     }
 
-    // FITUR LIHAT DETAIL
     function viewDetail(id) {
       const observations = getObservations();
       const obs = observations.find(o => o.id === id);
       if (!obs) return;
 
-      const categoryMap = {
-        flora: '🌿 Flora',
-        fauna: '🐦 Fauna',
-        habitat: '🏞️ Habitat'
-      };
-
+      const categoryMap = { flora: '🌿 Flora', fauna: '🐦 Fauna', habitat: '🏞️ Habitat' };
       const modalBody = document.getElementById('modalBody');
+
+      let fileHtml = '';
+      if (obs.fileData) {
+        if (obs.fileType?.startsWith('image/')) {
+          fileHtml = `<img src="${obs.fileData}" class="modal-img" alt="Foto" onclick="window.open(this.src)">`;
+        } else if (obs.fileType === 'application/pdf') {
+          fileHtml = `<div style="background:#0f1a12; padding:20px; text-align:center; border-radius:12px; margin:15px 0;">
+                        <span style="font-size:48px;">📑</span>
+                        <p><strong>${obs.fileName}</strong></p>
+                        <a href="${obs.fileData}" download="${obs.fileName}" class="btn-primary" style="display:inline-block; margin-top:10px;">⬇️ Download PDF</a>
+                      </div>`;
+        } else {
+          fileHtml = `<div style="background:#0f1a12; padding:20px; text-align:center; border-radius:12px; margin:15px 0;">
+                        <span style="font-size:48px;">📄</span>
+                        <p><strong>${obs.fileName}</strong></p>
+                        <a href="${obs.fileData}" download="${obs.fileName}" class="btn-primary" style="display:inline-block; margin-top:10px;">⬇️ Download File</a>
+                      </div>`;
+        }
+      } else {
+        fileHtml = '<div style="background:#0f1a12; padding:40px; text-align:center; border-radius:12px; margin:15px 0;">📷 Tidak ada file</div>';
+      }
+
       modalBody.innerHTML = `
-        ${obs.imageData ? `<img src="${obs.imageData}" class="modal-img" alt="Foto">` : '<div style="background:#0f1a12; padding:40px; text-align:center; border-radius:12px; margin:15px 0;">📷 Tidak ada foto</div>'}
+        ${fileHtml}
         <div class="modal-field"><strong>Nama:</strong> ${escapeHtml(obs.speciesName || '-')}</div>
         <div class="modal-field"><strong>Kategori:</strong> ${categoryMap[obs.category] || '-'}</div>
         <div class="modal-field"><strong>Lokasi:</strong> ${escapeHtml(obs.location || '-')}</div>
@@ -697,6 +753,15 @@
         <div class="modal-field"><strong>Dibuat:</strong> ${obs.createdAt ? new Date(obs.createdAt).toLocaleString() : '-'}</div>
       `;
       document.getElementById('detailModal').style.display = 'flex';
+    }
+
+    function downloadFile(data, fileName, mimeType) {
+      const link = document.createElement('a');
+      link.href = data;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
 
     function closeModal() {
@@ -714,11 +779,62 @@
     function resetForm() {
       document.getElementById('observation-form').reset();
       document.getElementById('edit-id').value = '';
-      document.getElementById('preview-img').src = '';
-      document.getElementById('image-preview').style.display = 'none';
       document.getElementById('date').valueAsDate = new Date();
       document.getElementById('cat-flora').checked = true;
-      document.getElementById('photo-upload').value = '';
+      document.getElementById('file-upload').value = '';
+      currentFileData = null;
+      currentFileType = null;
+      currentFileName = null;
+      currentFileSize = null;
+      document.getElementById('file-preview').classList.remove('active');
+      document.getElementById('file-visual-preview').innerHTML = '';
+    }
+
+    function updateFilePreview() {
+      const previewDiv = document.getElementById('file-preview');
+      const fileNameSpan = document.getElementById('file-name');
+      const fileSizeSpan = document.getElementById('file-size');
+      const fileIconSpan = document.getElementById('file-icon');
+      const visualPreview = document.getElementById('file-visual-preview');
+
+      fileNameSpan.innerHTML = `${currentFileName} ${getFileBadge(currentFileType)}`;
+      fileSizeSpan.textContent = formatFileSize(currentFileSize);
+      fileIconSpan.textContent = getFileIcon(currentFileType, currentFileName);
+
+      if (currentFileType?.startsWith('image/')) {
+        visualPreview.innerHTML = `<img src="${currentFileData}" style="max-width:100%; max-height:150px; border-radius:8px;">`;
+      } else if (currentFileType === 'application/pdf') {
+        visualPreview.innerHTML = `<div style="background:#1e3a5f; padding:20px; border-radius:8px; text-align:center;">
+                                    <span style="font-size:32px;">📑</span>
+                                    <p style="margin-top:8px;">${currentFileName}</p>
+                                  </div>`;
+      } else {
+        visualPreview.innerHTML = `<div style="background:#1e293b; padding:20px; border-radius:8px; text-align:center;">
+                                    <span style="font-size:32px;">📄</span>
+                                    <p style="margin-top:8px;">${currentFileName}</p>
+                                  </div>`;
+      }
+
+      previewDiv.classList.add('active');
+    }
+
+    function handleFile(file) {
+      const maxSize = 10 * 1024 * 1024;
+      if (file.size > maxSize) {
+        showMessage('File terlalu besar! Maksimal 10MB.', 'error');
+        return;
+      }
+
+      currentFileName = file.name;
+      currentFileSize = file.size;
+      currentFileType = file.type;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        currentFileData = e.target.result;
+        updateFilePreview();
+      };
+      reader.readAsDataURL(file);
     }
 
     function renderObservationsList() {
@@ -750,12 +866,14 @@
               <div class="observation-details">
                 <div>📍 ${escapeHtml(obs.location || 'Lokasi tidak disebutkan')}</div>
                 <div>📅 ${obs.date || '-'}</div>
+                <div>📎 ${obs.fileName ? obs.fileName.substring(0, 30) + (obs.fileName.length > 30 ? '...' : '') : 'Tidak ada file'}</div>
                 ${obs.description ? `<div>📝 ${escapeHtml(obs.description.substring(0, 80))}${obs.description.length > 80 ? '...' : ''}</div>` : ''}
               </div>
               <div class="observation-actions" onclick="event.stopPropagation()">
                 <button class="btn-view" onclick="viewDetail('${obs.id}')">🔍 Lihat</button>
                 <button class="btn-edit" onclick="editObservation('${obs.id}')">✏️ Edit</button>
                 <button class="btn-delete" onclick="deleteObservation('${obs.id}')">🗑️ Hapus</button>
+                ${obs.fileData ? `<button class="btn-download" onclick="downloadFile('${obs.fileData}', '${obs.fileName}', '${obs.fileType}')">⬇️ Download</button>` : ''}
               </div>
             </div>
           `).join('')}
@@ -786,18 +904,20 @@
       setTimeout(() => notif.remove(), 3000);
     }
 
-    // EVENT LISTENERS
+    // Event Listeners
     document.getElementById('observation-form').addEventListener('submit', function (e) {
       e.preventDefault();
       const speciesName = document.getElementById('species-name').value.trim();
       const location = document.getElementById('location').value;
       const date = document.getElementById('date').value;
+
       if (!speciesName || !location || !date) {
         showMessage('Lengkapi nama spesies, lokasi, dan tanggal!', 'error');
         return;
       }
+
       const category = document.querySelector('input[name="category"]:checked')?.value || 'flora';
-      const previewImg = document.getElementById('preview-img');
+
       const observation = {
         id: document.getElementById('edit-id').value || null,
         speciesName: speciesName,
@@ -806,9 +926,13 @@
         date: date,
         description: document.getElementById('description').value,
         observerName: document.getElementById('observer-name').value,
-        imageData: previewImg.src && previewImg.src !== '' ? previewImg.src : null,
+        fileData: currentFileData,
+        fileType: currentFileType,
+        fileName: currentFileName,
+        fileSize: currentFileSize,
         updatedAt: new Date().toISOString()
       };
+
       const isEdit = observation.id !== null;
       saveObservation(observation);
       resetForm();
@@ -823,50 +947,46 @@
     document.getElementById('modalClose').addEventListener('click', closeModal);
     window.addEventListener('click', (e) => { if (e.target === document.getElementById('detailModal')) closeModal(); });
 
-    // UPLOAD FOTO
+    // File Upload
     const uploadZone = document.getElementById('upload-zone');
-    const photoUpload = document.getElementById('photo-upload');
-    const previewImg = document.getElementById('preview-img');
-    const imagePreview = document.getElementById('image-preview');
-    uploadZone.addEventListener('click', () => photoUpload.click());
+    const fileInput = document.getElementById('file-upload');
+    const removeFileBtn = document.getElementById('remove-file');
+
+    uploadZone.addEventListener('click', () => fileInput.click());
     uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.style.background = '#1e3a2f'; });
     uploadZone.addEventListener('dragleave', () => { uploadZone.style.background = '#0f1a12'; });
     uploadZone.addEventListener('drop', (e) => {
       e.preventDefault();
       uploadZone.style.background = '#0f1a12';
       const file = e.dataTransfer.files[0];
-      if (file && file.type.startsWith('image/')) handleImage(file);
+      if (file) handleFile(file);
     });
-    photoUpload.addEventListener('change', (e) => { if (e.target.files[0]) handleImage(e.target.files[0]); });
-    document.getElementById('remove-image').addEventListener('click', () => {
-      previewImg.src = '';
-      imagePreview.style.display = 'none';
-      photoUpload.value = '';
+
+    fileInput.addEventListener('change', (e) => { if (e.target.files[0]) handleFile(e.target.files[0]); });
+
+    removeFileBtn.addEventListener('click', () => {
+      currentFileData = null;
+      currentFileType = null;
+      currentFileName = null;
+      currentFileSize = null;
+      fileInput.value = '';
+      document.getElementById('file-preview').classList.remove('active');
+      document.getElementById('file-visual-preview').innerHTML = '';
     });
-    function handleImage(file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        previewImg.src = e.target.result;
-        imagePreview.style.display = 'block';
-      };
-      reader.readAsDataURL(file);
-    }
 
     document.getElementById('date').valueAsDate = new Date();
     renderObservationsList();
-    
-    // Parse URL search parameters to pre-fill the form when redirected from the AI Scanner
+
+    // Parse URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('species')) {
       document.getElementById('species-name').value = urlParams.get('species');
     }
     if (urlParams.has('category')) {
       let cat = urlParams.get('category');
-      if (cat === 'insecta') cat = 'fauna'; // Map insecta to fauna option in standard categories
+      if (cat === 'insecta') cat = 'fauna';
       const radio = document.getElementById('cat-' + cat);
-      if (radio) {
-        radio.checked = true;
-      }
+      if (radio) radio.checked = true;
     }
     if (urlParams.has('desc')) {
       document.getElementById('description').value = urlParams.get('desc');
@@ -875,6 +995,7 @@
     window.editObservation = editObservation;
     window.deleteObservation = deleteObservation;
     window.viewDetail = viewDetail;
+    window.downloadFile = downloadFile;
 
     const navToggle = document.getElementById('nav-toggle');
     const navLinks = document.getElementById('nav-links');

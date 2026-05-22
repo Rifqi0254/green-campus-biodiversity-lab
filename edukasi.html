@@ -230,10 +230,26 @@
     </footer>
 
     <script>
+        // Navbar Scroll Effect
+        const navbar = document.getElementById('navbar');
+        const onScroll = () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+
+        // Mobile Navigation Toggle
         const navToggle = document.getElementById('nav-toggle');
         const navLinks = document.getElementById('nav-links');
         if (navToggle) {
-            navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+            navToggle.addEventListener('click', () => {
+                navToggle.classList.toggle('active');
+                navLinks.classList.toggle('open');
+            });
         }
     </script>
 </body>
