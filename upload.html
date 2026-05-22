@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Upload temuan spesies baru di kampus UIN Sultan Maulana Hasanuddin Banten. Fitur citizen science dengan identifikasi AI untuk mahasiswa relawan.">
+  <meta name="description"
+    content="Upload temuan spesies baru di kampus UIN Sultan Maulana Hasanuddin Banten. Fitur citizen science dengan identifikasi AI untuk mahasiswa relawan.">
   <title>Upload Temuan | Green Campus Biodiversity Lab</title>
   <link rel="icon" type="image/png" href="assets/logo-uin.png">
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
   <!-- ===== NAVIGATION ===== -->
@@ -49,7 +52,8 @@
       <div class="section-label animate-on-scroll">📷 Citizen Science</div>
       <h1 class="section-title animate-on-scroll">Upload Temuan Observasi</h1>
       <p class="section-subtitle animate-on-scroll">
-        Laporkan temuan spesies baru yang kamu temukan di lingkungan kampus. Setiap observasi berkontribusi pada pendataan biodiversitas.
+        Laporkan temuan spesies baru yang kamu temukan di lingkungan kampus. Setiap observasi berkontribusi pada
+        pendataan biodiversitas.
       </p>
     </div>
   </header>
@@ -58,20 +62,26 @@
   <section class="form-section">
     <div class="container">
       <form class="upload-form animate-on-scroll" id="observation-form">
+        <input type="hidden" id="edit-id" value="">
+
         <!-- Step indicator -->
-        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid rgba(148,163,184,0.1);">
+        <div
+          style="display: flex; align-items: center; gap: 8px; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid rgba(148,163,184,0.1);">
           <div style="display: flex; align-items: center; gap: 6px;">
-            <span style="width: 28px; height: 28px; border-radius: 50%; background: var(--gradient-accent); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; color: white;">1</span>
+            <span
+              style="width: 28px; height: 28px; border-radius: 50%; background: var(--gradient-accent); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; color: white;">1</span>
             <span style="font-size: 0.85rem; font-weight: 600; color: var(--green-400);">Foto</span>
           </div>
           <div style="flex: 1; height: 2px; background: rgba(34,197,94,0.3); border-radius: 2px;"></div>
           <div style="display: flex; align-items: center; gap: 6px;">
-            <span style="width: 28px; height: 28px; border-radius: 50%; background: rgba(34,197,94,0.2); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; color: var(--green-400);">2</span>
+            <span
+              style="width: 28px; height: 28px; border-radius: 50%; background: rgba(34,197,94,0.2); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; color: var(--green-400);">2</span>
             <span style="font-size: 0.85rem; font-weight: 500; color: var(--dark-400);">Detail</span>
           </div>
           <div style="flex: 1; height: 2px; background: rgba(148,163,184,0.1); border-radius: 2px;"></div>
           <div style="display: flex; align-items: center; gap: 6px;">
-            <span style="width: 28px; height: 28px; border-radius: 50%; background: rgba(148,163,184,0.1); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; color: var(--dark-500);">3</span>
+            <span
+              style="width: 28px; height: 28px; border-radius: 50%; background: rgba(148,163,184,0.1); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; color: var(--dark-500);">3</span>
             <span style="font-size: 0.85rem; font-weight: 500; color: var(--dark-500);">Kirim</span>
           </div>
         </div>
@@ -93,7 +103,8 @@
 
           <div class="ai-hint">
             <span class="ai-icon">🤖</span>
-            <span>AI membantu identifikasi awal spesies berdasarkan foto. Hasil identifikasi akan muncul secara otomatis setelah upload.</span>
+            <span>AI membantu identifikasi awal spesies berdasarkan foto. Hasil identifikasi akan muncul secara otomatis
+              setelah upload.</span>
           </div>
         </div>
 
@@ -102,9 +113,16 @@
           <label for="species-name">Nama Temuan / Spesies <span class="required">*</span></label>
           <input type="text" class="form-input" id="species-name" placeholder="Contoh: Kamboja Jepang" required>
           <div style="margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap;">
-            <span style="font-size: 0.75rem; color: var(--dark-500); padding: 2px 10px; background: rgba(255,255,255,0.05); border-radius: 999px; cursor: pointer;" onclick="document.getElementById('species-name').value='Kamboja Jepang'">💡 Kamboja Jepang</span>
-            <span style="font-size: 0.75rem; color: var(--dark-500); padding: 2px 10px; background: rgba(255,255,255,0.05); border-radius: 999px; cursor: pointer;" onclick="document.getElementById('species-name').value='Kutilang'">💡 Kutilang</span>
-            <span style="font-size: 0.75rem; color: var(--dark-500); padding: 2px 10px; background: rgba(255,255,255,0.05); border-radius: 999px; cursor: pointer;" onclick="document.getElementById('species-name').value='Kupu-kupu Swallowtail'">💡 Kupu-kupu Swallowtail</span>
+            <span
+              style="font-size: 0.75rem; color: var(--dark-500); padding: 2px 10px; background: rgba(255,255,255,0.05); border-radius: 999px; cursor: pointer;"
+              onclick="document.getElementById('species-name').value='Kamboja Jepang'">💡 Kamboja Jepang</span>
+            <span
+              style="font-size: 0.75rem; color: var(--dark-500); padding: 2px 10px; background: rgba(255,255,255,0.05); border-radius: 999px; cursor: pointer;"
+              onclick="document.getElementById('species-name').value='Kutilang'">💡 Kutilang</span>
+            <span
+              style="font-size: 0.75rem; color: var(--dark-500); padding: 2px 10px; background: rgba(255,255,255,0.05); border-radius: 999px; cursor: pointer;"
+              onclick="document.getElementById('species-name').value='Kupu-kupu Swallowtail'">💡 Kupu-kupu
+              Swallowtail</span>
           </div>
         </div>
 
@@ -162,7 +180,8 @@
         <!-- Description -->
         <div class="form-group">
           <label for="description">Deskripsi Singkat</label>
-          <textarea class="form-textarea" id="description" placeholder="Ceritakan kondisi temuan, jumlah yang dilihat, perilaku (untuk fauna), atau kondisi tumbuhan..."></textarea>
+          <textarea class="form-textarea" id="description"
+            placeholder="Ceritakan kondisi temuan, jumlah yang dilihat, perilaku (untuk fauna), atau kondisi tumbuhan..."></textarea>
         </div>
 
         <!-- Observer Info -->
@@ -178,29 +197,43 @@
           </div>
         </div>
 
-        <!-- Submit -->
+        <!-- Submit & Cancel Edit -->
         <div style="display: flex; gap: 12px; padding-top: 8px;">
-          <button type="submit" class="btn btn-primary btn-lg" style="flex: 1; justify-content: center;">
+          <button type="submit" class="btn btn-primary btn-lg" style="flex: 1; justify-content: center;"
+            id="submit-btn">
             🚀 Kirim Observasi
           </button>
-          <button type="reset" class="btn btn-outline" style="padding: 16px 24px;">
+          <button type="reset" class="btn btn-outline" style="padding: 16px 24px;" id="reset-btn">
             Bersihkan
+          </button>
+          <button type="button" class="btn btn-outline" id="cancel-edit-btn" style="padding: 16px 24px; display: none;">
+            Batal Edit
           </button>
         </div>
       </form>
 
+      <!-- ===== DAFTAR TEMUAN SAYA ===== -->
+      <div class="my-observations-section animate-on-scroll">
+        <h3>📋 Daftar Temuan Saya</h3>
+        <p class="section-sub">Temuan yang sudah Anda upload bisa diedit atau dihapus di sini</p>
+        <div id="observations-list-container"></div>
+      </div>
+
       <!-- Tips Section -->
-      <div style="max-width: 720px; margin: 40px auto 0; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;" class="animate-on-scroll">
+      <div style="max-width: 720px; margin: 40px auto 0; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;"
+        class="animate-on-scroll">
         <div class="info-card">
           <div class="info-card-icon">📸</div>
           <h4>Tips Foto</h4>
-          <p>Ambil foto dengan jelas. Pastikan objek terlihat utuh dan pencahayaan cukup. Sertakan detail unik seperti bunga, daun, atau warna.</p>
+          <p>Ambil foto dengan jelas. Pastikan objek terlihat utuh dan pencahayaan cukup. Sertakan detail unik seperti
+            bunga, daun, atau warna.</p>
         </div>
 
         <div class="info-card">
           <div class="info-card-icon">📍</div>
           <h4>Tips Lokasi</h4>
-          <p>Catat lokasi se-spesifik mungkin. Jika memungkinkan, aktifkan GPS di smartphone kamu saat mengambil foto.</p>
+          <p>Catat lokasi se-spesifik mungkin. Jika memungkinkan, aktifkan GPS di smartphone kamu saat mengambil foto.
+          </p>
         </div>
       </div>
     </div>
@@ -253,11 +286,300 @@
     </div>
   </footer>
 
-  <script src="js/data.js"></script>
-  <script src="js/app.js"></script>
   <script>
-    // Set default date to today
+    // ========== FITUR UPLOAD, EDIT, HAPUS ==========
+
+    const STORAGE_KEY = 'green_campus_observations';
+
+    function getObservations() {
+      const data = localStorage.getItem(STORAGE_KEY);
+      return data ? JSON.parse(data) : [];
+    }
+
+    function saveObservations(observations) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(observations));
+    }
+
+    function saveObservation(observation) {
+      let observations = getObservations();
+
+      if (observation.id) {
+        const index = observations.findIndex(obs => obs.id === observation.id);
+        if (index !== -1) {
+          observations[index] = observation;
+        }
+      } else {
+        observation.id = Date.now().toString();
+        observation.createdAt = new Date().toISOString();
+        observations.unshift(observation);
+      }
+
+      saveObservations(observations);
+      renderObservationsList();
+      return observation;
+    }
+
+    function deleteObservation(id) {
+      if (confirm('Apakah Anda yakin ingin menghapus temuan ini?')) {
+        let observations = getObservations();
+        observations = observations.filter(obs => obs.id !== id);
+        saveObservations(observations);
+        renderObservationsList();
+        showNotification('Temuan berhasil dihapus', 'success');
+      }
+    }
+
+    function editObservation(id) {
+      const observations = getObservations();
+      const observation = observations.find(obs => obs.id === id);
+
+      if (observation) {
+        document.getElementById('edit-id').value = observation.id;
+        document.getElementById('species-name').value = observation.speciesName || '';
+        document.getElementById('description').value = observation.description || '';
+        document.getElementById('location').value = observation.location || '';
+        document.getElementById('date').value = observation.date || '';
+        document.getElementById('observer-name').value = observation.observerName || '';
+        document.getElementById('observer-nim').value = observation.observerNim || '';
+
+        const category = observation.category || 'flora';
+        document.querySelector(`input[name="category"][value="${category}"]`).checked = true;
+
+        if (observation.imageData) {
+          const previewImg = document.getElementById('preview-img');
+          const previewDiv = document.getElementById('image-preview');
+          previewImg.src = observation.imageData;
+          previewDiv.classList.add('active');
+        }
+
+        document.getElementById('submit-btn').innerHTML = '✏️ Update Observasi';
+        document.getElementById('cancel-edit-btn').style.display = 'flex';
+
+        document.getElementById('observation-form').scrollIntoView({ behavior: 'smooth' });
+        showNotification('Silakan edit data, lalu klik Update', 'info');
+      }
+    }
+
+    function cancelEdit() {
+      document.getElementById('observation-form').reset();
+      document.getElementById('edit-id').value = '';
+      document.getElementById('preview-img').src = '';
+      document.getElementById('image-preview').classList.remove('active');
+      document.getElementById('date').valueAsDate = new Date();
+      document.getElementById('submit-btn').innerHTML = '🚀 Kirim Observasi';
+      document.getElementById('cancel-edit-btn').style.display = 'none';
+      showNotification('Edit dibatalkan', 'info');
+    }
+
+    function renderObservationsList() {
+      const observations = getObservations();
+      const container = document.getElementById('observations-list-container');
+
+      if (!container) return;
+
+      if (observations.length === 0) {
+        container.innerHTML = `
+          <div class="empty-observations">
+            <span>📭</span>
+            <p>Belum ada temuan yang diupload</p>
+            <p style="font-size: 0.8rem;">Upload temuan pertama Anda melalui form di atas</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="observations-list">
+          ${observations.map(obs => `
+            <div class="observation-item" data-id="${obs.id}">
+              <div class="observation-header">
+                <span class="observation-title">${escapeHtml(obs.speciesName || 'Tanpa Nama')}</span>
+                <span class="observation-category category-${obs.category || 'flora'}">
+                  ${obs.category === 'flora' ? '🌿 Flora' : obs.category === 'fauna' ? '🐦 Fauna' : '🏞️ Habitat'}
+                </span>
+              </div>
+              <div class="observation-details">
+                <p>📍 ${escapeHtml(obs.location || 'Lokasi tidak disebutkan')}</p>
+                <p>📅 ${obs.date || '-'}</p>
+                ${obs.description ? `<p>📝 ${escapeHtml(obs.description.substring(0, 100))}${obs.description.length > 100 ? '...' : ''}</p>` : ''}
+                ${obs.observerName ? `<p>👤 ${escapeHtml(obs.observerName)} ${obs.observerNim ? `(${obs.observerNim})` : ''}</p>` : ''}
+              </div>
+              <div class="observation-actions">
+                <button class="btn-edit" onclick="editObservation('${obs.id}')">✏️ Edit</button>
+                <button class="btn-delete" onclick="deleteObservation('${obs.id}')">🗑️ Hapus</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function showNotification(message, type = 'success') {
+      let notif = document.getElementById('custom-notification');
+      if (!notif) {
+        notif = document.createElement('div');
+        notif.id = 'custom-notification';
+        document.body.appendChild(notif);
+      }
+
+      const colors = {
+        success: 'linear-gradient(135deg, #16a34a, #15803d)',
+        error: 'linear-gradient(135deg, #dc2626, #b91c1c)',
+        info: 'linear-gradient(135deg, #2563eb, #1d4ed8)'
+      };
+
+      notif.style.background = colors[type] || colors.success;
+      notif.style.color = 'white';
+      notif.style.padding = '12px 20px';
+      notif.style.borderRadius = '12px';
+      notif.style.fontSize = '0.85rem';
+      notif.style.fontWeight = '500';
+      notif.style.boxShadow = '0 4px 15px rgba(0,0,0,0.3)';
+      notif.innerHTML = message;
+      notif.style.transform = 'translateX(0)';
+
+      setTimeout(() => {
+        notif.style.transform = 'translateX(400px)';
+      }, 3000);
+    }
+
+    // Form submission
+    document.getElementById('observation-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const speciesName = document.getElementById('species-name').value.trim();
+      const location = document.getElementById('location').value;
+      const date = document.getElementById('date').value;
+
+      if (!speciesName) {
+        showNotification('Nama spesies harus diisi', 'error');
+        return;
+      }
+      if (!location) {
+        showNotification('Lokasi harus dipilih', 'error');
+        return;
+      }
+      if (!date) {
+        showNotification('Tanggal pengamatan harus diisi', 'error');
+        return;
+      }
+
+      const category = document.querySelector('input[name="category"]:checked')?.value || 'flora';
+      const previewImg = document.getElementById('preview-img');
+      let imageData = previewImg.src && previewImg.src !== '' ? previewImg.src : null;
+
+      const observation = {
+        id: document.getElementById('edit-id').value || null,
+        speciesName: speciesName,
+        category: category,
+        location: location,
+        date: date,
+        description: document.getElementById('description').value,
+        observerName: document.getElementById('observer-name').value,
+        observerNim: document.getElementById('observer-nim').value,
+        imageData: imageData,
+        updatedAt: new Date().toISOString()
+      };
+
+      saveObservation(observation);
+
+      document.getElementById('observation-form').reset();
+      document.getElementById('edit-id').value = '';
+      document.getElementById('preview-img').src = '';
+      document.getElementById('image-preview').classList.remove('active');
+      document.getElementById('date').valueAsDate = new Date();
+      document.getElementById('submit-btn').innerHTML = '🚀 Kirim Observasi';
+      document.getElementById('cancel-edit-btn').style.display = 'none';
+
+      showNotification(observation.id ? 'Temuan berhasil diperbarui!' : 'Temuan berhasil diupload!', 'success');
+    });
+
+    document.getElementById('reset-btn').addEventListener('click', function () {
+      document.getElementById('edit-id').value = '';
+      document.getElementById('preview-img').src = '';
+      document.getElementById('image-preview').classList.remove('active');
+      document.getElementById('date').valueAsDate = new Date();
+      document.getElementById('submit-btn').innerHTML = '🚀 Kirim Observasi';
+      document.getElementById('cancel-edit-btn').style.display = 'none';
+    });
+
+    document.getElementById('cancel-edit-btn').addEventListener('click', cancelEdit);
+
+    // Photo upload handler
+    const uploadZone = document.getElementById('upload-zone');
+    const photoUpload = document.getElementById('photo-upload');
+    const imagePreview = document.getElementById('image-preview');
+    const previewImg = document.getElementById('preview-img');
+    const removeImageBtn = document.querySelector('.remove-image');
+
+    uploadZone.addEventListener('click', () => photoUpload.click());
+    uploadZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadZone.classList.add('drag-over');
+    });
+    uploadZone.addEventListener('dragleave', () => {
+      uploadZone.classList.remove('drag-over');
+    });
+    uploadZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadZone.classList.remove('drag-over');
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) {
+        handleImageFile(file);
+      }
+    });
+
+    photoUpload.addEventListener('change', (e) => {
+      if (e.target.files[0]) {
+        handleImageFile(e.target.files[0]);
+      }
+    });
+
+    removeImageBtn.addEventListener('click', () => {
+      previewImg.src = '';
+      imagePreview.classList.remove('active');
+      photoUpload.value = '';
+    });
+
+    function handleImageFile(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        previewImg.src = e.target.result;
+        imagePreview.classList.add('active');
+
+        const fileName = file.name.toLowerCase();
+        if (fileName.includes('kamboja') || fileName.includes('plumeria')) {
+          document.getElementById('species-name').value = 'Kamboja Jepang';
+          showNotification('🤖 AI: Terdeteksi tanaman Kamboja Jepang', 'info');
+        } else if (fileName.includes('kupu')) {
+          document.getElementById('species-name').value = 'Kupu-kupu Papilio';
+          showNotification('🤖 AI: Terdeteksi kupu-kupu jenis Papilio', 'info');
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
     document.getElementById('date').valueAsDate = new Date();
+    renderObservationsList();
+
+    window.editObservation = editObservation;
+    window.deleteObservation = deleteObservation;
+
+    // Mobile nav toggle
+    const navToggle = document.getElementById('nav-toggle');
+    const navLinks = document.getElementById('nav-links');
+    navToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+      navToggle.classList.toggle('active');
+    });
   </script>
 </body>
+
 </html>
